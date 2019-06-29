@@ -448,8 +448,8 @@ char *yytext;
 /* Mini Calculator */
 /* calc.lex */
 #line 5 "calc.lex"
-#include "heading.h"
-#include "tok.h"
+#include "y.tab.h"
+
 int yyerror(char *s);
 int yylineno = 1;
 #line 456 "lex.yy.c"
