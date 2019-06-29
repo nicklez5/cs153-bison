@@ -1,27 +1,35 @@
-/* Mini Calculator */
-/* calc.lex */
+   /* cs152-fall08 */
+   /* A flex scanner specification for the calculator language */
+   /* Written by Dennis Jeffrey */
 
-%{
-#include "y.tab.h"
-
-int yyerror(char *s);
-int yylineno = 1;
+%{   
+   #include "y.tab.h"
+   int currLine = 1, currPos = 1;
+   int numNumbers = 0;
+   int numOperators = 0;
+   int numParens = 0;
+   int numEquals = 0;
 %}
 
-digit		[0-9]
-int_const	{digit}+
-%option noyywrap
+DIGIT    [0-9]
+   
 %%
 
-{int_const}	{ yylval.int_val = atoi(yytext); return INTEGER_LITERAL; }
-"+"		{ yylval.op_val = new std::string(yytext); return PLUS; }
-"*"		{ yylval.op_val = new std::string(yytext); return MULT; }
-"/"		{ yylval.op_val = new std::string(yytext); return DIV; }
-"="		{ yylval.op_val = new std::string(yytext); return EQUAL;}
-"("		{ yylval.op_val = new std::string(yytext); return L_PAREN;}
-")"		{ yylval.op_val = new std::string(yytext); return R_PAREN;}
-[ \t]*		{}
-[\n]		{ yylineno++;	}
+"-"            {currPos += yyleng; numOperators++; return MINUS;}
+"+"            {currPos += yyleng; numOperators++; return PLUS;}
+"*"            {currPos += yyleng; numOperators++; return MULT;}
+"/"            {currPos += yyleng; numOperators++; return DIV;}
+"="            {currPos += yyleng; numEquals++; return EQUAL;}
+"("            {currPos += yyleng; numParens++; return L_PAREN;}
+")"            {currPos += yyleng; numParens++; return R_PAREN;}
 
-.		{ std::cerr << "SCANNER "; yyerror(""); exit(1);	}
+(\.{DIGIT}+)|({DIGIT}+(\.{DIGIT}*)?([eE][+-]?[0-9]+)?)   {currPos += yyleng; yylval.dval = atof(yytext); numNumbers++; return NUMBER;}
+
+[ \t]+         {/* ignore spaces */ currPos += yyleng;}
+
+"\n"           {currLine++; currPos = 1; return END;}
+
+.              {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); exit(0);}
+
+%%
 
