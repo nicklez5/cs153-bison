@@ -10,7 +10,7 @@ hex		0[xX]{hextail}
 
 
 %{
-	
+	#include <string>	
 	#include <stdlib.h>
 	#include <stdio.h>
 	
@@ -20,54 +20,55 @@ hex		0[xX]{hextail}
 	int num_int = 0; int num_op = 0;
 	int num_parentheses = 0;
 	int num_equal = 0;
+	string xyz = "";
 %%
-({digit}+)		printf("NUMBER %s\n",yytext); num_pos += yyleng; num_int++;		 
-"+"			printf("PLUS\n"); ++num_pos; num_op++;
-"-"			printf("SUB\n"); ++num_pos; num_op++;
-"*"			printf("MULT\n");  ++num_pos; num_op++;
-"/"			printf("DIV\n");  ++num_pos; num_op++;
-"("			printf("L_PAREN\n"); ++num_pos; num_parentheses++;
-")"			printf("R_PAREN\n");  ++num_pos;
-"%"			printf("MOD\n"); ++num_pos;
-"=="			printf("EQ\n"); num_pos += yyleng;
-"<>"			printf("NEQ\n"); num_pos += yyleng;
-"<"			printf("LT\n"); ++num_pos;
-">"			printf("GT\n"); ++num_pos;
-"<="			printf("LTE\n"); num_pos += yyleng;
-">="			printf("GTE\n"); num_pos += yyleng; 
-";"			printf("SEMICOLON\n"); num_pos += yyleng;
-":"			printf("COLON\n"); num_pos += yyleng;
-","			printf("COMMA\n"); num_pos += yyleng;
-":="			printf("ASSIGN\n"); num_pos += yyleng;
+({digit}+)		num_pos += yyleng; num_int++; xyz = "NUMBER"; xyz += " "; xyz += yytext; return xyz;		 
+"+"			++num_pos; num_op++; xyz = "PLUS"; return xyz;
+"-"			++num_pos; num_op++; xyz = "MINUS"; return xyz;
+"*"			++num_pos; num_op++; xyz = "MULT"; return xyz;
+"/"			++num_pos; num_op++; xyz = "DIV"; return xyz;
+"("			++num_pos; num_parentheses++; xyz = "L_PAREN"; return xyz;
+")"			++num_pos; num_parentheses++; xyz = "R_PAREN"; return xyz;
+"%"			++num_pos; xyz = "MOD"; return xyz;
+"=="			++num_pos += yyleng; xyz = "EQ"; return xyz;
+"<>"			xyz = "NEQ"; num_pos += yyleng; return xyz;
+"<"			xyz = "LT"; ++num_pos; return xyz;
+">"			xyz = "GT"; ++num_pos; return xyz;
+"<="			xyz = "LTE"; num_pos += yyleng; return xyz;
+">="			xyz = "GTE"; num_pos += yyleng; return xyz; 
+";"			xyz = "SEMICOLON"; num_pos += yyleng; return xyz;
+":"			xyz = "COLON"; num_pos += yyleng; return xyz;
+","			xyz = "COMMA"; num_pos += yyleng; return xyz;
+":="			xyz = "ASSIGN"; num_pos += yyleng; return xyz;
 "\n"			num_line++; num_pos = 0;
-"program"		printf("PROGRAM\n"); num_pos += yyleng;
-"beginprogram"		printf("BEGIN_PROGRAM\n"); num_pos += yyleng;
-"endprogram"		printf("END_PROGRAM\n"); num_pos += yyleng;
-"integer"		printf("INTEGER\n"); num_pos += yyleng;
-"array"			printf("ARRAY\n"); num_pos += yyleng;
-"of"			printf("OF\n"); num_pos += yyleng;
-"if"			printf("IF\n"); num_pos += yyleng;
-"then"			printf("THEN\n"); num_pos += yyleng;
-"endif"			printf("ENDIF\n"); num_pos += yyleng;
-"else"			printf("ELSE\n"); num_pos += yyleng;
-"while"			printf("WHILE\n"); num_pos += yyleng;
-"do"			printf("DO\n"); num_pos += yyleng;
-"beginloop"		printf("BEGINLOOP\n"); num_pos += yyleng;
-"endloop"		printf("ENDLOOP\n"); num_pos += yyleng;
-"continue"		printf("CONTINUE\n"); num_pos += yyleng;
-"read"			printf("READ\n"); num_pos += yyleng;
-"write"			printf("WRITE\n"); num_pos += yyleng;
-"and"			printf("AND\n"); num_pos += yyleng;
-"or"			printf("OR\n"); num_pos += yyleng;
-"not"			printf("NOT\n"); num_pos += yyleng;
-"true"			printf("TRUE\n"); num_pos += yyleng;
-"false"			printf("FALSE\n"); num_pos += yyleng;
+"program"		xyz = "PROGRAM"; num_pos += yyleng; return xyz;
+"beginprogram"		xyz = "BEGIN_PROGRAM"; num_pos += yyleng; return xyz;
+"endprogram"		xyz = "END_PROGRAM"; num_pos += yyleng; return xyz;
+"integer"		xyz = "INTEGER"; num_pos += yyleng; return xyz;
+"array"			xyz = "ARRAY"; num_pos += yyleng; return xyz;
+"of"			xyz = "OF"; num_pos += yyleng; return xyz;
+"if"			xyz = "IF"; num_pos += yyleng; return xyz;
+"then"			xyz = "THEN"; num_pos += yyleng; return xyz;
+"endif"			xyz = "ENDIF"; num_pos += yyleng; return xyz;
+"else"			xyz = "ELSE"; num_pos += yyleng; return xyz;
+"while"			xyz = "WHILE"; num_pos += yyleng; return xyz;
+"do"			xyz = "DO"; num_pos += yyleng; return xyz;
+"beginloop"		xyz = "BEGINLOOP"; num_pos += yyleng; return xyz;
+"endloop"		xyz = "ENDLOOP"; num_pos += yyleng; return xyz;
+"continue"		xyz = "CONTINUE"; num_pos += yyleng; return xyz;
+"read"			xyz = "READ"; num_pos += yyleng; return xyz;
+"write"			xyz = "WRITE"; num_pos += yyleng; return xyz;
+"and"			xyz = "AND"; num_pos += yyleng; return xyz;
+"or"			xyz = "OR"; num_pos += yyleng; return xyz;
+"not"			xyz = "NOT"; num_pos += yyleng; return xyz;
+"true"			xyz = "TRUE"; num_pos += yyleng; return xyz;
+"false"			xyz = "FALSE"; num_pos += yyleng; return xyz;
 [ \t]+			num_pos += yyleng;
 ([#]+({alpha}+|[ \t]+|{digit}+)*)			num_pos += yyleng;
-({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+)		printf("IDENT %s \n",yytext); num_pos += yyleng;
-({digit}+({alpha}))	printf("Error at line %d, column %d: identifier %s must begin with a letter\n",num_line,num_pos,yytext); exit(1);
-({alpha}+([_]))		printf("Error at line %d, column %d: identifier %s cannot end with an underscore\n",num_line,num_pos,yytext); exit(1);
-.			printf("Unrecognizable string %s at line %d at position %d\n", yytext,num_line,num_pos); exit(1);
+({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+)	xyz = "IDENT"; xyz += " "; xyz += yytext;	return xyz;
+({digit}+({alpha}))	xyz = "Error at line "; xyz += num_line; xyz += ", column "; xyz += num_pos; xyz += ": identifier "; xyz += yytext; xyz += " must begin with a letter";  return xyz;
+({alpha}+([_]))		xyz = "Error at line "; xyz += num_line; xyz += ", column "; xyz += num_pos; xyz += ": identifier "; xyz += yytext; xyz += " cannot end with an underscore"; return xyz;
+.			xyz = "Unrecognizable string "; xyz += yytext; xyz += " at line "; xyz += num_line; xyz += " at position "; xyz += num_pos; return xyz;
 
 
 %%
