@@ -65,10 +65,9 @@ hex		0[xX]{hextail}
 [ \t]+			num_pos += yyleng;
 ([#]+({alpha}+|[ \t]+|{digit}+)*)			num_pos += yyleng;
 ({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+)	return IDENT;
-/%
 ({digit}+({alpha}))	return ERROR_1;
-({alpha}+([_]))		xyz = "Error at line "; xyz += num_line; xyz += ", column "; xyz += num_pos; xyz += ": identifier "; xyz += yytext; xyz += " cannot end with an underscore"; return xyz;
-.			xyz = "Unrecognizable string "; xyz += yytext; xyz += " at line "; xyz += num_line; xyz += " at position "; xyz += num_pos; return xyz;
+({alpha}+([_]))		return ERROR_2; 
+.			return ERROR_3;
 
 
 %%
