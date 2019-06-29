@@ -2,49 +2,58 @@
 /* calc.y */
 
 %{
-#include "heading.h"
-int yyerror(char *s);
-int yylex(void);
+	#include <stdio.h>
+	#include <stdlib.h>
+	void yyerror(const char *msg);
+	extern int currLine;
+	extern int currPos;
+	FILE *yyin;
+	
 %}
 
 %union{
-  int		int_val;
-  string*	op_val;
+  double dval;
+  int ival;
 }
-
+%error-verbose
 %start	input 
-
-%token	<int_val>	INTEGER_LITERAL
-%type	<int_val>	exp
-%left	PLUS
-%left	MULT
-
+%token	<dval>	NUMBER
+%token MULT DIV PLUS MINUS EQUAL L_PAREN R_PAREN END
+%type	<dval>	exp
+%left	PLUS MINUS
+%left	MULT DIV
+%nonassoc UMINUS
 %%
 
 input:		/* empty */
-		| exp	{ cout << "Result: " << $1 << endl; }
+		| input line
 		;
+line:		exp EQUAL END {printf("\t%f\n",$1);}
+    		;
 
-exp:		INTEGER_LITERAL	{ $$ = $1; }
+exp:		NUMBER	{ $$ = $1; }
 		| exp PLUS exp	{ $$ = $1 + $3; }
 		| exp MULT exp	{ $$ = $1 * $3; }
+		| exp DIV exp { if($3==0) yyerror("divide by zero"); else $$ = $1 / $3; }
+		| exp MINUS exp { $$ = $1 - $3; }
+		| L_PAREN exp R_PAREN { $$ = $2; } 
+		| MINUS exp %prec UMINUS { $$ = -$2; }
 		;
 
 %%
-
-int yyerror(string s)
-{
-  extern int yylineno;	// defined and maintained in lex.c
-  extern char *yytext;	// defined and maintained in lex.c
-  
-  cerr << "ERROR: " << s << " at symbol \"" << yytext;
-  cerr << "\" on line " << yylineno << endl;
-  exit(1);
+int main(int argc,char **argv){
+	if(argc > 1){
+		yyin = fopen(argv[1],"r");
+		if(yyin == NULL){
+			printf("syntax: %s filename\n",argv[0]);
+		}//endif
+	}//end if
+	yyparse(); //Calls yylex for tokens.
+	return 0;
 }
 
-int yyerror(char *s)
-{
-  return yyerror(string(s));
+void yyerror(const char *msg){
+	printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
 }
 
 
