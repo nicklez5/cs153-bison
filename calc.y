@@ -37,7 +37,7 @@ exp:		NUMBER	{printf("number -> NUMBER(%s)\n",$1); }
 		| exp MULT exp	{ $$ = $1 * $3; }
 		| exp DIV exp { if($3==0) yyerror("divide by zero"); else $$ = $1 / $3; }
 		| exp SUB exp { $$ = $1 - $3; }
-		| exp MOD exp { $$ = $1 % $3; }
+		| exp MOD exp { $$ = $(($1 % $3)); }
 		| L_PAREN exp R_PAREN { $$ = $2; } 
 		| MINUS exp %prec UMINUS { $$ = -$2; }
 		;
@@ -67,7 +67,25 @@ comma:		COMMA {printf("comma -> COMMA\n"); }
 assign:		ASSIGN {printf("assign -> ASSIGN\n"); }
       		;
 
+comp:		EQ {printf("comp -> EQ\n"); }
+    		| NEQ {printf("comp -> NEQ\n"); }
+		| LT {printf("comp -> LT\n"); }
+		| GT {printf("comp -> GT\n"); }
+		| LTE {printf("comp -> LTE\n"); }
+		| GTE {printf("comp -> GTE\n"); }
+		;
 
+mult_exp:	term * term {printf("term -> term #%f * term  #%f\n",$1,$3); }
+		| term / term {printf("term -> term #%f / term #%f \n",$1,$3); }
+		| term % term {printf("term -> term #%f mod term #%f\n",$1,$3); }
+		| term {printf("term -> term #%f\n",$1); }
+		;
+expression:	mult_exp {printf("expression -> term #%f\n",$1); }
+	 	| mult_exp + mult_exp {printf("expression -> expression #%f add expression #f\n",$1,$3); }
+		| mult_exp - mult_exp {printf("expression -> expression #%f sub expression #f\n",$1,$3); }
+		;
+
+relation_exp:	
 
 
 
