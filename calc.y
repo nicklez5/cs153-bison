@@ -81,12 +81,23 @@ mult_exp:	term * term {printf("term -> term #%f * term  #%f\n",$1,$3); }
 		| term {printf("term -> term #%f\n",$1); }
 		;
 expression:	mult_exp {printf("expression -> term #%f\n",$1); }
-	 	| mult_exp + mult_exp {printf("expression -> expression #%f add expression #f\n",$1,$3); }
-		| mult_exp - mult_exp {printf("expression -> expression #%f sub expression #f\n",$1,$3); }
+	 	| mult_exp + mult_exp {printf("expression -> expression #%f add expression #%f\n",$1,$3); }
+		| mult_exp - mult_exp {printf("expression -> expression #%f sub expression #%f\n",$1,$3); }
 		;
-
-relation_exp:	
-
+relation_and_exp:	relation_exp {printf("relation_exp2 -> %s\n",$1); }
+		
+relation_exp:	true {printf("true -> TRUE\n"); }
+	    	| false {printf("false -> FALSE\n"); }
+		| expression comp expression {printf("relation_exp -> expression #%f comp #%f expression #%f\n",$1,$2,$3); }
+		| not expression comp expression {printf("relation_exp -> not expression #%f comp #%f expression #%f\n",$2,$3,$4); }
+		| not true {printf("false -> FALSE\n"); }
+		| not false {printf("true -> TRUE\n"); }
+		| L_PAREN bool_exp R_PAREN {printf("relation_exp -> bool_exp #%f\n", $2); }
+		| not L_PAREN bool_exp R_PAREN {printf("relation_exp -> not bool_exp #%f\n",$3); }
+		;
+relation_and_exp:	relation_exp {printf("%s",$1); }
+			| relation_exp or relation_exp {printf("relation_exp2 -> %s\n",$1); }
+			
 
 
 %%
