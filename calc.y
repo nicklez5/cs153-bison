@@ -7,6 +7,8 @@
 	void yyerror(const char *msg);
 	extern int currLine;
 	extern int currPos;
+	extern int block_num;
+	extern int declare_num;
 	FILE *yyin;
 	
 %}
@@ -14,6 +16,7 @@
 %union{
   double dval;
   int ival;
+  char* tokenName;
 }
 %error-verbose
 %start	input 
@@ -48,10 +51,21 @@ var:		IDENT {printf("IDENT -> IDENT(%s)\n",$1); currLine++; $$ = currLine; }
    		| IDENT L_PAREN exp R_PAREN {printf("IDENT -> IDENT (%s)\n",$1); currLine++; $$ = currLine;}
 		;
 
-block: 		declaration SEMICOLON beginprogram statement SEMICOLON {printf("block");}
+block: 		declaration SEMICOLON beginprogram statement SEMICOLON {block_num++; printf("block%d -> statement#%d semicolon#%d block%d#%d\n",block_num,$4,$2,block_num,currLine); currLine++; $$ = currLine; }
+     		
+		## dont think you need this because it can repeat for who gods no
+		| declaration SEMICOLON declaration SEMICOLON beginprogram statement SEMICOLON 
+		| declaration SEMICOLON beginprogram statement SEMICOLON statement SEMICOLON 
 		;
 
-program:	PROGRAM {printf("program -> PROGRAM\n"); currLine = 1;}	
+declaration:	IDENT COMMA COLON ARRAY L_PAREN NUMBER R_PAREN OF NUMBER { declare_num++; printf("declaration -> ident#%f declaration2#%f colon#%f declaration3#%f\n",$1,$7,$3,$9); currLine++; $$ = currLine; }  
+	   	| IDENT COMMA IDENT COLON NUMBER  { declare_num++; printf("declaration2 -> comma#%f ident#%f declaration2#%f\n",$2,$1,$3); currLine++; $$ = currLine; }
+		| IDENT COLON NUMBER  {
+begin_program:	BEGIN_PROGRAM {printf("begin_program -> BEGIN_PROGRAM\n");}
+	     	;
+end_program:	END_PROGRAM {printf("end_program -> END_PROGRAM\n");}
+	   	;
+program:	PROGRAM {printf("program -> PROGRAM\n"); currLine = 1; block_num = 1; declare_num = 1; }	
 		;
 
 array:		ARRAY {printf("array -> ARRAY\n"); currLine++; $$ = currLine; }
@@ -101,12 +115,22 @@ read:		READ {printf("read -> READ\n"); currLine++; $$ = currLine;}
 
 do:		DO {printf("do -> DO\n"); currLine++; $$ = currLine;}
   		;
+true:		TRUE {printf("true -> TRUE\n"); currLine++; $$ = currLine;}
+    		;
+false:		FALSE {printf("false -> FALSE\n"); currLine++; $$ = currLine;}
+     		;
+not:		NOT {printf("not -> NOT\n"); currLine++; $$ = currLine;} 
+		;
 
 beginloop:	BEGINLOOP {printf("beginloop -> BEGINLOOP\n"); currLine++; $$ = currLine;} 
 	 	;
 
 endloop: 	ENDLOOP {printf("endloop -> ENDLOOP\n"); currLine++; $$ = currLine;}
        		;
+continue:	CONTINUE {printf("continue -> CONTINUE\n"); currLine++; $$ = currLine;}
+		;
+while:		WHILE {printf("while -> WHILE\n"); currLine++; $$ = currLine;}
+     		;
 
 of:		OF {printf("of -> OF\n"); currLine++; $$ = currLine;}
   		;
