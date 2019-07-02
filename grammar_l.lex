@@ -21,7 +21,7 @@ hex		0[xX]{hextail}
 	int num_equal = 0;
 	
 %%
-({digit}+)		num_pos += yyleng; num_int++; return NUMBER;		 
+({digit}+)		num_pos += yyleng; num_int++; yyval = atoi(yytext); return NUMBER;		 
 "+"			++num_pos; num_op++; return PLUS;
 "-"			++num_pos; num_op++; return MINUS;
 "*"			++num_pos; num_op++; return MULT;
@@ -29,16 +29,16 @@ hex		0[xX]{hextail}
 "("			++num_pos; num_parentheses++; return L_PAREN;
 ")"			++num_pos; num_parentheses++;  return R_PAREN;
 "%"			++num_pos; return MOD;
-"=="			++num_pos += yyleng; return EQ;
-"<>"			num_pos += yyleng; return NEQ;
-"<"			++num_pos; return LT;
-">"			++num_pos; return GT;
-"<="			num_pos += yyleng; return LTE;
-">="			num_pos += yyleng; return GTE; 
-";"			num_pos += yyleng; return SEMICOLON;
-":"			num_pos += yyleng; return COLON;
-","			num_pos += yyleng; return COMMA;
-":="			num_pos += yyleng; return ASSIGN;
+"=="			++num_pos += yyleng; yyval = num_line; return EQ;
+"<>"			num_pos += yyleng; yyval = num_line; return NEQ;
+"<"			++num_pos; yyval = num_line; return LT;
+">"			++num_pos; yyval = num_line; return GT;
+"<="			num_pos += yyleng; yyval = num_line; return LTE;
+">="			num_pos += yyleng; yyval = num_line; return GTE; 
+";"			num_pos += yyleng; yyval = num_line; return SEMICOLON;
+":"			num_pos += yyleng; yyval = num_line; return COLON;
+","			num_pos += yyleng; yyval = num_line; return COMMA;
+":="			num_pos += yyleng; yyval = num_line; return ASSIGN;
 "\n"			num_line++; num_pos = 0; return END;
 "program"		num_pos += yyleng; return PROGRAM;
 "beginprogram"		num_pos += yyleng; return BEGIN_PROGRAM;
