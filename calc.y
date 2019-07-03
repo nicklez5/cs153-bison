@@ -21,11 +21,17 @@
 %error-verbose
 %start	input 
 %token	<dval>	NUMBER 
-%token  MULT DIV PLUS SUB EQUAL L_PAREN R_PAREN END MOD EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN ENDLOOP CONTINUE READ WRITE AND OR NOT TRUE FALSE DO BEGINLOOP WHILE ELSE ENDIF THEN IF OF ARRAY BEGIN_PROGRAM END_PROGRAM PROGRAM  
+%token  MULT DIV PLUS SUB EQUAL IDENT L_PAREN R_PAREN END MOD EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN ENDLOOP CONTINUE READ WRITE AND OR NOT TRUE FALSE DO BEGINLOOP WHILE ELSE ENDIF THEN IF OF ARRAY BEGIN_PROGRAM END_PROGRAM PROGRAM  
 %type	<dval>	exp 
-%type 	<dval>  var
 %type   <dval>  term
 %type   <dval>  mult_exp
+%type 	<dval>  expression
+%type   <tokenName> relation_exp
+%type   <tokenName> comp
+%type   <tokenName> var
+%type   <tokenName> true
+%type   <tokenName> false
+%type   <tokenName> relation_and_exp
 %token  IDENT
 %left	PLUS MINUS
 %left	MULT DIV
@@ -62,9 +68,10 @@ block: 		declaration SEMICOLON beginprogram statement SEMICOLON { printf("block 
 		;
 
 declaration:	IDENT COMMA IDENT COLON ARRAY L_PAREN NUMBER R_PAREN OF NUMBER { printf("declaration -> ident: %s , ident: %s colon. Array size: %d of %d)\n",$1,$3,$7,$10); }  
-	   	| IDENT COMMA IDENT COLON NUMBER  { printf("declaration2 -> ident: %s , ident: %s. Number %d\n",$1,$3,$5); }
-		| IDENT COLON NUMBER  { printf("declaration3 -> ident: %s: Number %d\n",$1,$3); }
+	   	| IDENT COMMA IDENT COLON NUMBER  { printf("declaration2 -> ident: %s , ident: %s. Number: %d\n",$1,$3,$5); }
+		| IDENT COLON NUMBER  { printf("declaration3 -> ident: %s Number: %d\n",$1,$3); }
 		;
+
 begin_program:	BEGIN_PROGRAM {printf("begin_program -> BEGIN_PROGRAM\n");}
 	     	;
 end_program:	END_PROGRAM {printf("end_program -> END_PROGRAM\n");}
@@ -78,11 +85,11 @@ array:		ARRAY {printf("array -> ARRAY\n"); }
 colon:		COLON {printf("colon -> COLON\n"); }
      		;
 
-term:		var {printf("term -> var(%s)\n",$1); $$ = $1 }
+term:		var {printf("term -> var(%s)\n",$1); }
 		| NUMBER{ printf("term-> NUMBER(%d)\n",$1); $$ = $1}
-		| SUB NUMBER {printf ("term -> -NUMBER(%d)\n",$2); $$ = "-" + $2; }
+		| SUB NUMBER {printf ("term -> -NUMBER(%d)\n",$2); $$ = -$2; }
 		| L_PAREN exp R_PAREN {printf("term -> term(%d)\n",$2); $$ = $2;  }
-		| SUB L_PAREN exp R_PAREN {printf("term -> term(%d)\n",$3); $$ = "-" + $3; }
+		| SUB L_PAREN exp R_PAREN {printf("term -> term(%d)\n",$3); $$ = -$3; }
 		;
 
 semicolon:	SEMICOLON {printf("semicolon -> SEMICOLON\n"); }
@@ -94,12 +101,12 @@ comma:		COMMA {printf("comma -> COMMA\n"); }
 assign:		ASSIGN {printf("assign -> ASSIGN\n"); }
       		;
 
-comp:		 EQ {printf("comp -> EQ#0\n"); }
-    		| NEQ {printf("comp -> NEQ#0\n"); }
-		| LT {printf("comp -> LT#0\n"); }
-		| GT {printf("comp -> GT#0\n"); }
-		| LTE {printf("comp -> LTE#0\n"); }
-		| GTE {printf("comp -> GTE#0\n"); }
+comp:		 EQ {printf("comp -> EQ#0\n"); $$ = $1; }
+    		| NEQ {printf("comp -> NEQ#0\n"); $$ = $1; }
+		| LT {printf("comp -> LT#0\n"); $$ = $1; }
+		| GT {printf("comp -> GT#0\n"); $$ = $1; }
+		| LTE {printf("comp -> LTE#0\n"); $$ = $1; }
+		| GTE {printf("comp -> GTE#0\n"); $$ = $1; }
 		;
 
 l_paren:	L_PAREN {printf("l_paren -> L_PAREN\n"); }
@@ -153,29 +160,34 @@ then:		THEN { printf("then -> THEN\n"); $$ = $1; }
 endif:		ENDIF {printf("endif -> ENDIF\n");  $$ = $1; }
      		;
 
-mult_exp:	term * term {printf("term -> term: %s * term: %s\n",$1,$3); $$ = $1 * $3; }
-		| term / term {printf("term -> term: %s / term: %s\n",$1,$3); $$ = $1 + " " + "/" + " " + $3;  }
-		| term % term {printf("term -> term: %s mod term: %s\n",$1,$3); $$ = $1 + " " + "mod" + " " + $3; }
-		| term {printf("term -> term: %s\n",$1); }
+mult_exp:	term * term {printf("multiply_exp -> term: %d * term: %d\n",$1,$3); $$ = $1 * $3; }
+		| term / term {printf("multiply_exp -> term: %d / term: %d\n",$1,$3); $$ = $1 / $3;  }
+		| term % term {printf("multiply_exp -> term: %d mod term: %d\n",$1,$3); $$ = $(($1 % $3)); }
+		| term {printf("multiply_exp -> term: %d\n",$1); $$ = $1 }
 		;
 
-expression:	mult_exp {printf("expression -> term: %s\n",$1); $$ = $1; }
-	 	| mult_exp + mult_exp {printf("expression -> expression: %s + expression: %s\n",$1,$3); }
-		| mult_exp - mult_exp {printf("expression -> expression: %s - expression: %s\n",$1,$3); }
+expression:	mult_exp {printf("expression -> term: %d\n",$1); $$ = $1; }
+	 	| mult_exp + mult_exp {printf("expression -> expression: %d + expression: %d\n",$1,$3); $$ = $1 + $3; }
+		| mult_exp - mult_exp {printf("expression -> expression: %d - expression: %d\n",$1,$3); $$ = $1 - $3; }
 		;
-relation_and_exp:	relation_exp {printf("relation_exp2 -> %s\n",$1); }
+relation_and_exp:	relation_exp {printf("relation_exp2 -> %s\n",$1); $$ = $1; }
+		|	relation_exp and relation_exp {printf("relation_exp2 -> %s and %s",$1,$3); $$ }
 		
-relation_exp:	true {printf("true -> TRUE\n"); }
-	    	| false {printf("false -> FALSE\n"); }
-		| expression comp expression {printf("relation_exp -> expression #%f comp #%f expression #%f\n",$1,$2,$3); }
-		| not expression comp expression {printf("relation_exp -> not expression #%f comp #%f expression #%f\n",$2,$3,$4); }
-		| not true {printf("false -> FALSE\n"); }
-		| not false {printf("true -> TRUE\n"); }
-		| L_PAREN bool_exp R_PAREN {printf("relation_exp -> bool_exp #%f\n", $2); }
-		| not L_PAREN bool_exp R_PAREN {printf("relation_exp -> not bool_exp #%f\n",$3); }
+relation_exp:	true {printf("relation_exp -> TRUE\n"); $$ = $1; }
+	    	| false {printf("relation_exp -> FALSE\n"); $$ = $1; }
+		| expression comp expression {printf("relation_exp -> expression: %d comp: %s expression: %d\n",$1,$2,$3); $$ = $1 + $2 + $3; }
+		| not expression comp expression {printf("relation_exp -> not expression #%d comp #%s expression #%d\n",$2,$3,$4); $$ = $1 + $2 + $3;  }
+		| not true {printf("relation_exp -> not TRUE\n"); $$ = "!" + " " + $2; }
+		| not false {printf("relation_exp -> not FALSE\n"); $$ = "!" + " " + $2; }
+		| L_PAREN bool_exp R_PAREN {printf("relation_exp -> bool_exp: %s\n", $2); $$ = $2; }
+		| not L_PAREN bool_exp R_PAREN {printf("relation_exp -> not bool_exp: %s\n",$3); $$ = $3;}
 		;
-relation_and_exp:	relation_exp {printf("%s",$1); }
-			| relation_exp or relation_exp {printf("relation_exp2 -> %s\n",$1); }
+relation_and_exp:	relation_exp {printf("%s",$1); $$ = $1; }
+			| relation_exp and relation_exp {printf("relation_exp2 -> %s and %s",$1,$3); $$ = $1 + " " + "and" + " " + $3; }
+
+bool_exp:		relation_and_exp {printf("%s",$1); $$ = $1; }
+       			relation_and_exp or relation_and_exp {printf("%s or $s",$1,$3); }
+				
 			
 
 
