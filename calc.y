@@ -32,6 +32,7 @@
 %type   <tokenName> true
 %type   <tokenName> false
 %type   <tokenName> relation_and_exp
+%type   <tokenName> statement
 %token  IDENT
 %left	PLUS MINUS
 %left	MULT DIV
@@ -61,13 +62,9 @@ var:		IDENT {printf("IDENT -> IDENT(%s)\n",$1); $$ = $1 }
 		;
 
 block: 		declaration SEMICOLON beginprogram statement SEMICOLON { printf("block -> statement(%s) semicolon\n",$4);  }
-     		
-		## dont think you need this because it can repeat for who gods no
-		| declaration SEMICOLON declaration SEMICOLON beginprogram statement SEMICOLON 
-		| declaration SEMICOLON beginprogram statement SEMICOLON statement SEMICOLON 
 		;
 
-declaration:	IDENT COMMA IDENT COLON ARRAY L_PAREN NUMBER R_PAREN OF NUMBER { printf("declaration -> ident: %s , ident: %s colon. Array size: %d of %d)\n",$1,$3,$7,$10); }  
+declaration:	IDENT COMMA IDENT COLON ARRAY L_PAREN NUMBER R_PAREN OF NUMBER { printf("declaration -> ident: %s , ident: %s colon. Array: %d of %d)\n",$1,$3,$7,$10); }  
 	   	| IDENT COMMA IDENT COLON NUMBER  { printf("declaration2 -> ident: %s , ident: %s. Number: %d\n",$1,$3,$5); }
 		| IDENT COLON NUMBER  { printf("declaration3 -> ident: %s Number: %d\n",$1,$3); }
 		;
@@ -115,49 +112,49 @@ l_paren:	L_PAREN {printf("l_paren -> L_PAREN\n"); }
 r_paren:	R_PAREN {printf("r_paren -> R_PAREN\n"); }
        		;
 
-if:		IF {printf("if -> IF\n"); $$ = $1; }
+if:		IF {printf("if -> IF\n");  }
   		;
 
-else:		ELSE {printf("else -> ELSE\n"); $$ = $1; }
+else:		ELSE {printf("else -> ELSE\n");  }
     		;
 
-read:		READ {printf("read -> READ\n"); $$ = $1; }
+read:		READ {printf("read -> READ\n"); }
     		;
 
-do:		DO {printf("do -> DO\n"); $$ = $1; }
+do:		DO {printf("do -> DO\n");  }
   		;
-true:		TRUE {printf("true -> TRUE\n"); $$ = $1; }
+true:		TRUE {printf("true -> TRUE\n");  }
     		;
-false:		FALSE {printf("false -> FALSE\n"); $$ = $1; }
+false:		FALSE {printf("false -> FALSE\n");  }
      		;
-not:		NOT {printf("not -> NOT\n"); $$ = $1; } 
+not:		NOT {printf("not -> NOT\n");  } 
 		;
 
-beginloop:	BEGINLOOP {printf("beginloop -> BEGINLOOP\n"); }  
+beginloop:	BEGINLOOP {printf("beginloop -> BEGINLOOP\n");  }  
 	 	;
 
-endloop: 	ENDLOOP {printf("endloop -> ENDLOOP\n"); }
+endloop: 	ENDLOOP {printf("endloop -> ENDLOOP\n");  }
        		;
-continue:	CONTINUE {printf("continue -> CONTINUE\n"); $$ = $1; }
+continue:	CONTINUE {printf("continue -> CONTINUE\n");  }
 		;
-while:		WHILE {printf("while -> WHILE\n"); $$ = $1; }
+while:		WHILE {printf("while -> WHILE\n");  }
      		;
 
-of:		OF {printf("of -> OF\n"); }
+of:		OF {printf("of -> OF\n");  }
   		;
 
-and:		AND {printf("and -> AND\n"); $$ = $1; }
+and:		AND {printf("and -> AND\n");  }
    		;
-or:		OR {printf("or -> OR\n");  $$ = $1; }
+or:		OR {printf("or -> OR\n");  }
   		;
 
-write:		WRITE {printf("write -> WRITE\n"); $$ = $1; }
+write:		WRITE {printf("write -> WRITE\n");  }
      		;
 
-then:		THEN { printf("then -> THEN\n"); $$ = $1; }
+then:		THEN { printf("then -> THEN\n");  }
     		;
 
-endif:		ENDIF {printf("endif -> ENDIF\n");  $$ = $1; }
+endif:		ENDIF {printf("endif -> ENDIF\n");   }
      		;
 
 mult_exp:	term * term {printf("multiply_exp -> term: %d * term: %d\n",$1,$3); $$ = $1 * $3; }
@@ -170,27 +167,35 @@ expression:	mult_exp {printf("expression -> term: %d\n",$1); $$ = $1; }
 	 	| mult_exp + mult_exp {printf("expression -> expression: %d + expression: %d\n",$1,$3); $$ = $1 + $3; }
 		| mult_exp - mult_exp {printf("expression -> expression: %d - expression: %d\n",$1,$3); $$ = $1 - $3; }
 		;
-relation_and_exp:	relation_exp {printf("relation_exp2 -> %s\n",$1); $$ = $1; }
-		|	relation_exp and relation_exp {printf("relation_exp2 -> %s and %s",$1,$3); $$ }
-		
+			
 relation_exp:	true {printf("relation_exp -> TRUE\n"); $$ = $1; }
 	    	| false {printf("relation_exp -> FALSE\n"); $$ = $1; }
 		| expression comp expression {printf("relation_exp -> expression: %d comp: %s expression: %d\n",$1,$2,$3); $$ = $1 + $2 + $3; }
 		| not expression comp expression {printf("relation_exp -> not expression #%d comp #%s expression #%d\n",$2,$3,$4); $$ = $1 + $2 + $3;  }
-		| not true {printf("relation_exp -> not TRUE\n"); $$ = "!" + " " + $2; }
-		| not false {printf("relation_exp -> not FALSE\n"); $$ = "!" + " " + $2; }
+		| not true {printf("relation_exp -> not TRUE\n"); $$ = "! " + $2; }
+		| not false {printf("relation_exp -> not FALSE\n"); $$ = "! " + $2; }
 		| L_PAREN bool_exp R_PAREN {printf("relation_exp -> bool_exp: %s\n", $2); $$ = $2; }
 		| not L_PAREN bool_exp R_PAREN {printf("relation_exp -> not bool_exp: %s\n",$3); $$ = $3;}
 		;
-relation_and_exp:	relation_exp {printf("%s",$1); $$ = $1; }
-			| relation_exp and relation_exp {printf("relation_exp2 -> %s and %s",$1,$3); $$ = $1 + " " + "and" + " " + $3; }
 
-bool_exp:		relation_and_exp {printf("%s",$1); $$ = $1; }
-       			relation_and_exp or relation_and_exp {printf("%s or $s",$1,$3); }
-				
+relation_and_exp:	relation_exp {printf("relation_and_exp -> %s\n",$1); $$ = $1; }
+			| relation_exp and relation_exp {printf("relation_and_exp -> %s and %s\n",$1,$3); $$ = $1 +  " and "  + $3; }
+			;
+
+bool_exp:		relation_and_exp {printf("bool_exp -> %s\n",$1); $$ = $1; }
+       			| relation_and_exp or relation_and_exp {printf("bool_exp -> %s or %s\n",$1,$3); $$ = $1 + " or "  + $3; }
+			;	
 			
-
-
+statement:		var assign expression{ printf("statement -> %s assign %d\n", $1, $3); $$ = $1 + ":=" + $3; }
+	 		| if bool_exp then statement semicolon endif { printf("statement -> if %s then %s\n",$2,$4); $$ = "if " + $2 + " then " + $4; }
+			| if bool_exp then statement semicolon else statement semicolon endif { printf("statement -> if %s then %s else %s\n",$2, $4, $7); $$ = "if " + $2 + " then " + $4 + " else " + $7; }
+			| while bool_exp beginloop statement semicolon endloop { printf("statement -> while %s beginloop statement: %s\n", $2,$4); $$ = "while " + $2 + " beginloop " + $4; } 
+			| do beginloop statement semicolon endloop while bool_exp { printf("statement -> do %s while %s\n",$3,$7); $$ = "do " + $3 + " while " + $7; }
+			| read var { printf("statement -> read %s\n",$2); $$ = "read " + $2; } 
+			| read var comma var { printf("statement -> read %s comma %s",$2,$4); $$ = "read " + $2 + " , " + $4; }
+			| write var 
+			| write var comma var
+			| continue 
 %%
 int main(int argc,char **argv){
 	if(argc > 1){
