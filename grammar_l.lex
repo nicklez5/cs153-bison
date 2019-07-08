@@ -64,7 +64,7 @@ random_num 	[():/._[],<]
 "true"			{ num_pos += yyleng; return TRUE; }
 "false"			{ num_pos += yyleng; return FALSE; }
 [ \t]+			{ num_pos += yyleng; }
-([#]+({alpha}+|[ \t]+|{digit}+|[.:]+)*|[\n]+)			{ num_pos += yyleng; num_line++; return COMMENT;}
+([#]+({alpha}*|[ \t]*|{digit}*|[.(/)_:]*)*)			{ num_pos += yyleng; num_line++; return COMMENT; }
 ({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+) { num_pos += yyleng; return IDENT; }
 ({digit}+({alpha}))	{ num_pos += yyleng; return error_1; }
 ({alpha}+([_]))		{ num_pos += yyleng; return error_2; }

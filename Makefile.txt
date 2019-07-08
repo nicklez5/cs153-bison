@@ -1,7 +1,8 @@
-parse: calc.lex calc.y
+parse: grammar_l.lex calc.y
 	bison -v -d --file-prefix=y calc.y
-	flex calc.lex
-	gcc -o calc y.tab.c lex.yy.c 
+	flex grammar_l.lex
+	gcc -o parser y.tab.c lex.yy.c -lfl
+
 clean:
 	rm -f lex.yy.c y.tab.* y.output *.o calc
 
