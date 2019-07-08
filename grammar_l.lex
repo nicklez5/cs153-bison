@@ -7,7 +7,7 @@ digit		[0-9]
 alpha		[a-zA-Z]
 hextail		({digit}|{alpha}){1,8}
 hex		0[xX]{hextail}
-
+random_num 	[():/._[],<]
 
 %{	
 	#include <stdlib.h>
@@ -64,7 +64,7 @@ hex		0[xX]{hextail}
 "true"			{ num_pos += yyleng; return TRUE; }
 "false"			{ num_pos += yyleng; return FALSE; }
 [ \t]+			{ num_pos += yyleng; }
-([#]+({alpha}+|[ \t]+|{digit}+)*)			{ num_pos += yyleng; return COMMENT; }
+([#]+({alpha}+|[ \t]+|{digit}+|[.:]+)*|[\n]+)			{ num_pos += yyleng; num_line++; return COMMENT;}
 ({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+) { num_pos += yyleng; return IDENT; }
 ({digit}+({alpha}))	{ num_pos += yyleng; return error_1; }
 ({alpha}+([_]))		{ num_pos += yyleng; return error_2; }
