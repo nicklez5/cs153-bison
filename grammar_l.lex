@@ -12,7 +12,7 @@ hex		0[xX]{hextail}
 %{	
 	#include <stdlib.h>
 	#include <stdio.h>
-	
+	#include "y.tab.h"	
 %}
 %option noyywrap
 	int num_pos = 0; int num_line = 0;
@@ -21,58 +21,59 @@ hex		0[xX]{hextail}
 	int num_equal = 0;
 	
 %%
-({digit}+)		num_pos += yyleng; num_int++; yyval = atoi(yytext); return NUMBER;		 
-"+"			++num_pos; num_op++; return PLUS;
-"-"			++num_pos; num_op++; return MINUS;
-"*"			++num_pos; num_op++; return MULT;
-"/"			++num_pos; num_op++; return DIV;
-"("			++num_pos; num_parentheses++; return L_PAREN;
-")"			++num_pos; num_parentheses++;  return R_PAREN;
-"%"			++num_pos; return MOD;
-"=="			++num_pos += yyleng; yyval = num_line; return EQ;
-"<>"			num_pos += yyleng; yyval = num_line; return NEQ;
-"<"			++num_pos; yyval = num_line; return LT;
-">"			++num_pos; yyval = num_line; return GT;
-"<="			num_pos += yyleng; yyval = num_line; return LTE;
-">="			num_pos += yyleng; yyval = num_line; return GTE; 
-";"			num_pos += yyleng; yyval = num_line; return SEMICOLON;
-":"			num_pos += yyleng; yyval = num_line; return COLON;
-","			num_pos += yyleng; yyval = num_line; return COMMA;
-":="			num_pos += yyleng; yyval = num_line; return ASSIGN;
-"\n"			num_line++; num_pos = 0; return END;
-"program"		num_pos += yyleng; return PROGRAM;
-"beginprogram"		num_pos += yyleng; return BEGIN_PROGRAM;
-"endprogram"		num_pos += yyleng; return END_PROGRAM;
-"integer"		num_pos += yyleng; return INTEGER;
-"array"			num_pos += yyleng; return ARRAY;
-"of"			num_pos += yyleng; return OF;
-"if"			num_pos += yyleng; return IF;
-"then"			num_pos += yyleng; return THEN;
-"endif"			num_pos += yyleng; return ENDIF;
-"else"			num_pos += yyleng; return ELSE;
-"while"			num_pos += yyleng; return WHILE;
-"do"			num_pos += yyleng; return DO;
-"beginloop"		num_pos += yyleng; return BEGINLOOP;
-"endloop"		num_pos += yyleng; return ENDLOOP;
-"continue"		num_pos += yyleng; return CONTINUE;
-"read"			num_pos += yyleng; return READ;
-"write"			num_pos += yyleng; return WRITE;
-"and"			num_pos += yyleng; return AND;
-"or"			num_pos += yyleng; return OR;
-"not"			num_pos += yyleng; return NOT;
-"true"			num_pos += yyleng; return TRUE;
-"false"			num_pos += yyleng; return FALSE;
-[ \t]+			num_pos += yyleng;
-([#]+({alpha}+|[ \t]+|{digit}+)*)			num_pos += yyleng;
-({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+)	return IDENT;
-({digit}+({alpha}))	return ERROR_1;
-({alpha}+([_]))		return ERROR_2; 
-.			return ERROR_3;
+({digit}+)		{ num_pos += yyleng; num_int++; yylval.dval = atof(yytext); return NUMBER; }		 
+"+"			{ ++num_pos; num_op++; return PLUS; }
+"-"			{ ++num_pos; num_op++; return MINUS; }
+"*"			{ ++num_pos; num_op++; return MULT; }
+"/"			{ ++num_pos; num_op++; return DIV; }
+"!"			{ ++num_pos; num_op++; return NOT; }
+"("			{ ++num_pos; num_parentheses++; return L_PAREN; }
+")"			{ ++num_pos; num_parentheses++;  return R_PAREN; }
+"%"			{ ++num_pos; return MOD; }
+"=="			{ num_pos += yyleng; return EQ; }
+"<>"			{ num_pos += yyleng; return NEQ; }
+"<"			{ ++num_pos; return LT; }
+">"			{ ++num_pos; return GT; }
+"<="			{ num_pos += yyleng; return LTE; }
+">="			{ num_pos += yyleng; return GTE; } 
+";"			{ num_pos += yyleng; return SEMICOLON; }
+":"			{ num_pos += yyleng; return COLON; }
+","			{ num_pos += yyleng; return COMMA; }
+":="			{ num_pos += yyleng; return ASSIGN; }
+"\n"			{ num_line++; return END; }
+"program"		{ num_pos += yyleng; return PROGRAM; }
+"beginprogram"		{ num_pos += yyleng; return BEGIN_PROGRAM; }
+"endprogram"		{ num_pos += yyleng; return END_PROGRAM; }
+"integer"		{ num_pos += yyleng; return INTEGER; }
+"array"			{ num_pos += yyleng; return ARRAY; }
+"of"			{ num_pos += yyleng; return OF; }
+"if"			{ num_pos += yyleng; return IF; }
+"then"			{ num_pos += yyleng; return THEN; }
+"endif"			{ num_pos += yyleng; return ENDIF; }
+"else"			{ num_pos += yyleng; return ELSE; }
+"while"			{ num_pos += yyleng; return WHILE; }
+"do"			{ num_pos += yyleng; return DO; }
+"beginloop"		{ num_pos += yyleng; return BEGINLOOP; }
+"endloop"		{ num_pos += yyleng; return ENDLOOP; }
+"continue"		{ num_pos += yyleng; return CONTINUE; }
+"read"			{ num_pos += yyleng; return READ; }
+"write"			{ num_pos += yyleng; return WRITE; }
+"and"			{ num_pos += yyleng; return AND; }
+"or"			{ num_pos += yyleng; return OR; }
+"not"			{ num_pos += yyleng; return NOT; }
+"true"			{ num_pos += yyleng; return TRUE; }
+"false"			{ num_pos += yyleng; return FALSE; }
+[ \t]+			{ num_pos += yyleng; }
+([#]+({alpha}+|[ \t]+|{digit}+)*)			{ num_pos += yyleng; return COMMENT; }
+({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+) { num_pos += yyleng; return IDENT; }
+({digit}+({alpha}))	{ num_pos += yyleng; return error_1; }
+({alpha}+([_]))		{ num_pos += yyleng; return error_2; }
+.			{ num_pos += yyleng; return error_3; }
 
 
 %%
 
-int main(int argc,char* argv[])
+/*int main(int argc,char* argv[])
 {
 	if(argc >= 2){
 		
@@ -86,4 +87,5 @@ int main(int argc,char* argv[])
 		printf("Give me your input:\n");
 		yylex();
 	}
-}
+}*/
+

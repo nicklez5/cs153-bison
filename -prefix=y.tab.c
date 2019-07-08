@@ -66,17 +66,17 @@
 
 	#include <stdio.h>
 	#include <stdlib.h>
+	#include <string.h>
 	void yyerror(const char *msg);
 	double findMod(double a, double b);
-	extern int num_line;
-	extern int num_pos;
-	//extern int block_num;
-	//extern int declare_num;
+	extern int num_pos = 0;
+	extern int num_line = 0;
+
 
 	FILE *yyin;
 	
 
-#line 80 "y.tab.c" /* yacc.c:339  */
+#line 80 "-prefix=y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -95,9 +95,9 @@
 #endif
 
 /* In a future release of Bison, this section will be replaced
-   by #include "y.tab.h".  */
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+   by #include "-prefix=y.tab.h".  */
+#ifndef YY_YY_PREFIX_Y_TAB_H_INCLUDED
+# define YY_YY_PREFIX_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -174,7 +174,7 @@ union YYSTYPE
   int ival;
   char* tokenName;
 
-#line 178 "y.tab.c" /* yacc.c:355  */
+#line 178 "-prefix=y.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -187,11 +187,11 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_PREFIX_Y_TAB_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 195 "y.tab.c" /* yacc.c:358  */
+#line 195 "-prefix=y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1290,66 +1290,66 @@ yyreduce:
     {
         case 3:
 #line 48 "calc.y" /* yacc.c:1646  */
-    {}
-#line 1295 "y.tab.c" /* yacc.c:1646  */
+    { }
+#line 1295 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
 #line 51 "calc.y" /* yacc.c:1646  */
-    {printf("\t%d\n",(yyvsp[-2].ival));}
-#line 1301 "y.tab.c" /* yacc.c:1646  */
+    {printf("\t%d\n",(yyvsp[-2].ival)); }
+#line 1301 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
 #line 54 "calc.y" /* yacc.c:1646  */
     {printf("number -> NUMBER(%d)\n",(yyvsp[0].ival));  (yyval.ival) =  (yyvsp[0].ival); }
-#line 1307 "y.tab.c" /* yacc.c:1646  */
+#line 1307 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 55 "calc.y" /* yacc.c:1646  */
     {(yyval.ival) = (yyvsp[-2].ival) + (yyvsp[0].ival); }
-#line 1313 "y.tab.c" /* yacc.c:1646  */
+#line 1313 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 56 "calc.y" /* yacc.c:1646  */
     { (yyval.ival) = (yyvsp[-2].ival) * (yyvsp[0].ival); }
-#line 1319 "y.tab.c" /* yacc.c:1646  */
+#line 1319 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 57 "calc.y" /* yacc.c:1646  */
     { if((yyvsp[0].ival)==0) yyerror("divide by zero"); else (yyval.ival) = ((yyvsp[-2].ival) / (yyvsp[0].ival)); }
-#line 1325 "y.tab.c" /* yacc.c:1646  */
+#line 1325 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
 #line 58 "calc.y" /* yacc.c:1646  */
     { (yyval.ival) = (yyvsp[-2].ival) - (yyvsp[0].ival); }
-#line 1331 "y.tab.c" /* yacc.c:1646  */
+#line 1331 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 59 "calc.y" /* yacc.c:1646  */
     { (yyval.ival) = findMod((yyvsp[-2].ival),(yyvsp[0].ival)); }
-#line 1337 "y.tab.c" /* yacc.c:1646  */
+#line 1337 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
 #line 60 "calc.y" /* yacc.c:1646  */
     { (yyval.ival) = (yyvsp[-1].ival); }
-#line 1343 "y.tab.c" /* yacc.c:1646  */
+#line 1343 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 61 "calc.y" /* yacc.c:1646  */
     { (yyval.ival) = -(yyvsp[0].ival); }
-#line 1349 "y.tab.c" /* yacc.c:1646  */
+#line 1349 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1353 "y.tab.c" /* yacc.c:1646  */
+#line 1353 "-prefix=y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
