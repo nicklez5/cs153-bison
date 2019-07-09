@@ -197,11 +197,11 @@ Rules useless in grammar
 
 
 State 10 conflicts: 2 shift/reduce
-State 19 conflicts: 2 shift/reduce
 State 20 conflicts: 2 shift/reduce
-State 21 conflicts: 5 shift/reduce
-State 22 conflicts: 2 shift/reduce
-State 23 conflicts: 5 shift/reduce
+State 21 conflicts: 2 shift/reduce
+State 22 conflicts: 5 shift/reduce
+State 23 conflicts: 2 shift/reduce
+State 24 conflicts: 5 shift/reduce
 
 
 Grammar
@@ -212,7 +212,7 @@ Grammar
     2      | input line
 
     3 line: exp EQUAL END
-    4     | COMMENT END
+    4     | COMMENT EQUAL END
     5     | COMMENT
 
     6 exp: NUMBER
@@ -243,7 +243,7 @@ LT (268)
 LTE (269)
 GT (270)
 GTE (271)
-EQUAL (272) 3
+EQUAL (272) 3 4
 EQ (273)
 NEQ (274)
 NOT (275)
@@ -353,10 +353,10 @@ State 5
 
 State 6
 
-    4 line: COMMENT . END
+    4 line: COMMENT . EQUAL END
     5     | COMMENT .
 
-    END  shift, and go to state 11
+    EQUAL  shift, and go to state 11
 
     $default  reduce using rule 5 (line)
 
@@ -421,9 +421,9 @@ State 10
 
 State 11
 
-    4 line: COMMENT END .
+    4 line: COMMENT EQUAL . END
 
-    $default  reduce using rule 4 (line)
+    END  shift, and go to state 19
 
 
 State 12
@@ -434,7 +434,7 @@ State 12
     L_PAREN  shift, and go to state 4
     MINUS    shift, and go to state 5
 
-    exp  go to state 19
+    exp  go to state 20
 
 
 State 13
@@ -445,7 +445,7 @@ State 13
     L_PAREN  shift, and go to state 4
     MINUS    shift, and go to state 5
 
-    exp  go to state 20
+    exp  go to state 21
 
 
 State 14
@@ -456,7 +456,7 @@ State 14
     L_PAREN  shift, and go to state 4
     MINUS    shift, and go to state 5
 
-    exp  go to state 21
+    exp  go to state 22
 
 
 State 15
@@ -467,7 +467,7 @@ State 15
     L_PAREN  shift, and go to state 4
     MINUS    shift, and go to state 5
 
-    exp  go to state 22
+    exp  go to state 23
 
 
 State 16
@@ -478,14 +478,14 @@ State 16
     L_PAREN  shift, and go to state 4
     MINUS    shift, and go to state 5
 
-    exp  go to state 23
+    exp  go to state 24
 
 
 State 17
 
     3 line: exp EQUAL . END
 
-    END  shift, and go to state 24
+    END  shift, and go to state 25
 
 
 State 18
@@ -496,6 +496,13 @@ State 18
 
 
 State 19
+
+    4 line: COMMENT EQUAL END .
+
+    $default  reduce using rule 4 (line)
+
+
+State 20
 
     7 exp: exp . PLUS exp
     8    | exp . MULT exp
@@ -512,7 +519,7 @@ State 19
     $default  reduce using rule 8 (exp)
 
 
-State 20
+State 21
 
     7 exp: exp . PLUS exp
     8    | exp . MULT exp
@@ -529,7 +536,7 @@ State 20
     $default  reduce using rule 9 (exp)
 
 
-State 21
+State 22
 
     7 exp: exp . PLUS exp
     8    | exp . MULT exp
@@ -552,7 +559,7 @@ State 21
     $default  reduce using rule 11 (exp)
 
 
-State 22
+State 23
 
     7 exp: exp . PLUS exp
     7    | exp PLUS exp .
@@ -571,7 +578,7 @@ State 22
     $default  reduce using rule 7 (exp)
 
 
-State 23
+State 24
 
     7 exp: exp . PLUS exp
     8    | exp . MULT exp
@@ -594,7 +601,7 @@ State 23
     $default  reduce using rule 10 (exp)
 
 
-State 24
+State 25
 
     3 line: exp EQUAL END .
 

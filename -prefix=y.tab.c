@@ -432,7 +432,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   41
+#define YYLAST   42
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  51
@@ -441,7 +441,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  14
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  25
+#define YYNSTATES  26
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -527,10 +527,10 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -6
+#define YYPACT_NINF -4
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-6)))
+  (!!((Yystate) == (-4)))
 
 #define YYTABLE_NINF -1
 
@@ -541,9 +541,9 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -6,     0,    -6,    -6,     1,     1,    -5,    -6,     6,    19,
-       9,    -6,     1,     1,     1,     1,     1,    15,    -6,     9,
-       9,    24,    29,    24,    -6
+      -4,     0,    -4,    -4,     1,     1,     3,    -4,     6,    19,
+       9,    15,     1,     1,     1,     1,     1,    17,    -4,    -4,
+       9,     9,    24,    29,    24,    -4
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -552,14 +552,14 @@ static const yytype_int8 yypact[] =
 static const yytype_uint8 yydefact[] =
 {
        2,     0,     1,     7,     0,     0,     6,     3,     0,     0,
-      14,     5,     0,     0,     0,     0,     0,     0,    13,     9,
-      10,    12,     8,    11,     4
+      14,     0,     0,     0,     0,     0,     0,     0,    13,     5,
+       9,    10,    12,     8,    11,     4
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -6,    -6,    -6,    -3
+      -4,    -4,    -4,    -3
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -573,20 +573,20 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-       2,     9,    10,     3,     3,     4,     4,     5,     5,    19,
-      20,    21,    22,    23,    12,    13,    14,    15,    16,    14,
+       2,     9,    10,     3,     3,     4,     4,     5,     5,    20,
+      21,    22,    23,    24,    12,    13,    14,    15,    16,    14,
       11,    16,     0,    17,     6,    18,     0,    12,    13,    14,
       15,    16,    12,    13,    14,    15,    16,    12,    13,    14,
-      24,    16
+      19,    16,    25
 };
 
 static const yytype_int8 yycheck[] =
 {
        0,     4,     5,     3,     3,     5,     5,     7,     7,    12,
       13,    14,    15,    16,     8,     9,    10,    11,    12,    10,
-      25,    12,    -1,    17,    24,     6,    -1,     8,     9,    10,
+      17,    12,    -1,    17,    24,     6,    -1,     8,     9,    10,
       11,    12,     8,     9,    10,    11,    12,     8,     9,    10,
-      25,    12
+      25,    12,    25
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -594,8 +594,8 @@ static const yytype_int8 yycheck[] =
 static const yytype_uint8 yystos[] =
 {
        0,    52,     0,     3,     5,     7,    24,    53,    54,    54,
-      54,    25,     8,     9,    10,    11,    12,    17,     6,    54,
-      54,    54,    54,    54,    25
+      54,    17,     8,     9,    10,    11,    12,    17,     6,    25,
+      54,    54,    54,    54,    54,    25
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -608,7 +608,7 @@ static const yytype_uint8 yyr1[] =
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     0,     2,     3,     2,     1,     1,     3,     3,
+       0,     2,     0,     2,     3,     3,     1,     1,     3,     3,
        3,     3,     3,     3,     2
 };
 
