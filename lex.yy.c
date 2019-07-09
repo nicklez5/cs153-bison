@@ -354,8 +354,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 49
-#define YY_END_OF_BUFFER 50
+#define YY_NUM_RULES 50
+#define YY_END_OF_BUFFER 51
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -365,21 +365,21 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[142] =
     {   0,
-        0,    0,   50,   48,   43,   20,    6,   44,    9,    7,
-        8,    4,    2,   18,    3,    5,    1,   17,   16,   12,
-       48,   13,   45,   45,   45,   45,   45,   45,   45,   45,
-       45,   45,   45,   45,   45,   45,   43,   44,   44,   44,
-       44,   44,    1,   46,   19,   14,   11,   10,   15,    0,
-       45,   47,   45,   45,   45,   45,   32,   45,   45,   45,
-       27,   45,   45,   26,   39,   45,   45,   45,   45,   45,
-       45,   45,   45,   45,   38,   45,   45,   45,   45,   45,
-       45,   45,   40,   45,   45,   45,   45,   45,   45,   45,
-       45,   45,   30,   45,   45,   45,   45,   45,   45,   36,
+        0,    0,   51,   49,   44,   21,    6,   45,    9,    7,
+        8,    4,    2,   19,    3,    5,    1,   18,   17,   13,
+       10,   14,   46,   46,   46,   46,   46,   46,   46,   46,
+       46,   46,   46,   46,   46,   46,   44,   45,   45,   45,
+       45,   45,    1,   47,   20,   15,   12,   11,   16,    0,
+       46,   48,   46,   46,   46,   46,   33,   46,   46,   46,
+       28,   46,   46,   27,   40,   46,   46,   46,   46,   46,
+       46,   46,   46,   46,   39,   46,   46,   46,   46,   46,
+       46,   46,   41,   46,   46,   46,   46,   46,   46,   46,
+       46,   46,   31,   46,   46,   46,   46,   46,   46,   37,
 
-       28,   41,   45,   45,   25,   45,   45,   29,   45,   45,
-       42,   45,   45,   31,   37,   45,   45,   45,   45,   45,
-       45,   45,   45,   45,   45,   34,   45,   24,   21,   45,
-       45,   35,   45,   33,   45,   45,   45,   23,   45,   22,
+       29,   42,   46,   46,   26,   46,   46,   30,   46,   46,
+       43,   46,   46,   32,   38,   46,   46,   46,   46,   46,
+       46,   46,   46,   46,   46,   35,   46,   25,   22,   46,
+       46,   36,   46,   34,   46,   46,   46,   24,   46,   23,
         0
     } ;
 
@@ -923,205 +923,210 @@ YY_RULE_SETUP
 case 10:
 YY_RULE_SETUP
 #line 34 "grammar_l.lex"
-{ num_pos += yyleng; return EQ; }
+{ ++num_pos; return EQUAL; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 35 "grammar_l.lex"
-{ num_pos += yyleng; return NEQ; }
+{ num_pos += yyleng; return EQ; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 36 "grammar_l.lex"
-{ ++num_pos; return LT; }
+{ num_pos += yyleng; return NEQ; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 37 "grammar_l.lex"
-{ ++num_pos; return GT; }
+{ ++num_pos; return LT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 38 "grammar_l.lex"
-{ num_pos += yyleng; return LTE; }
+{ ++num_pos; return GT; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 39 "grammar_l.lex"
-{ num_pos += yyleng; return GTE; } 
+{ num_pos += yyleng; return LTE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 40 "grammar_l.lex"
-{ num_pos += yyleng; return SEMICOLON; }
+{ num_pos += yyleng; return GTE; } 
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 41 "grammar_l.lex"
-{ num_pos += yyleng; return COLON; }
+{ num_pos += yyleng; return SEMICOLON; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 42 "grammar_l.lex"
-{ num_pos += yyleng; return COMMA; }
+{ num_pos += yyleng; return COLON; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 43 "grammar_l.lex"
-{ num_pos += yyleng; return ASSIGN; }
+{ num_pos += yyleng; return COMMA; }
 	YY_BREAK
 case 20:
-/* rule 20 can match eol */
 YY_RULE_SETUP
 #line 44 "grammar_l.lex"
-{ num_line++; return END; }
+{ num_pos += yyleng; return ASSIGN; }
 	YY_BREAK
 case 21:
+/* rule 21 can match eol */
 YY_RULE_SETUP
 #line 45 "grammar_l.lex"
-{ num_pos += yyleng; return PROGRAM; }
+{ num_line++; return END; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 46 "grammar_l.lex"
-{ num_pos += yyleng; return BEGIN_PROGRAM; }
+{ num_pos += yyleng; return PROGRAM; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 47 "grammar_l.lex"
-{ num_pos += yyleng; return END_PROGRAM; }
+{ num_pos += yyleng; return BEGIN_PROGRAM; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 48 "grammar_l.lex"
-{ num_pos += yyleng; return INTEGER; }
+{ num_pos += yyleng; return END_PROGRAM; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 49 "grammar_l.lex"
-{ num_pos += yyleng; return ARRAY; }
+{ num_pos += yyleng; return INTEGER; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 50 "grammar_l.lex"
-{ num_pos += yyleng; return OF; }
+{ num_pos += yyleng; return ARRAY; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 51 "grammar_l.lex"
-{ num_pos += yyleng; return IF; }
+{ num_pos += yyleng; return OF; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 52 "grammar_l.lex"
-{ num_pos += yyleng; return THEN; }
+{ num_pos += yyleng; return IF; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 53 "grammar_l.lex"
-{ num_pos += yyleng; return ENDIF; }
+{ num_pos += yyleng; return THEN; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 54 "grammar_l.lex"
-{ num_pos += yyleng; return ELSE; }
+{ num_pos += yyleng; return ENDIF; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 55 "grammar_l.lex"
-{ num_pos += yyleng; return WHILE; }
+{ num_pos += yyleng; return ELSE; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 56 "grammar_l.lex"
-{ num_pos += yyleng; return DO; }
+{ num_pos += yyleng; return WHILE; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 57 "grammar_l.lex"
-{ num_pos += yyleng; return BEGINLOOP; }
+{ num_pos += yyleng; return DO; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 58 "grammar_l.lex"
-{ num_pos += yyleng; return ENDLOOP; }
+{ num_pos += yyleng; return BEGINLOOP; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 59 "grammar_l.lex"
-{ num_pos += yyleng; return CONTINUE; }
+{ num_pos += yyleng; return ENDLOOP; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 60 "grammar_l.lex"
-{ num_pos += yyleng; return READ; }
+{ num_pos += yyleng; return CONTINUE; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 61 "grammar_l.lex"
-{ num_pos += yyleng; return WRITE; }
+{ num_pos += yyleng; return READ; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 62 "grammar_l.lex"
-{ num_pos += yyleng; return AND; }
+{ num_pos += yyleng; return WRITE; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 63 "grammar_l.lex"
-{ num_pos += yyleng; return OR; }
+{ num_pos += yyleng; return AND; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 64 "grammar_l.lex"
-{ num_pos += yyleng; return NOT; }
+{ num_pos += yyleng; return OR; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 65 "grammar_l.lex"
-{ num_pos += yyleng; return TRUE; }
+{ num_pos += yyleng; return NOT; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 66 "grammar_l.lex"
-{ num_pos += yyleng; return FALSE; }
+{ num_pos += yyleng; return TRUE; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 67 "grammar_l.lex"
-{ num_pos += yyleng; }
+{ num_pos += yyleng; return FALSE; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 68 "grammar_l.lex"
-{ num_pos += yyleng; num_line++; return COMMENT; }
+{ num_pos += yyleng; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 69 "grammar_l.lex"
-{ num_pos += yyleng; return IDENT; }
+{ num_pos += yyleng; num_line++; return COMMENT; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 70 "grammar_l.lex"
-{ num_pos += yyleng; return error_1; }
+{ num_pos += yyleng; return IDENT; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
 #line 71 "grammar_l.lex"
-{ num_pos += yyleng; return error_2; }
+{ num_pos += yyleng; return error_1; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
 #line 72 "grammar_l.lex"
-{ num_pos += yyleng; return error_3; }
+{ num_pos += yyleng; return error_2; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 75 "grammar_l.lex"
+#line 73 "grammar_l.lex"
+{ num_pos += yyleng; return error_3; }
+	YY_BREAK
+case 50:
+YY_RULE_SETUP
+#line 76 "grammar_l.lex"
 ECHO;
 	YY_BREAK
-#line 1125 "lex.yy.c"
+#line 1130 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2126,7 +2131,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 75 "grammar_l.lex"
+#line 76 "grammar_l.lex"
 
 
 /*int main(int argc,char* argv[])
@@ -2144,5 +2149,6 @@ void yyfree (void * ptr )
 		yylex();
 	}
 }*/
+
 
 

@@ -24,7 +24,7 @@
 %start	input 
 %token	<ival>	NUMBER 
 %token  <tokenName> IDENT
-%token  MULT DIV PLUS INTEGER SUB EQUAL L_PAREN R_PAREN COMMENT END MOD EQ NEQ LT GT LTE GTE SEMICOLON COLON COMMA ASSIGN ENDLOOP CONTINUE READ WRITE error_1 error_2 error_3 IF NOT FALSE END_PROGRAM ENDIF ELSE DO BEGIN_PROGRAM ARRAY AND WHILE TRUE THEN PROGRAM OR OF BEGINLOOP 	
+%token  L_PAREN R_PAREN MINUS MULT DIV MOD PLUS SUB LT LTE GT GTE EQUAL EQ NEQ NOT AND OR ASSIGN COMMENT END SEMICOLON COLON COMMA ENDLOOP CONTINUE READ WRITE error_1 error_2 error_3 IF NOT FALSE END_PROGRAM ENDIF ELSE DO BEGIN_PROGRAM ARRAY AND WHILE TRUE THEN PROGRAM OR OF BEGINLOOP 	
 %type	<ival>	exp 
 %type   <ival>  term
 %type   <ival>  mult_exp
@@ -45,15 +45,12 @@
 %%
 
 input		: 
-       		| input line  { } 
-		;
-
-cmt		: COMMENT END { }
-     		| COMMENT { }
-		| COMMENT COMMENT { }
-		;     
+       		| input line   
+		;	
 	 	
 line		: exp EQUAL END {printf("\t%d\n",$1); }
+      		| COMMENT END {}
+		| COMMENT {}
     		;
 
 exp		: NUMBER {printf("number -> NUMBER(%d)\n",$1);  $$ =  $1; }
@@ -69,6 +66,8 @@ exp		: NUMBER {printf("number -> NUMBER(%d)\n",$1);  $$ =  $1; }
 var		: IDENT {printf("IDENT -> IDENT(%s)\n",$1); $$ = $1 }
    		| IDENT L_PAREN exp R_PAREN {printf("IDENT -> IDENT (%s)\n",$1); $$ = $1}
 		;
+end		: END { }
+     		;
 
 block 		: declaration SEMICOLON BEGIN_PROGRAM statement SEMICOLON { printf("block -> statement(%s) semicolon\n",$4);  }
 		;

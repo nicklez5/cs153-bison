@@ -30,6 +30,7 @@ random_num 	[():/._[],<]
 "("			{ ++num_pos; num_parentheses++; return L_PAREN; }
 ")"			{ ++num_pos; num_parentheses++;  return R_PAREN; }
 "%"			{ ++num_pos; return MOD; }
+"="			{ ++num_pos; return EQUAL; }
 "=="			{ num_pos += yyleng; return EQ; }
 "<>"			{ num_pos += yyleng; return NEQ; }
 "<"			{ ++num_pos; return LT; }
@@ -88,4 +89,5 @@ random_num 	[():/._[],<]
 		yylex();
 	}
 }*/
+
 
