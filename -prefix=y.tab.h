@@ -61,38 +61,39 @@ extern int yydebug;
     GTE = 271,
     EQUAL = 272,
     EQ = 273,
-    NEQ = 274,
-    NOT = 275,
-    AND = 276,
-    OR = 277,
-    ASSIGN = 278,
-    COMMENT = 279,
-    END = 280,
-    SEMICOLON = 281,
-    COLON = 282,
-    COMMA = 283,
-    ENDLOOP = 284,
-    CONTINUE = 285,
-    READ = 286,
-    WRITE = 287,
-    error_1 = 288,
-    error_2 = 289,
-    error_3 = 290,
-    IF = 291,
-    FALSE = 292,
-    END_PROGRAM = 293,
-    ENDIF = 294,
-    ELSE = 295,
-    DO = 296,
-    BEGIN_PROGRAM = 297,
-    ARRAY = 298,
-    WHILE = 299,
-    TRUE = 300,
-    THEN = 301,
-    PROGRAM = 302,
-    OF = 303,
-    BEGINLOOP = 304,
-    UMINUS = 305
+    INTEGER = 274,
+    NEQ = 275,
+    NOT = 276,
+    AND = 277,
+    OR = 278,
+    ASSIGN = 279,
+    COMMENT = 280,
+    END = 281,
+    SEMICOLON = 282,
+    COLON = 283,
+    COMMA = 284,
+    ENDLOOP = 285,
+    CONTINUE = 286,
+    READ = 287,
+    WRITE = 288,
+    error_1 = 289,
+    error_2 = 290,
+    error_3 = 291,
+    IF = 292,
+    FALSE = 293,
+    END_PROGRAM = 294,
+    ENDIF = 295,
+    ELSE = 296,
+    DO = 297,
+    BEGIN_PROGRAM = 298,
+    ARRAY = 299,
+    WHILE = 300,
+    TRUE = 301,
+    THEN = 302,
+    PROGRAM = 303,
+    OF = 304,
+    BEGINLOOP = 305,
+    UMINUS = 306
   };
 #endif
 
@@ -101,13 +102,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 18 "calc.y" /* yacc.c:1909  */
+#line 19 "calc.y" /* yacc.c:1909  */
 
   double dval;
   int ival;
   char* tokenName;
 
-#line 111 "-prefix=y.tab.h" /* yacc.c:1909  */
+#line 112 "-prefix=y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

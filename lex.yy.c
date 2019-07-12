@@ -878,7 +878,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 25 "grammar_l.lex"
-{ num_pos += yyleng; num_int++; yylval.dval = atof(yytext); return NUMBER; }		 
+{ num_pos += yyleng; num_int++; yylval.dval = atol(yytext); return NUMBER; }		 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
@@ -979,7 +979,7 @@ case 21:
 /* rule 21 can match eol */
 YY_RULE_SETUP
 #line 45 "grammar_l.lex"
-{ num_line++; return END; }
+{ num_line++;  }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
@@ -1099,12 +1099,12 @@ YY_RULE_SETUP
 case 45:
 YY_RULE_SETUP
 #line 69 "grammar_l.lex"
-{ num_pos += yyleng; num_line++; return COMMENT; }
+{ num_pos += yyleng; num_line++;   }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 70 "grammar_l.lex"
-{ num_pos += yyleng; return IDENT; }
+{ num_pos += yyleng; yylval.tokenName = yytext; return IDENT; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP

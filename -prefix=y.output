@@ -1,60 +1,56 @@
 Nonterminals useless in grammar
 
-   var
-   end
    block
+   block_helper
    declaration
-   begin_program
-   end_program
-   program
-   array
-   colon
-   term
-   semicolon
-   comma
-   assign
-   comp
-   l_paren
-   r_paren
-   if
-   else
-   read
-   do
-   true
-   false
-   not
-   beginloop
-   endloop
-   continue
-   while
-   of
-   and
-   or
-   write
-   then
-   endif
-   mult_exp
-   expression
-   relation_exp
-   relation_and_exp
-   bool_exp
+   declaration_helper
    statement
+   expression_statement
+   ifelse_statement
+   while_statement
+   dobegin_statement
+   readwrite_statement
+   readwrite_helper
+   continue_statement
+   statement_helper
+   bool_exp
+   relation_and_exp2
+   relation_and_exp1
+   relation_exp
+   comp
+   expression
+   expression_helper
+   mult_exp
+   mult_exp_helper
+   term
+   var
 
 
 Terminals unused in grammar
 
-   IDENT
+   NUMBER
+   L_PAREN
+   R_PAREN
+   MINUS
+   MULT
+   DIV
+   MOD
+   PLUS
+   SUB
    LT
    LTE
    GT
    GTE
+   EQUAL
    EQ
+   INTEGER
    NEQ
    NOT
    AND
    OR
    ASSIGN
-   SEMICOLON
+   COMMENT
+   END
    COLON
    COMMA
    ENDLOOP
@@ -75,534 +71,206 @@ Terminals unused in grammar
    WHILE
    TRUE
    THEN
-   PROGRAM
    OF
    BEGINLOOP
+   UMINUS
 
 
 Rules useless in grammar
 
-   14 var: IDENT
-   15    | IDENT L_PAREN exp R_PAREN
+    2 block: block_helper BEGIN_PROGRAM statement_helper
 
-   16 end: END
+    3 block_helper: declaration SEMICOLON
 
-   17 block: declaration SEMICOLON BEGIN_PROGRAM statement SEMICOLON
+    4 declaration: declaration_helper COLON ARRAY L_PAREN NUMBER R_PAREN OF INTEGER
+    5            | declaration_helper COLON INTEGER
 
-   18 declaration: IDENT COMMA IDENT COLON ARRAY L_PAREN NUMBER R_PAREN OF NUMBER
-   19            | IDENT COMMA IDENT COLON NUMBER
-   20            | IDENT COLON NUMBER
+    6 declaration_helper: IDENT
+    7                   | COMMA
 
-   21 begin_program: BEGIN_PROGRAM
+    8 statement: expression_statement
+    9          | ifelse_statement
+   10          | while_statement
+   11          | dobegin_statement
+   12          | readwrite_statement
+   13          | continue_statement
 
-   22 end_program: END_PROGRAM
+   14 expression_statement: var ASSIGN expression
 
-   23 program: PROGRAM
+   15 ifelse_statement: IF bool_exp THEN statement_helper ENDIF
+   16                 | IF bool_exp THEN statement_helper ELSE statement_helper ENDIF
 
-   24 array: ARRAY
+   17 while_statement: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP
 
-   25 colon: COLON
+   18 dobegin_statement: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp
 
-   26 term: var
-   27     | NUMBER
-   28     | SUB NUMBER
-   29     | L_PAREN exp R_PAREN
-   30     | SUB L_PAREN exp R_PAREN
+   19 readwrite_statement: READ readwrite_helper
+   20                    | WRITE readwrite_helper
 
-   31 semicolon: SEMICOLON
+   21 readwrite_helper: COMMA
+   22                 | var
 
-   32 comma: COMMA
+   23 continue_statement: CONTINUE
 
-   33 assign: ASSIGN
+   24 statement_helper: statement SEMICOLON
 
-   34 comp: EQ
-   35     | NEQ
-   36     | LT
-   37     | GT
-   38     | LTE
-   39     | GTE
+   25 bool_exp: relation_and_exp2
 
-   40 l_paren: L_PAREN
+   26 relation_and_exp2: relation_and_exp1
+   27                  | relation_and_exp1 OR relation_and_exp1
 
-   41 r_paren: R_PAREN
+   28 relation_and_exp1: relation_exp AND relation_exp
+   29                  | relation_exp
 
-   42 if: IF
+   30 relation_exp: TRUE
+   31             | FALSE
+   32             | expression comp expression
+   33             | NOT expression comp expression
+   34             | NOT TRUE
+   35             | NOT FALSE
+   36             | L_PAREN bool_exp R_PAREN
+   37             | NOT L_PAREN bool_exp R_PAREN
 
-   43 else: ELSE
+   38 comp: EQ
+   39     | NEQ
+   40     | LT
+   41     | GT
+   42     | LTE
+   43     | GTE
 
-   44 read: READ
+   44 expression: mult_exp
+   45           | mult_exp expression_helper
 
-   45 do: DO
+   46 expression_helper: PLUS mult_exp
+   47                  | SUB mult_exp
 
-   46 true: TRUE
+   48 mult_exp: term
+   49         | term mult_exp_helper
 
-   47 false: FALSE
+   50 mult_exp_helper: MULT term
+   51                | DIV term
+   52                | MOD term
 
-   48 not: NOT
+   53 term: var
+   54     | MINUS var
+   55     | NUMBER
+   56     | MINUS NUMBER
+   57     | L_PAREN expression R_PAREN
+   58     | MINUS L_PAREN expression R_PAREN
 
-   49 beginloop: BEGINLOOP
-
-   50 endloop: ENDLOOP
-
-   51 continue: CONTINUE
-
-   52 while: WHILE
-
-   53 of: OF
-
-   54 and: AND
-
-   55 or: OR
-
-   56 write: WRITE
-
-   57 then: THEN
-
-   58 endif: ENDIF
-
-   59 mult_exp: term MULT term
-   60         | term DIV term
-   61         | term MOD term
-   62         | term
-
-   63 expression: mult_exp
-   64           | mult_exp PLUS mult_exp
-   65           | mult_exp SUB mult_exp
-
-   66 relation_exp: TRUE
-   67             | FALSE
-   68             | expression comp expression
-   69             | NOT expression comp expression
-   70             | NOT TRUE
-   71             | NOT FALSE
-   72             | L_PAREN bool_exp R_PAREN
-   73             | not L_PAREN bool_exp R_PAREN
-
-   74 relation_and_exp: relation_exp
-   75                 | relation_exp AND relation_exp
-
-   76 bool_exp: relation_and_exp
-   77         | relation_and_exp OR relation_and_exp
-
-   78 statement: var ASSIGN expression
-   79          | IF bool_exp THEN statement SEMICOLON ENDIF
-   80          | IF bool_exp THEN statement SEMICOLON ELSE statement SEMICOLON ENDIF
-   81          | WHILE bool_exp BEGINLOOP statement SEMICOLON ENDLOOP
-   82          | DO BEGINLOOP statement SEMICOLON ENDLOOP WHILE bool_exp
-   83          | READ var
-   84          | READ var COMMA var
-   85          | WRITE var
-   86          | WRITE var COMMA var
-   87          | CONTINUE
-
-
-State 10 conflicts: 2 shift/reduce
-State 20 conflicts: 2 shift/reduce
-State 21 conflicts: 2 shift/reduce
-State 22 conflicts: 5 shift/reduce
-State 23 conflicts: 2 shift/reduce
-State 24 conflicts: 5 shift/reduce
+   59 var: IDENT
+   60    | IDENT L_PAREN expression R_PAREN
 
 
 Grammar
 
-    0 $accept: input $end
+    0 $accept: program $end
 
-    1 input: %empty
-    2      | input line
-
-    3 line: exp EQUAL END
-    4     | COMMENT EQUAL END
-    5     | COMMENT
-
-    6 exp: NUMBER
-    7    | exp PLUS exp
-    8    | exp MULT exp
-    9    | exp DIV exp
-   10    | exp SUB exp
-   11    | exp MOD exp
-   12    | L_PAREN exp R_PAREN
-   13    | MINUS exp
+    1 program: PROGRAM IDENT SEMICOLON
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-NUMBER (258) 6
-IDENT (259)
-L_PAREN (260) 12
-R_PAREN (261) 12
-MINUS (262) 13
-MULT (263) 8
-DIV (264) 9
-MOD (265) 11
-PLUS (266) 7
-SUB (267) 10
+NUMBER (258)
+IDENT (259) 1
+L_PAREN (260)
+R_PAREN (261)
+MINUS (262)
+MULT (263)
+DIV (264)
+MOD (265)
+PLUS (266)
+SUB (267)
 LT (268)
 LTE (269)
 GT (270)
 GTE (271)
-EQUAL (272) 3 4
+EQUAL (272)
 EQ (273)
-NEQ (274)
-NOT (275)
-AND (276)
-OR (277)
-ASSIGN (278)
-COMMENT (279) 4 5
-END (280) 3 4
-SEMICOLON (281)
-COLON (282)
-COMMA (283)
-ENDLOOP (284)
-CONTINUE (285)
-READ (286)
-WRITE (287)
-error_1 (288)
-error_2 (289)
-error_3 (290)
-IF (291)
-FALSE (292)
-END_PROGRAM (293)
-ENDIF (294)
-ELSE (295)
-DO (296)
-BEGIN_PROGRAM (297)
-ARRAY (298)
-WHILE (299)
-TRUE (300)
-THEN (301)
-PROGRAM (302)
-OF (303)
-BEGINLOOP (304)
-UMINUS (305)
+INTEGER (274)
+NEQ (275)
+NOT (276)
+AND (277)
+OR (278)
+ASSIGN (279)
+COMMENT (280)
+END (281)
+SEMICOLON (282) 1
+COLON (283)
+COMMA (284)
+ENDLOOP (285)
+CONTINUE (286)
+READ (287)
+WRITE (288)
+error_1 (289)
+error_2 (290)
+error_3 (291)
+IF (292)
+FALSE (293)
+END_PROGRAM (294)
+ENDIF (295)
+ELSE (296)
+DO (297)
+BEGIN_PROGRAM (298)
+ARRAY (299)
+WHILE (300)
+TRUE (301)
+THEN (302)
+PROGRAM (303) 1
+OF (304)
+BEGINLOOP (305)
+UMINUS (306)
 
 
 Nonterminals, with rules where they appear
 
-$accept (51)
+$accept (52)
     on left: 0
-input (52)
-    on left: 1 2, on right: 0 2
-line (53)
-    on left: 3 4 5, on right: 2
-exp (54)
-    on left: 6 7 8 9 10 11 12 13, on right: 3 7 8 9 10 11 12 13
+program (53)
+    on left: 1, on right: 0
 
 
 State 0
 
-    0 $accept: . input $end
+    0 $accept: . program $end
 
-    $default  reduce using rule 1 (input)
+    PROGRAM  shift, and go to state 1
 
-    input  go to state 1
+    program  go to state 2
 
 
 State 1
 
-    0 $accept: input . $end
-    2 input: input . line
+    1 program: PROGRAM . IDENT SEMICOLON
 
-    $end     shift, and go to state 2
-    NUMBER   shift, and go to state 3
-    L_PAREN  shift, and go to state 4
-    MINUS    shift, and go to state 5
-    COMMENT  shift, and go to state 6
-
-    line  go to state 7
-    exp   go to state 8
+    IDENT  shift, and go to state 3
 
 
 State 2
 
-    0 $accept: input $end .
+    0 $accept: program . $end
 
-    $default  accept
+    $end  shift, and go to state 4
 
 
 State 3
 
-    6 exp: NUMBER .
+    1 program: PROGRAM IDENT . SEMICOLON
 
-    $default  reduce using rule 6 (exp)
+    SEMICOLON  shift, and go to state 5
 
 
 State 4
 
-   12 exp: L_PAREN . exp R_PAREN
+    0 $accept: program $end .
 
-    NUMBER   shift, and go to state 3
-    L_PAREN  shift, and go to state 4
-    MINUS    shift, and go to state 5
-
-    exp  go to state 9
+    $default  accept
 
 
 State 5
 
-   13 exp: MINUS . exp
+    1 program: PROGRAM IDENT SEMICOLON .
 
-    NUMBER   shift, and go to state 3
-    L_PAREN  shift, and go to state 4
-    MINUS    shift, and go to state 5
-
-    exp  go to state 10
-
-
-State 6
-
-    4 line: COMMENT . EQUAL END
-    5     | COMMENT .
-
-    EQUAL  shift, and go to state 11
-
-    $default  reduce using rule 5 (line)
-
-
-State 7
-
-    2 input: input line .
-
-    $default  reduce using rule 2 (input)
-
-
-State 8
-
-    3 line: exp . EQUAL END
-    7 exp: exp . PLUS exp
-    8    | exp . MULT exp
-    9    | exp . DIV exp
-   10    | exp . SUB exp
-   11    | exp . MOD exp
-
-    MULT   shift, and go to state 12
-    DIV    shift, and go to state 13
-    MOD    shift, and go to state 14
-    PLUS   shift, and go to state 15
-    SUB    shift, and go to state 16
-    EQUAL  shift, and go to state 17
-
-
-State 9
-
-    7 exp: exp . PLUS exp
-    8    | exp . MULT exp
-    9    | exp . DIV exp
-   10    | exp . SUB exp
-   11    | exp . MOD exp
-   12    | L_PAREN exp . R_PAREN
-
-    R_PAREN  shift, and go to state 18
-    MULT     shift, and go to state 12
-    DIV      shift, and go to state 13
-    MOD      shift, and go to state 14
-    PLUS     shift, and go to state 15
-    SUB      shift, and go to state 16
-
-
-State 10
-
-    7 exp: exp . PLUS exp
-    8    | exp . MULT exp
-    9    | exp . DIV exp
-   10    | exp . SUB exp
-   11    | exp . MOD exp
-   13    | MINUS exp .
-
-    MOD  shift, and go to state 14
-    SUB  shift, and go to state 16
-
-    MOD       [reduce using rule 13 (exp)]
-    SUB       [reduce using rule 13 (exp)]
-    $default  reduce using rule 13 (exp)
-
-
-State 11
-
-    4 line: COMMENT EQUAL . END
-
-    END  shift, and go to state 19
-
-
-State 12
-
-    8 exp: exp MULT . exp
-
-    NUMBER   shift, and go to state 3
-    L_PAREN  shift, and go to state 4
-    MINUS    shift, and go to state 5
-
-    exp  go to state 20
-
-
-State 13
-
-    9 exp: exp DIV . exp
-
-    NUMBER   shift, and go to state 3
-    L_PAREN  shift, and go to state 4
-    MINUS    shift, and go to state 5
-
-    exp  go to state 21
-
-
-State 14
-
-   11 exp: exp MOD . exp
-
-    NUMBER   shift, and go to state 3
-    L_PAREN  shift, and go to state 4
-    MINUS    shift, and go to state 5
-
-    exp  go to state 22
-
-
-State 15
-
-    7 exp: exp PLUS . exp
-
-    NUMBER   shift, and go to state 3
-    L_PAREN  shift, and go to state 4
-    MINUS    shift, and go to state 5
-
-    exp  go to state 23
-
-
-State 16
-
-   10 exp: exp SUB . exp
-
-    NUMBER   shift, and go to state 3
-    L_PAREN  shift, and go to state 4
-    MINUS    shift, and go to state 5
-
-    exp  go to state 24
-
-
-State 17
-
-    3 line: exp EQUAL . END
-
-    END  shift, and go to state 25
-
-
-State 18
-
-   12 exp: L_PAREN exp R_PAREN .
-
-    $default  reduce using rule 12 (exp)
-
-
-State 19
-
-    4 line: COMMENT EQUAL END .
-
-    $default  reduce using rule 4 (line)
-
-
-State 20
-
-    7 exp: exp . PLUS exp
-    8    | exp . MULT exp
-    8    | exp MULT exp .
-    9    | exp . DIV exp
-   10    | exp . SUB exp
-   11    | exp . MOD exp
-
-    MOD  shift, and go to state 14
-    SUB  shift, and go to state 16
-
-    MOD       [reduce using rule 8 (exp)]
-    SUB       [reduce using rule 8 (exp)]
-    $default  reduce using rule 8 (exp)
-
-
-State 21
-
-    7 exp: exp . PLUS exp
-    8    | exp . MULT exp
-    9    | exp . DIV exp
-    9    | exp DIV exp .
-   10    | exp . SUB exp
-   11    | exp . MOD exp
-
-    MOD  shift, and go to state 14
-    SUB  shift, and go to state 16
-
-    MOD       [reduce using rule 9 (exp)]
-    SUB       [reduce using rule 9 (exp)]
-    $default  reduce using rule 9 (exp)
-
-
-State 22
-
-    7 exp: exp . PLUS exp
-    8    | exp . MULT exp
-    9    | exp . DIV exp
-   10    | exp . SUB exp
-   11    | exp . MOD exp
-   11    | exp MOD exp .
-
-    MULT  shift, and go to state 12
-    DIV   shift, and go to state 13
-    MOD   shift, and go to state 14
-    PLUS  shift, and go to state 15
-    SUB   shift, and go to state 16
-
-    MULT      [reduce using rule 11 (exp)]
-    DIV       [reduce using rule 11 (exp)]
-    MOD       [reduce using rule 11 (exp)]
-    PLUS      [reduce using rule 11 (exp)]
-    SUB       [reduce using rule 11 (exp)]
-    $default  reduce using rule 11 (exp)
-
-
-State 23
-
-    7 exp: exp . PLUS exp
-    7    | exp PLUS exp .
-    8    | exp . MULT exp
-    9    | exp . DIV exp
-   10    | exp . SUB exp
-   11    | exp . MOD exp
-
-    MULT  shift, and go to state 12
-    DIV   shift, and go to state 13
-    MOD   shift, and go to state 14
-    SUB   shift, and go to state 16
-
-    MOD       [reduce using rule 7 (exp)]
-    SUB       [reduce using rule 7 (exp)]
-    $default  reduce using rule 7 (exp)
-
-
-State 24
-
-    7 exp: exp . PLUS exp
-    8    | exp . MULT exp
-    9    | exp . DIV exp
-   10    | exp . SUB exp
-   10    | exp SUB exp .
-   11    | exp . MOD exp
-
-    MULT  shift, and go to state 12
-    DIV   shift, and go to state 13
-    MOD   shift, and go to state 14
-    PLUS  shift, and go to state 15
-    SUB   shift, and go to state 16
-
-    MULT      [reduce using rule 10 (exp)]
-    DIV       [reduce using rule 10 (exp)]
-    MOD       [reduce using rule 10 (exp)]
-    PLUS      [reduce using rule 10 (exp)]
-    SUB       [reduce using rule 10 (exp)]
-    $default  reduce using rule 10 (exp)
-
-
-State 25
-
-    3 line: exp EQUAL END .
-
-    $default  reduce using rule 3 (line)
+    $default  reduce using rule 1 (program)
