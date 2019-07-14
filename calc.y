@@ -11,7 +11,7 @@
 	extern int num_pos ;
 	extern int num_line;
 	#define ITOA(n) my_itoa((char [41]) {0},(n))
-
+	char *string3;
 	FILE *yyin;
 	
 %}
@@ -31,13 +31,12 @@
 %type   <ival>  mult_exp
 %type 	<ival>  expression
 %type   <ival>  expression_helper mult_exp_helper
-%type   <tokenName> comp
-%type   <tokenName> relation_exp
-%type   <tokenName> block
-%type   <tokenName> var
-%type   <tokenName> statement
-%type   <tokenName> declaration NEQ EQ LT GTE GT LTE
-%type   <tokenName> bool_exp relation_and_exp2 relation_and_exp1 expression_statement ifelse_statement while_statement dobegin_statement readwrite_statement readwrite_helper continue_statement statement_helper declaration_helper block_helper 
+%type   <tokenName> block block_helper declaration_helper declaration declaration_helper2  
+%type   <tokenName> expression_statement ifelse_statement while_statement dobegin_statement readwrite_statement readwrite_helper continue_statement statement_helper
+%type   <tokenName> bool_exp relation_and_exp relation_exp relation_and_helper bool_exp_helper 
+%type   <tokenName> comp var
+%type   <tokenName> statement 
+%type   <tokenName> NEQ EQ LT GTE GT LTE   
 %left	PLUS MINUS
 %left	MULT DIV
 %nonassoc UMINUS
@@ -45,22 +44,25 @@
 
 %%
 program		: PROGRAM IDENT SEMICOLON block END_PROGRAM  { printf("program -> PROGRAM %s SEMICOLON block END_PROGRAM\n", $2); }
-	 	;
+		;
 
 
 block 		: block_helper BEGIN_PROGRAM statement_helper { printf("block -> statement(%s) semicolon\n",$3); sprintf($$,"Block:%s|Statement:%s",$1,$3); $$ =  malloc(strlen($1) + strlen($3) + 18);  }
 		;
 
-block_helper    : declaration SEMICOLON {printf("declaration -> %s\n",$1); $$ = $1; }
+block_helper    : %empty {}
+		| declaration SEMICOLON block_helper { /* printf("block_helper -> %s\n",$1); $$ = $1; */ }
 		;
 
-declaration	: declaration_helper COLON ARRAY L_PAREN NUMBER R_PAREN OF INTEGER {printf("declaration -> array: %d of integer\n", $5); sprintf($$,"Declaration:%s|Array:%d",$1,$5); $$ = malloc(strlen($1) + strlen(ITOA($5)) + 20); }  
-	    	| declaration_helper COLON INTEGER { printf("declaration -> %s\n",$1); sprintf($$,"Declaration:%s",$1);  $$ = malloc(strlen($1) + 13); }
-		;
+declaration	: declaration_helper COLON declaration_helper2 {$$ = $1;}
 
-declaration_helper : IDENT {printf("IDENT -> %s\n",$1); $$ = $1;}
-		   | COMMA {}
+declaration_helper : %empty {}
+		   | IDENT {printf("declaration -> %s\n",$1); $$ = $1; } 
+		   | IDENT COMMA declaration_helper{printf("declaration -> %s\n",$1); $$ = $1; }	
 		   ;
+declaration_helper2 : ARRAY L_PAREN NUMBER R_PAREN OF INTEGER {printf("declaration2 -> Array: %d of Integer\n",$3); }
+		    | INTEGER {printf("declaration2 -> INTEGER\n");  }
+		    ;
 
 statement	: expression_statement {$$ = $1;}
 	  	| ifelse_statement {$$ = $1; }
@@ -83,30 +85,36 @@ while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP {printf("wh
 dobegin_statement	: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp {printf("dobegin_statement -> %s\n",$3); sprintf($$,"Do:%s|While:%s", $3,$6); $$ = malloc(strlen($3) + strlen($6) + 11); }
 		  	;
 
-readwrite_statement	: READ readwrite_helper { printf("readwrite_statement -> read %s\n",$2); sprintf($$,"Read:%s",$2); $$ = malloc(strlen($2) + 6); }
-		    	| WRITE readwrite_helper { printf("readwrite_statement -> write %s\n",$2); sprintf($$,"Write:%s",$2); $$ = malloc(strlen($2) +7);  }
+readwrite_statement	: READ readwrite_helper { printf("readwrite_statement -> read\n");  }
+		    	| WRITE readwrite_helper { printf("readwrite_statement -> write\n");   }
 			;
 
-readwrite_helper	: COMMA {}
-		 	| var {printf("var -> %s\n",$1); $$ = $1; }
+readwrite_helper	: %empty { }
+		 	| var COMMA readwrite_helper {$$ = $1;  }
+			| var { /* printf("var -> %s\n",$1); $$ = $1; */  }
 			;
 
 continue_statement	: CONTINUE {printf("continue_statement -> CONTINUE\n"); $$ = "CONTINUE"; }
 			;
 
-statement_helper	: statement SEMICOLON { printf("statement -> %s\n",$1); $$ = $1; }
+statement_helper	: %empty {}
+		 	| statement SEMICOLON statement_helper { printf("statement -> %s\n",$1); $$ = $1; }
 		 	;
 
-bool_exp		: relation_and_exp2 {$$ = $1;}
-	  		;
-
-relation_and_exp2	: relation_and_exp1 {printf("bool_exp -> %s\n",$1); $$ = $1; }
-		  	| relation_and_exp1 OR relation_and_exp1 {printf("bool_exp -> %s or %s\n", $1,$3); sprintf($$,"Rel_Exp:%s||Rel_Exp2:%s", $1,$3); $$ = malloc(strlen($1) + strlen($3) + 20);  }
+bool_exp		: relation_and_exp bool_exp_helper {printf("bool_exp -> %s %s\n",$1,$2); $$ = malloc(strlen($1) + strlen($2) + 2); sprintf($$,"%s %s",$1,$2); }
 			;
 
-relation_and_exp1 	: relation_exp AND relation_exp {printf("relation_and_exp -> %s and %s\n",$1,$3); sprintf($$,"Rel_Exp:%s&&Rel_Exp2:%s",$1,$3); $$ = malloc(strlen($1) + strlen($3) + 20); }
-		   	| relation_exp {printf("relation_and_exp -> %s\n",$1); $$ = $1; }
+relation_and_exp 	: relation_exp relation_and_helper {printf("relation_and_exp -> %s %s\n",$1 , $2); $$ = malloc(strlen($1) + strlen($2) + 2); sprintf($$,"%s %s",$1,$2);   }
 			;
+
+relation_and_helper	: %empty {}
+		    	| AND relation_exp relation_and_helper {printf("relation_and_helper -> AND %s\n",$2); $$ = malloc(strlen($2) + strlen($3) + 2); sprintf($$,"%s %s",$2,$3); }
+			;
+
+bool_exp_helper 	: %empty {}
+		 	| OR relation_and_exp bool_exp_helper { printf("bool_exp_helper -> OR %s\n", $2); $$ = malloc(strlen($2) + strlen($3) + 2); sprintf($$,"%s %s", $2 ,$3); }
+			;
+
 	
 relation_exp		: TRUE {printf("relation_exp -> TRUE\n"); $$ = "TRUE"; }
 			| FALSE {printf("relation_exp -> FALSE\n"); $$ = "FALSE"; }
@@ -126,22 +134,22 @@ comp		: EQ {printf("comp -> EQ#0\n"); $$ = $1; }
 		| GTE {printf("comp -> GTE#0\n"); $$ = $1; }
 		;
 
-expression 	: mult_exp {printf("expression -> term: %d\n", $1); $$ = $1;}
-	    	| mult_exp expression_helper {printf("expression -> expression: %d\n",$1); $$ = $1; } 
+expression 	: mult_exp expression_helper {printf("expression -> expression: %d\n",$1); $$ = $1; } 
 		;
 
 	    
-expression_helper : PLUS mult_exp {printf("expression -> add expression: %d\n",$2); $$ = $2; }
-		  | SUB mult_exp { printf("expression -> sub expression: %d\n",$2); $$ = -$2; }
+expression_helper : %empty {}
+		  | PLUS mult_exp expression_helper {printf("expression -> add expression: %d\n",$2); $$ = $2; }
+		  | MINUS mult_exp expression_helper { printf("expression -> sub expression: %d\n",$2); $$ = -$2; }
 		  ;
 
-mult_exp	: term {printf("multiply_exp -> term: %d\n",$1); $$ = $1; }
-		| term mult_exp_helper {printf("multiply_exp -> term: %d\n",$1); $$ = $1; }
+mult_exp	: term mult_exp_helper {printf("multiply_exp -> term: %d\n",$1); $$ = $1; }
 		;
 
-mult_exp_helper : MULT term {printf("multiply_exp -> mult %d\n",$2); $$ = $2; }
-		| DIV term { printf("multiply_exp -> div %d\n",$2); $$ = $2; }
-		| MOD term { printf("multiply_exp -> mod %d\n",$2); $$ = $2; }
+mult_exp_helper : %empty {}
+		| MULT term mult_exp_helper {printf("multiply_exp -> mult %d\n",$2); $$ = $2; }
+		| DIV term mult_exp_helper { printf("multiply_exp -> div %d\n",$2); $$ = $2; }
+		| MOD term mult_exp_helper { printf("multiply_exp -> mod %d\n",$2); $$ = $2; }
 		;
 
 term		: var {printf("term -> var(%s)\n", $1); }
@@ -151,8 +159,8 @@ term		: var {printf("term -> var(%s)\n", $1); }
 		| L_PAREN expression R_PAREN {printf("term -> term(%d)\n",$2); $$ = $2; }
 		| MINUS L_PAREN expression R_PAREN {printf("term -> term(%d)\n",$3); $$ = -$3; }
 		;
-var		: IDENT {printf("IDENT -> IDENT(%s)\n",$1); $$ = $1; }
-     		| IDENT L_PAREN expression R_PAREN {printf("IDENT -> IDENT (%s)\n",$1); $$ = $1;}
+var		: IDENT {printf("var -> IDENT(%s)\n",$1); $$ = $1; }
+     		| IDENT L_PAREN expression R_PAREN {printf("var -> %s\n",$1); $$ = $1;}
 		;
 %%
 int main(int argc,char **argv){

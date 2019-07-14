@@ -7,7 +7,6 @@ digit		[0-9]
 alpha		[a-zA-Z]
 hextail		({digit}|{alpha}){1,8}
 hex		0[xX]{hextail}
-random_num 	[():/._[],<]
 
 %{	
 	#include <stdlib.h>
@@ -21,7 +20,7 @@ random_num 	[():/._[],<]
 	int num_equal = 0;
 	
 %%
-({digit}+)		{ num_pos += yyleng; num_int++; yylval.dval = atol(yytext); return NUMBER; }		 
+({digit}+)		{ num_pos += yyleng; num_int++; yylval.ival = atoi(yytext); return NUMBER; }		 
 "+"			{ ++num_pos; num_op++; return PLUS; }
 "-"			{ ++num_pos; num_op++; return MINUS; }
 "*"			{ ++num_pos; num_op++; return MULT; }
@@ -41,7 +40,7 @@ random_num 	[():/._[],<]
 ":"			{ num_pos += yyleng; return COLON; }
 ","			{ num_pos += yyleng; return COMMA; }
 ":="			{ num_pos += yyleng; return ASSIGN; }
-"\n"			{ num_line++;  }
+"\n"			{ num_line++; num_pos = 0; }
 "program"		{ num_pos += yyleng; return PROGRAM; }
 "beginprogram"		{ num_pos += yyleng; return BEGIN_PROGRAM; }
 "endprogram"		{ num_pos += yyleng; return END_PROGRAM; }
@@ -66,7 +65,7 @@ random_num 	[():/._[],<]
 "false"			{ num_pos += yyleng; return FALSE; }
 [ \t]+			{ num_pos += yyleng; }
 ([#]+({alpha}*[ \t]*{digit}*[.(/)_:]*)*)			{ num_pos += yyleng; num_line++;   }
-({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+) { num_pos += yyleng; yylval.tokenName = yytext; return IDENT; }
+({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+) { num_pos += yyleng; yylval.tokenName = strdup(yytext); return IDENT; }
 ({digit}+({alpha}))	{ num_pos += yyleng; return error_1; }
 ({alpha}+([_]))		{ num_pos += yyleng; return error_2; }
 .			{ num_pos += yyleng; return error_3; }

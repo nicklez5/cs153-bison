@@ -434,16 +434,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   3
+#define YYLAST   117
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  52
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  2
+#define YYNNTS  26
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  2
+#define YYNRULES  61
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  6
+#define YYNSTATES  121
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -494,7 +494,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    47,    47
+       0,    47,    47,    51,    54,    57,    58,    61,    62,    65,
+      66,    67,    68,    69,    70,    73,    76,    77,    80,    83,
+      86,    87,    90,    91,    94,    97,   100,   103,   104,   107,
+     108,   111,   112,   113,   114,   115,   116,   117,   118,   121,
+     122,   123,   124,   125,   126,   129,   130,   134,   135,   138,
+     139,   142,   143,   144,   147,   148,   149,   150,   151,   152,
+     154,   155
 };
 #endif
 
@@ -509,7 +515,14 @@ static const char *const yytname[] =
   "END", "SEMICOLON", "COLON", "COMMA", "ENDLOOP", "CONTINUE", "READ",
   "WRITE", "error_1", "error_2", "error_3", "IF", "FALSE", "END_PROGRAM",
   "ENDIF", "ELSE", "DO", "BEGIN_PROGRAM", "ARRAY", "WHILE", "TRUE", "THEN",
-  "PROGRAM", "OF", "BEGINLOOP", "UMINUS", "$accept", "program", YY_NULLPTR
+  "PROGRAM", "OF", "BEGINLOOP", "UMINUS", "$accept", "program", "block",
+  "block_helper", "declaration", "declaration_helper", "statement",
+  "expression_statement", "ifelse_statement", "while_statement",
+  "dobegin_statement", "readwrite_statement", "readwrite_helper",
+  "continue_statement", "statement_helper", "bool_exp",
+  "relation_and_exp2", "relation_and_exp1", "relation_exp", "comp",
+  "expression", "expression_helper", "mult_exp", "mult_exp_helper", "term",
+  "var", YY_NULLPTR
 };
 #endif
 
@@ -527,10 +540,10 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -49
+#define YYPACT_NINF -47
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-49)))
+  (!!((Yystate) == (-47)))
 
 #define YYTABLE_NINF -1
 
@@ -541,7 +554,19 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-     -48,    -3,     2,   -24,   -49,   -49
+     -45,     5,    25,    -7,   -47,     0,   -47,   -47,   -17,   -16,
+      10,    11,   -47,    17,   -47,    -2,    27,   -47,    14,    14,
+       9,    -5,     9,    36,   -47,   -47,   -47,   -47,   -47,   -47,
+     -47,    41,   -47,    61,    92,   -47,   -47,   -47,   -47,   -47,
+       9,    48,    31,   -47,   -47,    21,   -47,    47,    50,    74,
+       4,    93,   -47,    17,    23,   -47,    92,    72,    92,    70,
+      76,    65,   -47,    92,   -47,     9,   -47,   -47,    74,    17,
+       9,     9,   -47,   -47,   -47,   -47,   -47,   -47,    92,    92,
+      92,   -47,    92,    92,    92,   -47,    54,    17,   -47,    80,
+      85,   -47,   -47,   -47,   101,   102,    92,    20,   -47,   -47,
+     -47,   -47,   -47,   -47,   -47,   -47,    53,    79,    62,   -47,
+     -47,   -47,   -47,    17,     9,   -47,    91,    73,   -47,   -47,
+     -47
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -549,19 +574,35 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     0,     1,     2
+       0,     0,     0,     0,     1,     0,     7,     8,     0,     0,
+       0,     0,     2,     0,     4,     0,    60,    24,     0,     0,
+       0,     0,     0,     0,     9,    10,    11,    12,    13,    14,
+       3,     0,     6,     0,     0,    22,    20,    23,    21,    56,
+       0,     0,     0,    32,    31,     0,    26,    27,    30,     0,
+      45,    49,    54,     0,     0,    25,     0,     0,     0,     0,
+       0,     0,    57,     0,    55,     0,    36,    35,     0,     0,
+       0,     0,    41,    43,    42,    44,    39,    40,     0,     0,
+       0,    46,     0,     0,     0,    50,     0,     0,    15,     0,
+       0,    61,    37,    58,     0,     0,     0,     0,    28,    29,
+      33,    48,    47,    51,    52,    53,     0,     0,     0,    59,
+      38,    34,    16,     0,     0,    18,     0,     0,    19,     5,
+      17
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -49,   -49
+     -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,
+     -47,   -47,    95,   -47,   -46,   -21,   -47,    42,    44,    49,
+     -32,   -47,   -22,   -47,    22,   -13
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2
+      -1,     2,     8,     9,    10,    11,    23,    24,    25,    26,
+      27,    28,    36,    29,    30,    45,    46,    47,    48,    78,
+      49,    81,    50,    85,    51,    52
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -569,31 +610,77 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-       1,     3,     4,     5
+      31,    54,    59,     1,     6,    37,    37,    86,    61,     3,
+      68,    79,    39,    16,    40,    80,    41,    32,    16,    60,
+       5,    16,    12,    97,    88,     4,    90,    13,    64,     7,
+      42,    94,    34,    61,    39,    16,    65,    14,    41,    15,
+      31,   107,    33,    35,    95,    53,   100,    43,    17,    18,
+      19,    62,    16,    63,    20,    44,    31,   101,   102,    21,
+     112,   113,    22,    55,   111,    56,    57,   117,    69,    66,
+      70,    93,    71,    87,    31,    89,    91,    67,    72,    73,
+      74,    75,    92,    76,   106,    77,   108,    72,    73,    74,
+      75,    93,    76,   118,    77,    39,    16,    58,   114,    41,
+      31,    82,    83,    84,   103,   104,   105,   109,   110,   115,
+     119,   116,    98,   120,    38,    99,     0,    96
 };
 
-static const yytype_uint8 yycheck[] =
+static const yytype_int8 yycheck[] =
 {
-      48,     4,     0,    27
+      13,    22,    34,    48,     4,    18,    19,    53,    40,     4,
+      42,     7,     3,     4,     5,    11,     7,    19,     4,    40,
+      27,     4,    39,    69,    56,     0,    58,    43,    41,    29,
+      21,    63,     5,    65,     3,     4,     5,    27,     7,    28,
+      53,    87,    44,    29,    65,    50,    78,    38,    31,    32,
+      33,     3,     4,     5,    37,    46,    69,    79,    80,    42,
+      40,    41,    45,    27,    96,    24,     5,   113,    47,    38,
+      23,     6,    22,    50,    87,     3,     6,    46,    13,    14,
+      15,    16,     6,    18,    30,    20,     6,    13,    14,    15,
+      16,     6,    18,   114,    20,     3,     4,     5,    45,     7,
+     113,     8,     9,    10,    82,    83,    84,     6,     6,    30,
+      19,    49,    70,    40,    19,    71,    -1,    68
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    48,    53,     4,     0,    27
+       0,    48,    53,     4,     0,    27,     4,    29,    54,    55,
+      56,    57,    39,    43,    27,    28,     4,    31,    32,    33,
+      37,    42,    45,    58,    59,    60,    61,    62,    63,    65,
+      66,    77,    19,    44,     5,    29,    64,    77,    64,     3,
+       5,     7,    21,    38,    46,    67,    68,    69,    70,    72,
+      74,    76,    77,    50,    67,    27,    24,     5,     5,    72,
+      67,    72,     3,     5,    77,     5,    38,    46,    72,    47,
+      23,    22,    13,    14,    15,    16,    18,    20,    71,     7,
+      11,    73,     8,     9,    10,    75,    66,    50,    72,     3,
+      72,     6,     6,     6,    72,    67,    71,    66,    69,    70,
+      72,    74,    74,    76,    76,    76,    30,    66,     6,     6,
+       6,    72,    40,    41,    45,    30,    49,    66,    67,    19,
+      40
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    52,    53
+       0,    52,    53,    54,    55,    56,    56,    57,    57,    58,
+      58,    58,    58,    58,    58,    59,    60,    60,    61,    62,
+      63,    63,    64,    64,    65,    66,    67,    68,    68,    69,
+      69,    70,    70,    70,    70,    70,    70,    70,    70,    71,
+      71,    71,    71,    71,    71,    72,    72,    73,    73,    74,
+      74,    75,    75,    75,    76,    76,    76,    76,    76,    76,
+      77,    77
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     3
+       0,     2,     5,     3,     2,     8,     3,     1,     1,     1,
+       1,     1,     1,     1,     1,     3,     5,     7,     5,     6,
+       2,     2,     1,     1,     1,     2,     1,     1,     3,     3,
+       1,     1,     1,     3,     4,     2,     2,     3,     4,     1,
+       1,     1,     1,     1,     1,     1,     2,     2,     2,     1,
+       2,     2,     2,     2,     1,     2,     1,     2,     3,     4,
+       1,     4
 };
 
 
@@ -1271,12 +1358,366 @@ yyreduce:
     {
         case 2:
 #line 47 "calc.y" /* yacc.c:1646  */
-    {printf("program -> PROGRAM %s SEMICOLON block END_PROGRAM\n", (yyvsp[-1].tokenName)); }
-#line 1276 "-prefix=y.tab.c" /* yacc.c:1646  */
+    { printf("program -> PROGRAM %s SEMICOLON block END_PROGRAM\n", (yyvsp[-3].tokenName)); }
+#line 1363 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 3:
+#line 51 "calc.y" /* yacc.c:1646  */
+    { printf("block -> statement(%s) semicolon\n",(yyvsp[0].tokenName)); sprintf((yyval.tokenName),"Block:%s|Statement:%s",(yyvsp[-2].tokenName),(yyvsp[0].tokenName)); (yyval.tokenName) =  malloc(strlen((yyvsp[-2].tokenName)) + strlen((yyvsp[0].tokenName)) + 18);  }
+#line 1369 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 4:
+#line 54 "calc.y" /* yacc.c:1646  */
+    {printf("block_helper -> %s\n",(yyvsp[-1].tokenName)); (yyval.tokenName) = (yyvsp[-1].tokenName); }
+#line 1375 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 5:
+#line 57 "calc.y" /* yacc.c:1646  */
+    {printf("declaration -> array: %d of integer\n", (yyvsp[-3].ival)); sprintf((yyval.tokenName),"Declaration:%s|Array:%d",(yyvsp[-7].tokenName),(yyvsp[-3].ival)); (yyval.tokenName) = malloc(strlen((yyvsp[-7].tokenName)) + strlen(ITOA((yyvsp[-3].ival))) + 20); }
+#line 1381 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 6:
+#line 58 "calc.y" /* yacc.c:1646  */
+    { printf("declaration -> %s\n",(yyvsp[-2].tokenName)); sprintf((yyval.tokenName),"Declaration:%s",(yyvsp[-2].tokenName));  (yyval.tokenName) = malloc(strlen((yyvsp[-2].tokenName)) + 13); }
+#line 1387 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 7:
+#line 61 "calc.y" /* yacc.c:1646  */
+    {printf("declaration_helper -> %s\n",(yyvsp[0].tokenName)); (yyval.tokenName) = (yyvsp[0].tokenName);}
+#line 1393 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 8:
+#line 62 "calc.y" /* yacc.c:1646  */
+    {}
+#line 1399 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 9:
+#line 65 "calc.y" /* yacc.c:1646  */
+    {(yyval.tokenName) = (yyvsp[0].tokenName);}
+#line 1405 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 10:
+#line 66 "calc.y" /* yacc.c:1646  */
+    {(yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1411 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 11:
+#line 67 "calc.y" /* yacc.c:1646  */
+    {(yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1417 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 12:
+#line 68 "calc.y" /* yacc.c:1646  */
+    {(yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1423 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 13:
+#line 69 "calc.y" /* yacc.c:1646  */
+    {(yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1429 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 14:
+#line 70 "calc.y" /* yacc.c:1646  */
+    {(yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1435 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 15:
+#line 73 "calc.y" /* yacc.c:1646  */
+    { printf("Statement -> %s assign %d\n", (yyvsp[-2].tokenName) , (yyvsp[0].ival)); sprintf((yyval.tokenName),"Var:%s|Expression:%d",(yyvsp[-2].tokenName),(yyvsp[0].ival)); (yyval.tokenName) = malloc(strlen((yyvsp[-2].tokenName)) + strlen(ITOA((yyvsp[0].ival))) + 17); }
+#line 1441 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 16:
+#line 76 "calc.y" /* yacc.c:1646  */
+    {printf("IFstatement -> %s\n",(yyvsp[-3].tokenName)); printf("ThenStatement -> %s\n",(yyvsp[-1].tokenName)); sprintf((yyval.tokenName),"If:%s|Then:%s",(yyvsp[-3].tokenName),(yyvsp[-1].tokenName)); (yyval.tokenName) = malloc(strlen((yyvsp[-3].tokenName)) + strlen((yyvsp[-1].tokenName)) + 10); }
+#line 1447 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 17:
+#line 77 "calc.y" /* yacc.c:1646  */
+    {printf("IFstatement -> %s\n",(yyvsp[-5].tokenName)); printf("ThenStatement -> %s\n",(yyvsp[-3].tokenName)); printf("ELSEstatement -> %s\n",(yyvsp[-1].tokenName)); sprintf((yyval.tokenName),"If:%s|Then:%s|Else:%s",(yyvsp[-5].tokenName),(yyvsp[-3].tokenName),(yyvsp[-1].tokenName)); (yyval.tokenName) = malloc(strlen((yyvsp[-5].tokenName)) + strlen((yyvsp[-3].tokenName)) + strlen((yyvsp[-1].tokenName)) + 16);  }
+#line 1453 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 18:
+#line 80 "calc.y" /* yacc.c:1646  */
+    {printf("whilestatement -> %s\n",(yyvsp[-3].tokenName)); sprintf((yyval.tokenName),"While:%s|Statement:%s",(yyvsp[-3].tokenName),(yyvsp[-1].tokenName)); (yyval.tokenName) = malloc(strlen((yyvsp[-3].tokenName)) + strlen((yyvsp[-1].tokenName)) + 18);  }
+#line 1459 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 19:
+#line 83 "calc.y" /* yacc.c:1646  */
+    {printf("dobegin_statement -> %s\n",(yyvsp[-3].tokenName)); sprintf((yyval.tokenName),"Do:%s|While:%s", (yyvsp[-3].tokenName),(yyvsp[0].tokenName)); (yyval.tokenName) = malloc(strlen((yyvsp[-3].tokenName)) + strlen((yyvsp[0].tokenName)) + 11); }
+#line 1465 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 20:
+#line 86 "calc.y" /* yacc.c:1646  */
+    { printf("readwrite_statement -> read %s\n",(yyvsp[0].tokenName)); sprintf((yyval.tokenName),"Read:%s",(yyvsp[0].tokenName)); (yyval.tokenName) = malloc(strlen((yyvsp[0].tokenName)) + 6); }
+#line 1471 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 87 "calc.y" /* yacc.c:1646  */
+    { printf("readwrite_statement -> write %s\n",(yyvsp[0].tokenName)); sprintf((yyval.tokenName),"Write:%s",(yyvsp[0].tokenName)); (yyval.tokenName) = malloc(strlen((yyvsp[0].tokenName)) +7);  }
+#line 1477 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 90 "calc.y" /* yacc.c:1646  */
+    {}
+#line 1483 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 23:
+#line 91 "calc.y" /* yacc.c:1646  */
+    {printf("var -> %s\n",(yyvsp[0].tokenName)); (yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1489 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 94 "calc.y" /* yacc.c:1646  */
+    {printf("continue_statement -> CONTINUE\n"); (yyval.tokenName) = "CONTINUE"; }
+#line 1495 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 25:
+#line 97 "calc.y" /* yacc.c:1646  */
+    { printf("statement -> %s\n",(yyvsp[-1].tokenName)); (yyval.tokenName) = (yyvsp[-1].tokenName); }
+#line 1501 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 100 "calc.y" /* yacc.c:1646  */
+    {(yyval.tokenName) = (yyvsp[0].tokenName);}
+#line 1507 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 27:
+#line 103 "calc.y" /* yacc.c:1646  */
+    {printf("bool_exp -> %s\n",(yyvsp[0].tokenName)); (yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1513 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 28:
+#line 104 "calc.y" /* yacc.c:1646  */
+    {printf("bool_exp -> %s or %s\n", (yyvsp[-2].tokenName),(yyvsp[0].tokenName)); sprintf((yyval.tokenName),"Rel_Exp:%s||Rel_Exp2:%s", (yyvsp[-2].tokenName),(yyvsp[0].tokenName)); (yyval.tokenName) = malloc(strlen((yyvsp[-2].tokenName)) + strlen((yyvsp[0].tokenName)) + 20);  }
+#line 1519 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 29:
+#line 107 "calc.y" /* yacc.c:1646  */
+    {printf("relation_and_exp -> %s and %s\n",(yyvsp[-2].tokenName),(yyvsp[0].tokenName)); sprintf((yyval.tokenName),"Rel_Exp:%s&&Rel_Exp2:%s",(yyvsp[-2].tokenName),(yyvsp[0].tokenName)); (yyval.tokenName) = malloc(strlen((yyvsp[-2].tokenName)) + strlen((yyvsp[0].tokenName)) + 20); }
+#line 1525 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 30:
+#line 108 "calc.y" /* yacc.c:1646  */
+    {printf("relation_and_exp -> %s\n",(yyvsp[0].tokenName)); (yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1531 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 31:
+#line 111 "calc.y" /* yacc.c:1646  */
+    {printf("relation_exp -> TRUE\n"); (yyval.tokenName) = "TRUE"; }
+#line 1537 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 32:
+#line 112 "calc.y" /* yacc.c:1646  */
+    {printf("relation_exp -> FALSE\n"); (yyval.tokenName) = "FALSE"; }
+#line 1543 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 33:
+#line 113 "calc.y" /* yacc.c:1646  */
+    {printf("relation_exp -> expression: %d comp: %s expression: %d\n", (yyvsp[-2].ival) , (yyvsp[-1].tokenName), (yyvsp[0].ival)); sprintf((yyval.tokenName),"Exp:%d|Comp:%s|Exp:%d",(yyvsp[-2].ival),(yyvsp[-1].tokenName),(yyvsp[0].ival)); (yyval.tokenName) = malloc(strlen(ITOA((yyvsp[-2].ival))) + strlen((yyvsp[-1].tokenName)) + strlen(ITOA((yyvsp[0].ival))) + 16); }
+#line 1549 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 34:
+#line 114 "calc.y" /* yacc.c:1646  */
+    {printf("relation_exp -> not expression: %d comp: %s expression: %d\n",(yyvsp[-2].ival),(yyvsp[-1].tokenName),(yyvsp[0].ival)); sprintf((yyval.tokenName),"NotExp:%d|Comp:%s|Exp:%d", (yyvsp[-2].ival),(yyvsp[-1].tokenName),(yyvsp[0].ival)); (yyval.tokenName) = malloc(strlen(ITOA((yyvsp[-2].ival))) + strlen((yyvsp[-1].tokenName)) + strlen(ITOA((yyvsp[0].ival))) + 19); }
+#line 1555 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 35:
+#line 115 "calc.y" /* yacc.c:1646  */
+    {printf("relation_exp -> not TRUE\n"); (yyval.tokenName) = "NOT TRUE"; }
+#line 1561 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 36:
+#line 116 "calc.y" /* yacc.c:1646  */
+    {printf("relation_exp -> not FALSE\n"); (yyval.tokenName) = "NOT FALSE"; }
+#line 1567 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 37:
+#line 117 "calc.y" /* yacc.c:1646  */
+    {printf("relation_exp -> bool_exp: %s\n", (yyvsp[-1].tokenName)); (yyval.tokenName) = (yyvsp[-1].tokenName); }
+#line 1573 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 38:
+#line 118 "calc.y" /* yacc.c:1646  */
+    {printf("relation_exp -> not bool_exp: %s\n",(yyvsp[-1].tokenName)); (yyval.tokenName) = (yyvsp[-1].tokenName); }
+#line 1579 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 39:
+#line 121 "calc.y" /* yacc.c:1646  */
+    {printf("comp -> EQ#0\n"); (yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1585 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 40:
+#line 122 "calc.y" /* yacc.c:1646  */
+    {printf("comp -> NEQ#0\n"); (yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1591 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 41:
+#line 123 "calc.y" /* yacc.c:1646  */
+    {printf("comp -> LT#0\n"); (yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1597 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 42:
+#line 124 "calc.y" /* yacc.c:1646  */
+    {printf("comp -> GT#0\n"); (yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1603 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 43:
+#line 125 "calc.y" /* yacc.c:1646  */
+    {printf("comp -> LTE#0\n"); (yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1609 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 44:
+#line 126 "calc.y" /* yacc.c:1646  */
+    {printf("comp -> GTE#0\n"); (yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1615 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 45:
+#line 129 "calc.y" /* yacc.c:1646  */
+    {printf("expression -> term: %d\n", (yyvsp[0].ival)); (yyval.ival) = (yyvsp[0].ival);}
+#line 1621 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 46:
+#line 130 "calc.y" /* yacc.c:1646  */
+    {printf("expression -> expression: %d\n",(yyvsp[-1].ival)); (yyval.ival) = (yyvsp[-1].ival); }
+#line 1627 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 47:
+#line 134 "calc.y" /* yacc.c:1646  */
+    {printf("expression -> add expression: %d\n",(yyvsp[0].ival)); (yyval.ival) = (yyvsp[0].ival); }
+#line 1633 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 48:
+#line 135 "calc.y" /* yacc.c:1646  */
+    { printf("expression -> sub expression: %d\n",(yyvsp[0].ival)); (yyval.ival) = -(yyvsp[0].ival); }
+#line 1639 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 49:
+#line 138 "calc.y" /* yacc.c:1646  */
+    {printf("multiply_exp -> term: %d\n",(yyvsp[0].ival)); (yyval.ival) = (yyvsp[0].ival); }
+#line 1645 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 50:
+#line 139 "calc.y" /* yacc.c:1646  */
+    {printf("multiply_exp -> term: %d\n",(yyvsp[-1].ival)); (yyval.ival) = (yyvsp[-1].ival); }
+#line 1651 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 51:
+#line 142 "calc.y" /* yacc.c:1646  */
+    {printf("multiply_exp -> mult %d\n",(yyvsp[0].ival)); (yyval.ival) = (yyvsp[0].ival); }
+#line 1657 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 52:
+#line 143 "calc.y" /* yacc.c:1646  */
+    { printf("multiply_exp -> div %d\n",(yyvsp[0].ival)); (yyval.ival) = (yyvsp[0].ival); }
+#line 1663 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 53:
+#line 144 "calc.y" /* yacc.c:1646  */
+    { printf("multiply_exp -> mod %d\n",(yyvsp[0].ival)); (yyval.ival) = (yyvsp[0].ival); }
+#line 1669 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 54:
+#line 147 "calc.y" /* yacc.c:1646  */
+    {printf("term -> var(%s)\n", (yyvsp[0].tokenName)); }
+#line 1675 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 55:
+#line 148 "calc.y" /* yacc.c:1646  */
+    {printf("term -> -var(%s)\n",(yyvsp[0].tokenName)); }
+#line 1681 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 56:
+#line 149 "calc.y" /* yacc.c:1646  */
+    {printf("term -> NUMBER(%d)\n",(yyvsp[0].ival)); (yyval.ival) = (yyvsp[0].ival); }
+#line 1687 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 57:
+#line 150 "calc.y" /* yacc.c:1646  */
+    {printf("term -> -NUMBER(%d)\n",(yyvsp[0].ival)); (yyval.ival) = -(yyvsp[0].ival); }
+#line 1693 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 58:
+#line 151 "calc.y" /* yacc.c:1646  */
+    {printf("term -> term(%d)\n",(yyvsp[-1].ival)); (yyval.ival) = (yyvsp[-1].ival); }
+#line 1699 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 59:
+#line 152 "calc.y" /* yacc.c:1646  */
+    {printf("term -> term(%d)\n",(yyvsp[-1].ival)); (yyval.ival) = -(yyvsp[-1].ival); }
+#line 1705 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 60:
+#line 154 "calc.y" /* yacc.c:1646  */
+    {printf("var -> IDENT(%s)\n",(yyvsp[0].tokenName)); (yyval.tokenName) = (yyvsp[0].tokenName); }
+#line 1711 "-prefix=y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 61:
+#line 155 "calc.y" /* yacc.c:1646  */
+    {printf("var -> IDENT (%s)\n",(yyvsp[-3].tokenName)); (yyval.tokenName) = (yyvsp[-3].tokenName);}
+#line 1717 "-prefix=y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1280 "-prefix=y.tab.c" /* yacc.c:1646  */
+#line 1721 "-prefix=y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
