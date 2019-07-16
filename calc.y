@@ -82,7 +82,7 @@ ifelse_statement 	: IF bool_exp THEN statement_helper ENDIF {printf("IFstatement
 		  	| IF bool_exp THEN statement_helper ELSE statement_helper ENDIF {printf("IFstatement -> %s\n",$2); printf("ThenStatement -> %s\n",$4); printf("ELSEstatement -> %s\n",$6); $$ = malloc(strlen($2) + strlen($4) + strlen($6) + 16); sprintf($$,"If:%s|Then:%s|Else:%s",$2,$4,$6);   }
 			;
 
-while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP {printf("whilestatement -> %s\n",$2); sprintf($$,"While:%s|Statement:%s",$2,$4); $$ = malloc(strlen($2) + strlen($4) + 18);  }
+while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP {printf("whilestatement -> %s\n",$2); $$ = malloc(strlen($2) + strlen($4) + 18); sprintf($$,"While:%s|Statement:%s",$2,$4);    }
 		 	;
 
 dobegin_statement	: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp {printf("dobegin_statement -> do:%s while:%s\n",$3,$6); $$ = malloc(strlen($3) + strlen($6) + 11); sprintf($$,"Do:%s|While:%s", $3,$6);   }

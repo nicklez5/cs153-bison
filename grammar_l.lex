@@ -64,11 +64,11 @@ hex		0[xX]{hextail}
 "true"			{ num_pos += yyleng; return TRUE; }
 "false"			{ num_pos += yyleng; return FALSE; }
 [ \t]+			{ num_pos += yyleng; }
-([#]+({alpha}*[ \t]*{digit}*[.(/)_:]*)*)			{ num_pos += yyleng; num_line++;   }
+([#]+[^\n]*)			{ num_pos += yyleng; num_line++;   }
 ({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+) { num_pos += yyleng; yylval.tokenName = strdup(yytext); return IDENT; }
-({digit}+({alpha}))	{ num_pos += yyleng; return error_1; }
-({alpha}+([_]))		{ num_pos += yyleng; return error_2; }
-.			{ num_pos += yyleng; return error_3; }
+({digit}+({alpha}))	{ num_pos += yyleng;  }
+({alpha}+([_]))		{ num_pos += yyleng;  }
+.			{ num_pos += yyleng;  }
 
 
 %%
