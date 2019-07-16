@@ -501,8 +501,8 @@ static const yytype_uint8 yyrline[] =
       80,    83,    84,    87,    90,    93,    94,    97,    98,   101,
      104,   105,   108,   111,   114,   115,   118,   119,   123,   124,
      125,   126,   127,   128,   129,   130,   133,   134,   135,   136,
-     137,   138,   141,   145,   146,   147,   150,   153,   154,   155,
-     156,   159,   160,   161,   162,   163,   165,   166
+     137,   138,   141,   145,   146,   147,   150,   154,   155,   156,
+     157,   160,   161,   162,   163,   164,   166,   167
 };
 #endif
 
@@ -1470,7 +1470,7 @@ yyreduce:
 
   case 19:
 #line 79 "calc.y" /* yacc.c:1646  */
-    { printf("Statement -> %d assign %d\n", (yyvsp[-2].ival) , (yyvsp[0].ival)); char *x; char *p; sprintf(str,"%d",(yyvsp[0].ival)); x = str; sprintf(str,"%d",(yyvsp[-2].ival)); p = str; (yyval.tokenName) = malloc(strlen(p) + strlen(x) + 17); sprintf((yyval.tokenName),"Var:%d|Expression:%d",(yyvsp[-2].ival),(yyvsp[0].ival)); }
+    { printf("Statement -> %c assign %c\n", (yyvsp[-2].ival) , (yyvsp[0].ival)); char *x; char *p; sprintf(str,"%c",(yyvsp[0].ival)); x = str; sprintf(str,"%c",(yyvsp[-2].ival)); p = str; (yyval.tokenName) = malloc(strlen(p) + strlen(x) + 17); sprintf((yyval.tokenName),"Var:%c|Expression:%c",(yyvsp[-2].ival),(yyvsp[0].ival)); }
 #line 1475 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1506,13 +1506,13 @@ yyreduce:
 
   case 25:
 #line 93 "calc.y" /* yacc.c:1646  */
-    { printf("readwrite_statement -> read  %d\n",(yyvsp[-1].ival)); char *x; sprintf(str,"%d",(yyvsp[-1].ival)); x = str; (yyval.tokenName) = malloc(strlen(x) + 7 ); sprintf((yyval.tokenName),"read: %d",(yyvsp[-1].ival));  }
+    { printf("readwrite_statement -> read %c\n",(yyvsp[-1].ival)); (yyval.tokenName) = malloc(8); sprintf((yyval.tokenName),"read: %c",(yyvsp[-1].ival));  }
 #line 1511 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
 #line 94 "calc.y" /* yacc.c:1646  */
-    { printf("readwrite_statement -> write %d\n",(yyvsp[-1].ival)); char *x; sprintf(str,"%d",(yyvsp[-1].ival)); x = str; (yyval.tokenName) = malloc(strlen(x) + 8); sprintf((yyval.tokenName),"write: %d",(yyvsp[-1].ival));  }
+    { printf("readwrite_statement -> write %c\n",(yyvsp[-1].ival));  (yyval.tokenName) = malloc(9); sprintf((yyval.tokenName),"write: %c",(yyvsp[-1].ival));  }
 #line 1517 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1524,7 +1524,7 @@ yyreduce:
 
   case 28:
 #line 98 "calc.y" /* yacc.c:1646  */
-    { printf("readwrite_helper -> AND %d\n",(yyvsp[-1].ival)); char *x; sprintf(str,"%d",(yyvsp[-1].ival)); x = str; (yyval.tokenName) = malloc(strlen(x) + 7); sprintf((yyval.tokenName),"read: %d",(yyvsp[-1].ival)); }
+    { printf("readwrite_helper -> AND %c\n",(yyvsp[-1].ival));  (yyval.tokenName) = malloc(8); sprintf((yyval.tokenName),"read: %c",(yyvsp[-1].ival)); }
 #line 1529 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1596,13 +1596,13 @@ yyreduce:
 
   case 40:
 #line 125 "calc.y" /* yacc.c:1646  */
-    { printf("relation_exp -> expression: %d comp: %s expression: %d\n", (yyvsp[-2].ival) , (yyvsp[-1].tokenName), (yyvsp[0].ival)); char *x; char *p; sprintf(str,"%d",(yyvsp[-2].ival));  p = str; sprintf(str2,"%d",(yyvsp[0].ival)); x = str2;  (yyval.tokenName) = malloc(strlen(p) + strlen((yyvsp[-1].tokenName)) + strlen(x) + 16); sprintf((yyval.tokenName),"Exp:%d|Comp:%s|Exp:%d",(yyvsp[-2].ival),(yyvsp[-1].tokenName),(yyvsp[0].ival)); }
+    { printf("relation_exp -> expression: %c comp: %s expression: %d\n", (yyvsp[-2].ival) , (yyvsp[-1].tokenName), (yyvsp[0].ival)); char *x; char *p; sprintf(str,"%c",(yyvsp[-2].ival));  p = str; sprintf(str2,"%d",(yyvsp[0].ival)); x = str2;  (yyval.tokenName) = malloc(strlen(p) + strlen((yyvsp[-1].tokenName)) + strlen(x) + 16); sprintf((yyval.tokenName),"Exp:%c|Comp:%s|Exp:%d",(yyvsp[-2].ival),(yyvsp[-1].tokenName),(yyvsp[0].ival)); }
 #line 1601 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
 #line 126 "calc.y" /* yacc.c:1646  */
-    {printf("relation_exp -> not expression: %d comp: %s expression: %d\n",(yyvsp[-2].ival),(yyvsp[-1].tokenName),(yyvsp[0].ival)); char *x; char *p; sprintf(str,"%d",(yyvsp[-2].ival)); p = str; sprintf(str2,"%d",(yyvsp[0].ival)); x = str2; (yyval.tokenName) = malloc(strlen(p) + strlen((yyvsp[-1].tokenName)) + strlen(x) + 19);  sprintf((yyval.tokenName),"NotExp:%d|Comp:%s|Exp:%d", (yyvsp[-2].ival),(yyvsp[-1].tokenName),(yyvsp[0].ival)); }
+    {printf("relation_exp -> not expression: %c comp: %s expression: %d\n",(yyvsp[-2].ival),(yyvsp[-1].tokenName),(yyvsp[0].ival)); char *x; char *p; sprintf(str,"%c",(yyvsp[-2].ival)); p = str; sprintf(str2,"%d",(yyvsp[0].ival)); x = str2; (yyval.tokenName) = malloc(strlen(p) + strlen((yyvsp[-1].tokenName)) + strlen(x) + 19);  sprintf((yyval.tokenName),"NotExp:%c|Comp:%s|Exp:%d", (yyvsp[-2].ival),(yyvsp[-1].tokenName),(yyvsp[0].ival)); }
 #line 1607 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1668,7 +1668,7 @@ yyreduce:
 
   case 52:
 #line 141 "calc.y" /* yacc.c:1646  */
-    {printf("expression -> expression: %d\n",(yyvsp[-1].ival)); (yyval.ival) = (yyvsp[-1].ival); }
+    {printf("expression -> expression: %c\n",(yyvsp[-1].ival)); (yyval.ival) = (yyvsp[-1].ival); }
 #line 1673 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1692,72 +1692,72 @@ yyreduce:
 
   case 56:
 #line 150 "calc.y" /* yacc.c:1646  */
-    { printf("mult_exp -> term: %d\n",(yyvsp[-1].ival)); (yyval.ival) = (yyvsp[-1].ival);  }
+    { printf("mult_exp -> term: %c\n",(yyvsp[-1].ival)); (yyval.ival) = (yyvsp[-1].ival); }
 #line 1697 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 153 "calc.y" /* yacc.c:1646  */
+#line 154 "calc.y" /* yacc.c:1646  */
     {(yyval.ival) = 0; }
 #line 1703 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 154 "calc.y" /* yacc.c:1646  */
+#line 155 "calc.y" /* yacc.c:1646  */
     {printf("multiply_exp -> mult %d\n",(yyvsp[-1].ival)); (yyval.ival) = (yyvsp[-1].ival); }
 #line 1709 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 155 "calc.y" /* yacc.c:1646  */
+#line 156 "calc.y" /* yacc.c:1646  */
     { printf("multiply_exp -> div %d\n",(yyvsp[-1].ival));  (yyval.ival) = (yyvsp[-1].ival); }
 #line 1715 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 156 "calc.y" /* yacc.c:1646  */
+#line 157 "calc.y" /* yacc.c:1646  */
     { printf("multiply_exp -> mod %d\n",(yyvsp[-1].ival));  (yyval.ival) = (yyvsp[-1].ival); }
 #line 1721 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 159 "calc.y" /* yacc.c:1646  */
-    {printf("term -> var(%d)\n", (yyvsp[0].ival)); (yyval.ival) = (yyvsp[0].ival) ;  }
+#line 160 "calc.y" /* yacc.c:1646  */
+    {printf("term -> var(%c)\n", (yyvsp[0].ival)); (yyval.ival) = (yyvsp[0].ival) ;  }
 #line 1727 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 160 "calc.y" /* yacc.c:1646  */
+#line 161 "calc.y" /* yacc.c:1646  */
     {printf("term -> NUMBER(%d)\n",(yyvsp[0].ival)); (yyval.ival) = (yyvsp[0].ival); /*sprintf(str,"%d",$1); $$ = str; */ }
 #line 1733 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 161 "calc.y" /* yacc.c:1646  */
+#line 162 "calc.y" /* yacc.c:1646  */
     {printf("term -> -NUMBER(%d)\n",(yyvsp[0].ival)); (yyval.ival) = -(yyvsp[0].ival); /*sprintf(str,"-%d",$2); $$ = str;*/  }
 #line 1739 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 162 "calc.y" /* yacc.c:1646  */
-    {printf("term -> expression(%d)\n",(yyvsp[-1].ival)); (yyval.ival) = (yyvsp[-1].ival); }
+#line 163 "calc.y" /* yacc.c:1646  */
+    {printf("term -> expression(%c)\n",(yyvsp[-1].ival)); (yyval.ival) = (yyvsp[-1].ival); }
 #line 1745 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 163 "calc.y" /* yacc.c:1646  */
-    { printf("term -> expression(-%d)\n",(yyvsp[-1].ival)); /*$$ = malloc(strlen($3) + 4); sprintf($$,"-%s",$3); */ (yyval.ival) = -(yyvsp[-1].ival); }
+#line 164 "calc.y" /* yacc.c:1646  */
+    { printf("term -> expression(-%c)\n",(yyvsp[-1].ival)); /*$$ = malloc(strlen($3) + 4); sprintf($$,"-%s",$3); */ (yyval.ival) = -(yyvsp[-1].ival); }
 #line 1751 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 165 "calc.y" /* yacc.c:1646  */
+#line 166 "calc.y" /* yacc.c:1646  */
     { printf("var -> IDENT(%s)\n",(yyvsp[0].tokenName)); int c; c = *(yyvsp[0].tokenName); (yyval.ival) = c;  }
 #line 1757 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 166 "calc.y" /* yacc.c:1646  */
+#line 167 "calc.y" /* yacc.c:1646  */
     { char *c; c = return_ascii((yyvsp[-1].ival)); printf("var -> IDENT %s(%s)\n",(yyvsp[-3].tokenName),c); int xyz; xyz = *(yyvsp[-3].tokenName); (yyval.ival) = xyz;   }
 #line 1763 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1991,7 +1991,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 168 "calc.y" /* yacc.c:1906  */
+#line 169 "calc.y" /* yacc.c:1906  */
 
 int main(int argc,char **argv){
 	if(argc > 1){
