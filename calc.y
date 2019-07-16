@@ -8,10 +8,12 @@
 	void yyerror(const char *msg);
 	double findMod(double a, double b);
 	char *my_itoa(char *dest,int i);
+	char *return_ascii(int i);
 	extern int num_pos ;
 	extern int num_line;
 	#define ITOA(n) my_itoa((char [41]) {0},(n))
 	char str[12];
+	char str2[12];
 	FILE *yyin;
 	
 %}
@@ -28,13 +30,13 @@
 %token  L_PAREN R_PAREN MINUS MULT DIV MOD PLUS SUB LT LTE GT GTE EQUAL EQ INTEGER NEQ NOT AND OR ASSIGN  COMMENT END SEMICOLON COLON COMMA ENDLOOP CONTINUE READ WRITE error_1 error_2 error_3 IF FALSE END_PROGRAM ENDIF ELSE DO BEGIN_PROGRAM ARRAY  WHILE TRUE THEN PROGRAM OF BEGINLOOP 	
  
 
-%type   <tokenName>  mult_exp
-%type 	<tokenName>  expression
-%type   <tokenName>  expression_helper mult_exp_helper
+%type   <ival>  mult_exp
+%type 	<ival>  expression
+%type   <ival>  expression_helper mult_exp_helper term var
 %type   <tokenName> block block_helper declaration_helper declaration declaration_helper2  
 %type   <tokenName> expression_statement ifelse_statement while_statement dobegin_statement readwrite_statement readwrite_helper continue_statement statement_helper
 %type   <tokenName> bool_exp relation_and_exp relation_exp relation_and_helper bool_exp_helper 
-%type   <tokenName> comp var term
+%type   <tokenName> comp 
 %type   <tokenName> statement 
 %type   <tokenName> NEQ EQ LT GTE GT LTE   
 %left	PLUS MINUS
@@ -74,7 +76,7 @@ statement	: expression_statement {$$ = $1;}
 		| continue_statement {$$ = $1; }
 		;
 
-expression_statement : var ASSIGN expression { printf("Statement -> %s assign %s\n", $1 , $3); $$ = malloc(strlen($1) + strlen($3) + 17); sprintf($$,"Var:%s|Expression:%s",$1,$3); }
+expression_statement : var ASSIGN expression { printf("Statement -> %d assign %d\n", $1 , $3); char *x; char *p; sprintf(str,"%d",$3); x = str; sprintf(str,"%d",$1); p = str; $$ = malloc(strlen(p) + strlen(x) + 17); sprintf($$,"Var:%d|Expression:%d",$1,$3); }
 		     | var EQUAL expression { printf("Syntax error at line %d: := expected\n",num_line); exit(0); }
 		     ;
 
@@ -88,12 +90,12 @@ while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP {printf("wh
 dobegin_statement	: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp {printf("dobegin_statement -> do:%s while:%s\n",$3,$6); $$ = malloc(strlen($3) + strlen($6) + 11); sprintf($$,"Do:%s|While:%s", $3,$6);   }
 		  	;
 
-readwrite_statement	: READ var readwrite_helper { if(strlen($3) == 0){printf("readwrite_statement -> read  %s\n",$2); $$ = $2;} else{ printf("readwrite_statement -> read  %s %s\n",$2,$3); $$ = malloc(strlen($2) + strlen($3) + 2); sprintf($$,"%s %s",$2,$3); } }
-		    	| WRITE var readwrite_helper {if(strlen($3) == 0){printf("readwrite_statement -> write %s\n",$2); $$ = $2;} else{ printf("readwrite_statement -> write %s %s\n",$2,$3); $$ = malloc(strlen($2) + strlen($3) + 2); sprintf($$,"%s %s",$2,$3); } } 
+readwrite_statement	: READ var readwrite_helper { printf("readwrite_statement -> read  %d\n",$2); char *x; sprintf(str,"%d",$2); x = str; $$ = malloc(strlen(x) + 7 ); sprintf($$,"read: %d",$2);  }
+		    	| WRITE var readwrite_helper { printf("readwrite_statement -> write %d\n",$2); char *x; sprintf(str,"%d",$2); x = str; $$ = malloc(strlen(x) + 8); sprintf($$,"write: %d",$2);  } 
 			;
 
 readwrite_helper	: %empty {$$ = ""; }
-		 	| COMMA var readwrite_helper{ printf("readwrite_helper -> AND %s\n",$2); if(strlen($3) == 0){$$ = malloc(strlen($2) + 3); sprintf($$,"+ %s",$2); }else { $$ = malloc(strlen($2) + strlen($3) + 4); sprintf($$,"+ %s %s",$2,$3); }}
+		 	| COMMA var readwrite_helper{ printf("readwrite_helper -> AND %d\n",$2); char *x; sprintf(str,"%d",$2); x = str; $$ = malloc(strlen(x) + 7); sprintf($$,"read: %d",$2); }
 			;
 
 continue_statement	: CONTINUE {printf("continue_statement -> CONTINUE\n"); $$ = "CONTINUE"; }
@@ -120,8 +122,8 @@ bool_exp_helper 	: %empty {$$ = "";}
 	
 relation_exp		: TRUE {printf("relation_exp -> TRUE\n"); $$ = "TRUE"; }
 			| FALSE {printf("relation_exp -> FALSE\n"); $$ = "FALSE"; }
-			| expression comp expression {printf("relation_exp -> expression: %s comp: %s expression: %s\n", $1 , $2, $3); $$ = malloc(strlen($1) + strlen($2) + strlen($3) + 16); sprintf($$,"Exp:%s|Comp:%s|Exp:%s",$1,$2,$3); }	      
-			| NOT expression comp expression {printf("relation_exp -> not expression: %s comp: %s expression: %s\n",$2,$3,$4); $$ = malloc(strlen($2) + strlen($3) + strlen($4) + 19);  sprintf($$,"NotExp:%s|Comp:%s|Exp:%s", $2,$3,$4); }
+			| expression comp expression { printf("relation_exp -> expression: %d comp: %s expression: %d\n", $1 , $2, $3); char *x; char *p; sprintf(str,"%d",$1);  p = str; sprintf(str2,"%d",$3); x = str2;  $$ = malloc(strlen(p) + strlen($2) + strlen(x) + 16); sprintf($$,"Exp:%d|Comp:%s|Exp:%d",$1,$2,$3); }	      
+			| NOT expression comp expression {printf("relation_exp -> not expression: %d comp: %s expression: %d\n",$2,$3,$4); char *x; char *p; sprintf(str,"%d",$2); p = str; sprintf(str2,"%d",$4); x = str2; $$ = malloc(strlen(p) + strlen($3) + strlen(x) + 19);  sprintf($$,"NotExp:%d|Comp:%s|Exp:%d", $2,$3,$4); }
 			| NOT TRUE {printf("relation_exp -> not TRUE\n"); $$ = "NOT TRUE"; }
 			| NOT FALSE {printf("relation_exp -> not FALSE\n"); $$ = "NOT FALSE"; }
 			| L_PAREN bool_exp R_PAREN {printf("relation_exp -> bool_exp: %s\n", $2); $$ = $2; }
@@ -136,32 +138,32 @@ comp		: EQ {printf("comp -> EQ#0\n"); $$ = "=="; }
 		| GTE {printf("comp -> GTE#0\n"); $$ = ">="; }
 		;
 
-expression 	: mult_exp expression_helper {printf("expression -> expression: %s\n",$1); if(strlen($2) == 0){$$ = $1;} else {$$ = malloc(strlen($1) + strlen($2) + 2); sprintf($$,"%s %s",$1,$2); }} 
+expression 	: mult_exp expression_helper {printf("expression -> expression: %d\n",$1); $$ = $1; } 
 		;
 
 	    
-expression_helper : %empty {$$ = "";}
-		  | PLUS mult_exp expression_helper {printf("expression -> add expression: %s\n",$2); if(strlen($3) == 0){$$ = malloc(strlen($2) + 3); sprintf($$,"+ %s",$2); }else{$$ = malloc(strlen($2) + strlen($3) + 4); sprintf($$,"+ %s %s",$2,$3); }}
-		  | MINUS mult_exp expression_helper { printf("expression -> sub expression: %s\n",$2); if(strlen($3) == 0){$$ = malloc(strlen($2) + 3); sprintf($$,"- %s",$2); }else{$$ = malloc(strlen($2) + strlen($3) + 4); sprintf($$, "- %s %s",$2,$3); } }
+expression_helper : %empty {$$ = 0;}
+		  | PLUS mult_exp expression_helper {printf("expression -> add expression: %d\n",$2); $$ = $2; }
+		  | MINUS mult_exp expression_helper { printf("expression -> sub expression: %d\n",$2); $$ = $2; }
 		  ;
 
-mult_exp	: term mult_exp_helper {if(strlen($2) == 0){printf("multiply_exp -> term: %s\n",$1); $$ = $1;} else{printf("multiply_exp -> term: %s %s\n",$1,$2); $$ = malloc(strlen($1) + strlen($2) + 2); sprintf($$,"%s %s",$1,$2); }  }
+mult_exp	: term mult_exp_helper { printf("mult_exp -> term: %d\n",$1); $$ = $1;  }
 		;
 
-mult_exp_helper : %empty {$$ = "";}
-		| MULT term mult_exp_helper {printf("multiply_exp -> mult %s\n",$2); if(strlen($3) == 0){$$ = malloc(strlen($2) + 3 ); sprintf($$,"* %s",$2); }else{ $$ = malloc(strlen($2) + strlen($3) + 4); sprintf($$,"* %s %s",$2,$3); }}
-		| DIV term mult_exp_helper { printf("multiply_exp -> div %s\n",$2);  if(strlen($3) == 0){$$ = malloc(strlen($2) + 3 ); sprintf($$,"/ %s",$2); }else{ $$ = malloc(strlen($2) + strlen($3) + 4); sprintf($$,"/ %s %s",$2,$3); }} 
-		| MOD term mult_exp_helper { printf("multiply_exp -> mod %s\n",$2);  if(strlen($3) == 0){$$ = malloc(strlen($2) + 5 ); sprintf($$,"mod %s",$2);}else{ $$ = malloc(strlen($2) + strlen($3) + 6); sprintf($$,"mod %s %s",$2,$3); }}
+mult_exp_helper : %empty {$$ = 0; }
+		| MULT term mult_exp_helper {printf("multiply_exp -> mult %d\n",$2); $$ = $2; }
+		| DIV term mult_exp_helper { printf("multiply_exp -> div %d\n",$2);  $$ = $2; } 
+		| MOD term mult_exp_helper { printf("multiply_exp -> mod %d\n",$2);  $$ = $2; }
 		;
 
-term		: var {printf("term -> var(%s)\n", $1); $$ = $1; }
-		| NUMBER {printf("term -> NUMBER(%d)\n",$1); sprintf(str,"%d",$1); $$ = str; }
-		| MINUS NUMBER {printf("term -> -NUMBER(%d)\n",$2); sprintf(str,"-%d",$2); $$ = str;  }
-		| L_PAREN expression R_PAREN {printf("term -> expression(%s)\n",$2); $$ = $2; }
-		| MINUS L_PAREN expression R_PAREN {printf("term -> -expression(%s)\n",$3); $$ = malloc(strlen($3) + 4); sprintf($$,"-%s",$3); }
+term		: var {printf("term -> var(%d)\n", $1); $$ = $1 ;  }
+		| NUMBER {printf("term -> NUMBER(%d)\n",$1); $$ = $1; /*sprintf(str,"%d",$1); $$ = str; */ }
+		| MINUS NUMBER {printf("term -> -NUMBER(%d)\n",$2); $$ = -$2; /*sprintf(str,"-%d",$2); $$ = str;*/  }
+		| L_PAREN expression R_PAREN {printf("term -> expression(%d)\n",$2); $$ = $2; }
+		| MINUS L_PAREN expression R_PAREN { printf("term -> expression(-%d)\n",$3); /*$$ = malloc(strlen($3) + 4); sprintf($$,"-%s",$3); */ $$ = -$3; }
 		;
-var		: IDENT {printf("var -> IDENT(%s)\n",$1); $$ = $1; }
-     		| IDENT L_PAREN expression R_PAREN {printf("var -> IDENT %s(%s)\n",$1,$3); $$ = malloc(strlen($1) + strlen($3) + 3 ); sprintf($$,"%s(%s)",$1,$3); }
+var		: IDENT { printf("var -> IDENT(%s)\n",$1); int c; c = *$1; $$ = c;  }
+     		| IDENT L_PAREN expression R_PAREN { char *c; c = return_ascii($3); printf("var -> IDENT %s(%s)\n",$1,c); int xyz; xyz = *$1; $$ = xyz;   }
 		;
 %%
 int main(int argc,char **argv){
@@ -173,6 +175,11 @@ int main(int argc,char **argv){
 	}//end if
 	yyparse(); //Calls yylex for tokens.
 	return 0;
+}
+char *return_ascii(int i){
+	sprintf(str,"%d",i);
+	char *pChar = str;
+	return pChar;	
 }
 char *my_itoa(char *dest,int i){
 	sprintf(dest, "%d", i);

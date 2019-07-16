@@ -18,6 +18,7 @@ hex		0[xX]{hextail}
 	int num_int = 0; int num_op = 0;
 	int num_parentheses = 0;
 	int num_equal = 0;
+	char c;
 	
 %%
 ({digit}+)		{ num_pos += yyleng; num_int++; yylval.ival = atoi(yytext); return NUMBER; }		 
@@ -65,7 +66,7 @@ hex		0[xX]{hextail}
 "false"			{ num_pos += yyleng; return FALSE; }
 [ \t]+			{ num_pos += yyleng; }
 ([#]+[^\n]*)			{ num_pos += yyleng; num_line++;   }
-({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+) { num_pos += yyleng; yylval.tokenName = strdup(yytext); return IDENT; }
+({alpha}+)|({alpha}+({alpha}|{digit}*){alpha}+)|({alpha}+[_]{alpha}+)|({alpha}+[_]{digit}+) { c = yytext[0]; int xyz = (int)c;  yylval.ival = xyz; num_pos += yyleng; yylval.tokenName = strdup(yytext); return IDENT; }
 ({digit}+({alpha}))	{ num_pos += yyleng;  }
 ({alpha}+([_]))		{ num_pos += yyleng;  }
 .			{ num_pos += yyleng;  }
