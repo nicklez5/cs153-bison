@@ -4,20 +4,33 @@
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
-	
+	#include "linked_list.h"	
 	#include <string.h>
 	void yyerror(const char *msg);
 	double findMod(double a, double b);
 	char *my_itoa(char *dest,int i);
 	char *return_ascii(int i);
+	int bool_value(int dest);
 	extern int num_pos ;
 	extern int num_line;
-	char *program_name; 
+	const char *program_name; 
+	char *totalLine;
 	#define ITOA(n) my_itoa((char [41]) {0},(n))
+	#define BUZZ_SIZE 1024
 	char str[12];
 	char str2[12];
+	char str3[12]; 
+	int point_number = 0;
+	int term_number = 0;
+	int current_value = 0;
+	char *cur_string_value;
+	int finished_looping = 0; 
+	int fresh_term = 0;
+	int dont_loop = 0;
+	int check_bool_type = 0;
+	node *temp;
 	FILE *yyin;
-	
+	FILE *yyout;
 %}
 
 %union{
@@ -47,7 +60,8 @@
 
 
 %%
-program		: PROGRAM IDENT SEMICOLON block END_PROGRAM  { program_name = $2; }
+		/* Create a program name   */
+program		: PROGRAM IDENT SEMICOLON block END_PROGRAM  {  }
 		;
 
 
@@ -58,16 +72,15 @@ block_helper    : %empty { }
 		| declaration SEMICOLON block_helper {    }
 		;
 
-declaration	: declaration_helper COLON declaration_helper2 {  }
-	    	| declaration_helper declaration_helper2{  }
+declaration	: declaration_helper COLON declaration_helper2 { if(strcmp($3,"integer") == 1) {sprintf(str, "   .[] _%s, %s", $1,$3); sprintf(str2," _%s",$1); sprintf(str3,"%s",$1);  if(search_value(temp,str3) == 1){ fprintf(fp,str); node_insert(temp,str2,str,str3);   } } dont_loop = 0;}
 		;  
 
 declaration_helper : %empty { }
-		   | IDENT {  } 
-		   | IDENT COMMA declaration_helper{  }	
-		   ;
-declaration_helper2 : ARRAY L_PAREN NUMBER R_PAREN OF INTEGER {  }
-		    | INTEGER {   }
+		   | IDENT {dont_loop = 1; $$ = $1;   } 
+		   | IDENT COMMA declaration_helper{ dont_loop = 1; sprintf(str,"   . _%s",$1); sprintf(str2," _%s",$1); sprintf(str3,"%s",$1); if(search_value(temp,str3) == 1){ fprintf(fp,str); node_insert(temp,str2,str,str3);   } $$ = $1; }	
+		   ; 
+declaration_helper2 : ARRAY L_PAREN NUMBER R_PAREN OF INTEGER { sprintf(str, "%d",$3); $$ = str;  }
+		    | INTEGER {$$ = "integer";  }
 		    ;
 
 statement	: expression_statement {  }
@@ -77,8 +90,8 @@ statement	: expression_statement {  }
 		| readwrite_statement { }
 		| continue_statement { }
 		;
-
-expression_statement : var ASSIGN expression { }
+			/* = dst,src          dst = src */
+expression_statement : var ASSIGN expression { char* x; x = return_ascii($1); sprintf(str,"%d",$3); sprintf(str2," =%s,%s",value_return(temp,x),value_return(temp,str)) fprintf(fp,str);   }  
 		     | var EQUAL expression {  }
 		     ;
 
@@ -92,8 +105,8 @@ while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP {    }
 dobegin_statement	: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp {    }
 		  	;
 
-readwrite_statement	: READ var readwrite_helper {   }
-		    	| WRITE var readwrite_helper {   } 
+readwrite_statement	: READ var readwrite_helper {char* x; x = return_ascii($2); sprintf(str,"   .<%s",value_return(temp,x)); fprintf(fp,str);     }
+		    	| WRITE var readwrite_helper {char* x; x = return_ascii($2); sprintf(str,"   .>%s",value_return(temp,x)); fprintf(fp,str);   } 
 			;
 
 readwrite_helper	: %empty { }
@@ -107,14 +120,14 @@ statement_helper	: %empty {  }
 		 	| statement SEMICOLON statement_helper {  }
 		 	;
 
-bool_exp		: relation_and_exp bool_exp_helper { }
+bool_exp		: relation_and_exp bool_exp_helper {$$ = $1; }
 			;
 
-relation_and_exp 	: relation_exp relation_and_helper {   }
+relation_and_exp 	: relation_exp relation_and_helper { $$ = $1;   }
 			;
 
-relation_and_helper	: %empty {   }
-		    	| AND relation_exp relation_and_helper {  }
+relation_and_helper	: %empty {$$ = "";  }
+		    	| AND relation_exp relation_and_helper {   }
 			;
 
 bool_exp_helper 	: %empty {   }
@@ -122,61 +135,129 @@ bool_exp_helper 	: %empty {   }
 			;
 
 	
-relation_exp		: TRUE { }
-			| FALSE { }
-			| expression comp expression { }	      
-			| NOT expression comp expression {   }
-			| NOT TRUE {  }
-			| NOT FALSE {  }
-			| L_PAREN bool_exp R_PAREN { }
-			| NOT L_PAREN bool_exp R_PAREN {  }
+relation_exp		: TRUE {$$ = "True";  char *x = "True"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); if(search_value(&T,str) == 1){ node_insert(&T,str2,"",x); term_number++;    }  }
+			| FALSE { $$ = "False"; char *x = "False"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); if(search_value(&T,str) == 1){ node_insert(&T,str2,"",x); term_number++; } }
+			| expression comp expression {sprintf(str,"%c",$1); if(bool_value($3) == 1){ sprintf(str2,"%c",$3); }else { sprintf(str2,"%d",$3); } char *src2; src2 = value_return(str); char *src3;  src3 = value_return(str2); sprintf(str3,"   %s t%d,%s,%s",$2,term_number,src2,src3); fprintf(yyout,str3); sprintf(str2," t%d",term_number); sprintf(str,"  . t%d",term_number); $$ = str3; if(search_value(&T,str3) == 1 )  {node_insert(&T,str2,str,str3); term_number++; }  }	      
+			| NOT expression comp expression {sprintf(str,"%c",$1); if(bool_value($3) == 1){ sprintf(str2,"%c",$3); }else { sprintf(str2,"%d",$3); } char *src2; src2 = value_return(str); char *src3; src3 = value_return(str2); sprintf(str3,"   not%s t%d,%s,%s",$2,term_number,src2,src3); fprintf(yyout,str3); sprintf(str2," t%d",term_number); sprintf(str,"   . t%d",term_number); $$ = str3; if(search_value(&T,str3) == 1 ) {node_insert(&T,str2,str,str3); term_number++; }  }
+			| NOT TRUE { $$ = "Not True"; char *x = "Not True"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); if(search_value(&T,str) == 1){ node_insert(&T,str2,"",x); term_number++; } }
+			| NOT FALSE { $$ = "Not False"; char *x = "Not False"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); if(search_value(&T,str) == 1){ node_insert(&T,str2,"",x); term_number++; } }
+			| L_PAREN bool_exp R_PAREN { sprintf(str,"%s",$2); $$ = $2;  }
+			| NOT L_PAREN bool_exp R_PAREN {sprintf(str,"%s",$3);  $$ = $3; }
 			;
 
-comp		: EQ {  }
-    		| NEQ { }
-		| LT { }
-		| GT { }
-		| LTE { }
-		| GTE {  }
+comp		: EQ {$$ = "==";  }
+    		| NEQ {$$ = "!="; }
+		| LT { $$ = "<"; }
+		| GT { $$ = ">"; }
+		| LTE { $$ = "<="; }
+		| GTE { $$ = ">="; }
 		;
 
-expression 	: mult_exp expression_helper { } 
+expression 	: mult_exp expression_helper {$$ = $1; } 
 		;
 
 	    
 expression_helper : %empty {  }
-		  | PLUS mult_exp expression_helper { }
-		  | MINUS mult_exp expression_helper {  }
+		  /* dst = src1 + src2 = + dst,src1,src2 */ 
+		  | PLUS mult_exp expression_helper { fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); } else {sprintf(str,"%d",$2); } char *src2; src2 = value_return(str); if(finished_looping == 1) { sprintf(str2,"+ t%d,%s,%s",term_number, cur_string_value , src2); term_number++; fprintf(yyout,str2); $$ = $2; }  } 
+		  | MINUS mult_exp expression_helper { fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); } else {sprintf(str,"%d",$2); } char *src2; src2 = value_return(str); if(finished_looping == 1) { sprintf(str2,"- t%d,%s,%s",term_number, cur_string_value , src2); term_number++; fprintf(yyout,str2); $$ = $2; } }
 		  ;
 
-mult_exp	: term mult_exp_helper {  }
+mult_exp	: term mult_exp_helper {$$ = $1; } 
 	 	;
 
 
-mult_exp_helper : %empty { }
-		| MULT term mult_exp_helper { }
-		| DIV term mult_exp_helper {  } 
-		| MOD term mult_exp_helper {  }
+mult_exp_helper : %empty {  }
+
+		/* dst = src1 * src2 = * dst,src1,src2 */
+		| MULT term mult_exp_helper {fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2);}else {sprintf(str,"%d",$2); } char* src2; src2 = value_return(str); if(finished_looping == 1){ sprintf(str2,"* t%d,%s,%s",term_number, cur_string_value, src2); term_number++; fprintf(yyout,str2); $$ = $2;    } } /* cur_string_value is in src1 */
+
+		| DIV term mult_exp_helper { fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); }else { sprintf(str,"%d",$2);} char* src2; src2 = value_return(str); if(finished_looping == 1){ sprintf(str2,"/ t%d,%s,%s", term_number, cur_string_value , src2); term_number++; fprintf(yyout,str2); $$ = $2;  }}    
+		| MOD term mult_exp_helper { fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); }else { sprintf(str,"%d",$2);} char* src2; src2 = value_return(str1); if(finished_looping == 1){ sprintf(str2,"% t%d,%s,%s", term_number, cur_string_value, src2); term_number++; fprintf(yyout,str2); $$ = $2;   } }
 		;
 
-term		: var {  }
-		| NUMBER { }
-		| MINUS NUMBER {  }
-		| L_PAREN expression R_PAREN { }
-		| MINUS L_PAREN expression R_PAREN {  }
+term		: var {  $$ = $1;  }
+		| NUMBER { sprintf(str, "   . p%d",point_number); sprintf(str2," p%d",point_number); sprintf(str3,"%d",$1); if(search_value(T, str3) == 1) { node_insert(&T,str2,str,str3); fprintf(yyout,str); cur_string_value = str2; point_number++;  } else { if(fresh_term == 0){ cur_string_value = value_return(str3); fresh_term = 1; }} $$= $1; }  
+		| MINUS NUMBER {sprintf(str,"   . p%d",point_number); sprintf(str2," p%d",point_number); sprintf(str3,"-%d",$2); if(search_value(T,str3) == 1) { node_insert(&T,str2,str,str3); fprintf(yyout,str); cur_string_value = str2;  point_number++; }else { if(fresh_term == 0){ cur_string_value = value_return(str3); fresh_term = 1; } } $$ = -$2;  }
+		| L_PAREN expression R_PAREN {sprintf(str,"   . p%d",point_number); sprintf(str2," t%d",point_number); sprintf(str3,"%d",$2); if(search_value(T,str3) == 1){  node_insert(&T,str2,str,str3);  fprintf(yyout,str); cur_string_value = str2;  term_number++;}else { if(fresh_term == 0) {  cur_string_value = value_return(str3); fresh_term = 1; }} $$ = $2;  }
+		| MINUS L_PAREN expression R_PAREN {sprintf(str,"   . p%d",point_number); sprintf(str2," t%d",point_number); sprintf(str3,"-%d",$3);if(search_value(T,str3) == 1) { node_insert(&T,str2,str,str3); fprintf(yyout,str); point_number++; }else { if(fresh_term == 0) { cur_string_value = value_return(str3); fresh_term = 1; } } $$ = -$3;  }
 		;
-var		: IDENT {  }
-     		| IDENT L_PAREN expression R_PAREN {   }
+var		: IDENT {if(dont_loop == 0){  sprintf(str,"   . %s",$1); sprintf(str2," _%s",$1);  sprintf(str3,"%d",$1); cur_string_value = str2; if(search_value(T,str3) == 1){ node_insert(&T,str2,str,str3); fprintf(yyout,str); cur_string_value = str2;  }else {  if(fresh_term == 0) {cur_string_value = value_return(str3); fresh_term = 1; }} }$$ = $1;   }
+     		| IDENT L_PAREN expression R_PAREN { /*char *xyz; xyz = return_ascii($3); sprintf(str,"   . %s",xyz); sprintf(str2," _%s",xyz); sprintf(str3,"%d",$3); cur_string_value = str2; if(search_value(T,str3) == 1){ node_insert(&T,str2,str,str3); fprint(yyout,str); cur_string_value = str2; }else { if(fresh_term == 0) {cur_string_value = value_return(str3); fresh_term = 1; }} $$ = $1; */   }
 		;
 %%
+
 int main(int argc,char **argv){
-	if(argc > 1){
+	
+	if(argc == 2){
 		yyin = fopen(argv[1],"r");
 		if(yyin == NULL){
 			printf("syntax: %s filename\n",argv[0]);
 		}//endif
-	}//end if
-	yyparse(); //Calls yylex for tokens.
+		yyparse();
+	}else if(argc == 1){
+
+		yyparse();
+
+	}else if(argc == 3){
+
+		/* Writing to a file */
+		const char *output_file = argv[2];
+		const char *file_ext = ".txt";
+
+		char result[100];
+
+		strcpy(result,output_file);
+		strcat(result,file_ext);
+		 
+		yyout = fopen(result,"w");
+		
+		/* Reading the file and parsing it */
+		yyin = fopen(argv[1],"r");
+
+		/* Create a single linked list */
+
+		temp = create(); 
+
+		if(yyin == NULL){
+			printf("syntax: %s filename\n",argv[0]);
+		}
+
+		yyparse();
+		fclose(yyout); 
+		fclose(yyin); 
+
+		
+		/* After reading all the variables and written into a different file */
+		/* Take in all the input and then write it to here */
+		char buff[BUZZ_SIZE];
+
+		char result2[100]
+		const char *mil_ext = ".mil";
+		strcpy(result2,output_file);
+		strcat(result2,mil_ext);
+		
+		yyin = fopen(result , "r");
+		yyout = fopen(result2, "w");
+		finished_looping = 1;
+		if(yyin == NULL){
+			printf("File Opening Error!!");
+		}
+		/* Reading all of the strings and printing on the mil file */
+		while(fgets(buff,BUFF_SIZE,yyin) != NULL){
+			fprint(yyout,"%s\n",buff); 
+		}
+
+		fclose(yyin);
+		yyparse();		
+		
+		
+	}
+	
+ //Calls yylex for tokens.
+		
+	 
+	  
 	return 0;
 }
 char *return_ascii(int i){
@@ -187,6 +268,15 @@ char *return_ascii(int i){
 char *my_itoa(char *dest,int i){
 	sprintf(dest, "%d", i);
 	return dest;
+}
+
+/* return a 1 if the character is an ascii value */ 
+int bool_value(int dest){
+	if((dest >= 97 && dest <= 122) || (dest >= 65 && dest <= 90)){
+		return 1;
+	}
+	return 0;
+
 }
 double findMod(double a, double b){
 	if( a < 0)
