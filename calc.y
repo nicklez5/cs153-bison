@@ -20,6 +20,7 @@
 	char str[12];
 	char str2[12];
 	char str3[12]; 
+	char str4[12];
 	int point_number = 0;
 	int term_number = 0;
 	int current_value = 0;
@@ -28,6 +29,7 @@
 	int fresh_term = 0;
 	int dont_loop = 0;
 	int check_bool_type = 0;
+	int loop_token = 0;
 	node *temp;
 	FILE *yyin;
 	FILE *yyout;
@@ -68,7 +70,7 @@ program		: PROGRAM IDENT SEMICOLON block END_PROGRAM  {  }
 block 		: block_helper BEGIN_PROGRAM statement_helper {   }
 		;
 
-block_helper    : %empty { }
+block_helper    : %empty {$$ = ""; }
 		| declaration SEMICOLON block_helper {    }
 		;
 
@@ -85,13 +87,13 @@ declaration_helper2 : ARRAY L_PAREN NUMBER R_PAREN OF INTEGER { sprintf(str, "%d
 
 statement	: expression_statement {  }
 	  	| ifelse_statement {  }
-		| while_statement { }
+		| while_statement { $$ = $1; }
 		| dobegin_statement { }
-		| readwrite_statement { }
+		| readwrite_statement {$$ = $1; }
 		| continue_statement { }
 		;
 			/* = dst,src          dst = src */
-expression_statement : var ASSIGN expression { char* x; x = return_ascii($1); sprintf(str,"%d",$3); sprintf(str2," =%s,%s",value_return(temp,x),value_return(temp,str)) fprintf(fp,str);   }  
+expression_statement : var ASSIGN expression { char* x; x = return_ascii($1); sprintf(str,"%d",$3); sprintf(str2," =%s,%s\n",value_return(temp,x),value_return(temp,str)) fprintf(fp,str);   }  
 		     | var EQUAL expression {  }
 		     ;
 
@@ -99,14 +101,14 @@ ifelse_statement 	: IF bool_exp THEN statement_helper ENDIF {  }
 		  	| IF bool_exp THEN statement_helper ELSE statement_helper ENDIF { }
 			;
 
-while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP {    }
+while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP {char* predicate_id; predicate_id = value_return(temp,$2); char* label; label = value_return(temp,$4); sprintf(str,"?:= L%d,%s\n",loop_token,predicate_id); fprintf(fp,str); sprintf(str2,"L%d",loop_token); $$ = str2; loop_token++;         }
 		 	;
 
 dobegin_statement	: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp {    }
 		  	;
 
-readwrite_statement	: READ var readwrite_helper {char* x; x = return_ascii($2); sprintf(str,"   .<%s",value_return(temp,x)); fprintf(fp,str);     }
-		    	| WRITE var readwrite_helper {char* x; x = return_ascii($2); sprintf(str,"   .>%s",value_return(temp,x)); fprintf(fp,str);   } 
+readwrite_statement	: READ var readwrite_helper {char* x; x = return_ascii($2); sprintf(str,"   .<%s\n",value_return(temp,x)); sprintf(str2," t%d",term_number); sprintf(str3,".<%s",value_return(temp,x)); if(search_value(T,str3) == 1){node_insert(&T,str2,str,str3); } fprintf(fp,str); $$ = str3;    }
+		    	| WRITE var readwrite_helper {char* x; x = return_ascii($2); sprintf(str,"   .>%s\n",value_return(temp,x)); sprintf(str2," t%d",term_number); sprintf(str3,".>%s",value_return(temp,x)); if(search_value(T,str3) == 1){ node_insert(&T,str2,str,str3); } fprintf(fp,str); $$ = str3;  } 
 			;
 
 readwrite_helper	: %empty { }
@@ -116,22 +118,22 @@ readwrite_helper	: %empty { }
 continue_statement	: CONTINUE {  }
 			;
 
-statement_helper	: %empty {  }
-		 	| statement SEMICOLON statement_helper {  }
+statement_helper	: %empty { $$ = ""; }
+		 	| statement SEMICOLON statement_helper { $$ = $1; /* char *x; x = value_return(temp,$1);   sprintf(str,":L%d\n",loop_num);  fprintf(fp,str) */ }
 		 	;
 
-bool_exp		: relation_and_exp bool_exp_helper {$$ = $1; }
+bool_exp		: relation_and_exp bool_exp_helper {char *left_id; left_id = value_return(temp,$1); if(strlen($2) == 0){ $$ = $1; } else {char *right_id; right_id = value_return(temp,$2); sprintf(str2," t%d",term_number); sprintf(str3,"|| t%d,%s,%s",term_number,left_id,right_id); sprintf(str4,"   %s\n",str3); if(search_value(T,str3) == 1){ fprintf(yyout,str4); node_insert(&T,str2,str4,str3);} term_number++; $$ = str3; } }
 			;
 
-relation_and_exp 	: relation_exp relation_and_helper { $$ = $1;   }
+relation_and_exp 	: relation_exp relation_and_helper { char* left_id; left_id = value_return(temp,$1); if(strlen($2) == 0){ $$ = $1; }else{char* right_id; right_id = value_return(temp,$2); sprintf(str2," t%d",term_number); sprintf(str3,"&& t%d,%s,%s",term_number,left_id,right_id); sprintf(str4,"   %s\n",str3); if(search_value(T,str3) == 1){ fprintf(yyout,str4); node_insert(&T,str2,str4,str3); } term_number++; $$ = str3;   }   }
 			;
 
 relation_and_helper	: %empty {$$ = "";  }
-		    	| AND relation_exp relation_and_helper {   }
+		    	| AND relation_exp relation_and_helper { $$ = $2;  }
 			;
 
-bool_exp_helper 	: %empty {   }
-		 	| OR relation_and_exp bool_exp_helper {  }
+bool_exp_helper 	: %empty {$$ = "";   }
+		 	| OR relation_and_exp bool_exp_helper { $$ = $2;  }
 			;
 
 	
@@ -250,7 +252,7 @@ int main(int argc,char **argv){
 
 		fclose(yyin);
 		yyparse();		
-		
+		fclose(yyout);
 		
 	}
 	
