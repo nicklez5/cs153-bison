@@ -10,6 +10,7 @@ hex		0[xX]{hextail}
 
 %{	
 	#include <stdlib.h>
+	
 	#include <stdio.h>
 	#include "y.tab.h"	
 %}
