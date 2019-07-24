@@ -27,6 +27,8 @@
 	char *totalLine;
 	#define ITOA(n) my_itoa((char [41]) {0},(n))
 	#define BUZZ_SIZE 1024
+	
+	
 	char str[12];
 	char str2[12];
 	char str3[12]; 
@@ -92,91 +94,89 @@ program		: PROGRAM IDENT SEMICOLON block END_PROGRAM  {  }
 		;
 
 
-block 		: block_helper BEGIN_PROGRAM statement_helper { $$ = "";  }
+block 		: block_helper BEGIN_PROGRAM statement_helper {   }
 		;
 
-block_helper    : %empty {$$ = ""; }
-		| declaration SEMICOLON block_helper {$$ = "";    }
+block_helper    : %empty {}
+		| declaration SEMICOLON block_helper {   }
 		;
 
-declaration	: declaration_helper COLON declaration_helper2 { if(strcmp($3,"integer") == 1) {sprintf(str, "   .[] _%s, %s", $1,$3); sprintf(str2," _%s",$1); sprintf(str3,"%s",$1); node_insert(&list_var,str2,str,str3);    $$ = str; } $$ = $1; dont_loop = 0;}
+declaration	: declaration_helper COLON declaration_helper2 { }
 		;  
 
-declaration_helper : %empty {$$ = ""; }
-		   | IDENT declaration_helper {dont_loop = 0; $$ = $1; int x; x = *$1; dont_loop = 1; sprintf(str,"   . _%s",$1); sprintf(str2," _%s",$1); sprintf(str3,"%d",x); if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str,str3); }    } 
-		   | IDENT COMMA declaration_helper{  int x; x = *$1; dont_loop = 1; sprintf(str,"   . _%s",$1); sprintf(str2," _%s",$1); sprintf(str3,"%d",x); if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str,str3);   }  $$ = $1; }	
+declaration_helper : %empty { }
+		   | IDENT declaration_helper {    } 
+		   | IDENT COMMA declaration_helper{ }	
 		   ; 
 
-declaration_helper2 : ARRAY L_PAREN NUMBER R_PAREN OF INTEGER { sprintf(str, "%d",$3); $$ = str;  }
-		    | INTEGER {$$ = "integer";  }
+declaration_helper2 : ARRAY L_PAREN NUMBER R_PAREN OF INTEGER {  }
+		    | INTEGER {  }
 		    ;
 
-statement	: expression_statement {$$ = "";  }
-	  	| ifelse_statement {$$ = "";  }
-		| while_statement { $$ = $1; }
-		| dobegin_statement {$$ = ""; }
-		| readwrite_statement {$$ = $1; }
-		| continue_statement {$$ = ""; }
+statement	: expression_statement { }
+	  	| ifelse_statement {  }
+		| while_statement { }
+		| dobegin_statement {   }
+		| readwrite_statement { }
+		| continue_statement { }
 		;
 			/* = dst,src          dst = src */
-expression_statement : var ASSIGN expression { char* x; x = return_ascii($1); sprintf(str,"%d",$3); sprintf(str2," =%s,%s",value_return(list_var,x),value_return(list_var,str)); node_insert(&list_var,"","",str2); $$ = value_return(list_var,x);   }  
+expression_statement : var ASSIGN expression {    }  
 		  
 		     ;
 
-ifelse_statement 	: IF bool_exp THEN statement_helper ENDIF { $$ = "";  }
-		  	| IF bool_exp THEN statement_helper ELSE statement_helper ENDIF { $$ = ""; }
+ifelse_statement 	: IF bool_exp THEN statement_helper ENDIF {   }
+		  	| IF bool_exp THEN statement_helper ELSE statement_helper ENDIF {  }
 			;
 
-while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP {char* predicate_id; predicate_id = value_return(list_var,$2); char* label; label = value_return(list_var,$4); sprintf(str,"?:= L%d,%s",loop_token,predicate_id); node_insert(&list_func,"","",str); node_insert(&list_func,"","","L");  sprintf(str2,"L%d",loop_token);  $$ = str2; loop_token++;         }
+while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP {      }
 		 	;
 
-dobegin_statement	: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp { $$ = "";   }
+dobegin_statement	: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp {   }
 		  	;
 
-readwrite_statement	: READ var readwrite_helper {char* x; x = return_ascii($2); sprintf(str,"   .<%s",value_return(list_var,x)); sprintf(str2," t%d",term_number); sprintf(str3,".<%s",value_return(list_var,x)); node_insert(&list_var,str2,str,str3); node_insert(&list_func,"","",str3);   $$ = str3;    }
-		    	| WRITE var readwrite_helper {char* x; x = return_ascii($2); sprintf(str,"   .>%s",value_return(list_var,x)); sprintf(str2," t%d",term_number); sprintf(str3,".>%s",value_return(list_var,x)); node_insert(&list_var,str2,str,str3); node_insert(&list_func,"","",str3);  $$ = str3;  } 
+readwrite_statement	: READ var readwrite_helper {    }
+		    	| WRITE var readwrite_helper {   } 
 			;
 
-readwrite_helper	: %empty {$$ = ""; }
+readwrite_helper	: %empty { }
 		 	| COMMA var readwrite_helper{  }
 			;
 
-continue_statement	: CONTINUE {$$ = "";  }
+continue_statement	: CONTINUE {  }
 			;
 
-statement_helper	: %empty { $$ = ""; }
-		 	| statement SEMICOLON statement_helper { $$ = $1; /* char *x; x = value_return(temp,$1);   sprintf(str,":L%d\n",loop_num);  fprintf(fp,str) */ }
+statement_helper	: %empty {  }
+		 	| statement SEMICOLON statement_helper { }
 		 	;
 
-bool_exp		: relation_and_exp bool_exp_helper {char *left_id; left_id = value_return(list_var,$1); if(strlen($2) == 0){ $$ = $1; } else {char *right_id; right_id = value_return(list_var,$2); sprintf(str2," t%d",term_number); sprintf(str3,"|| t%d,%s,%s",term_number,left_id,right_id); sprintf(str4,"   %s",str3); if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str4,str3); node_insert(&list_func,"","",str3);   term_number++; } $$ = str3; } }
+bool_exp		: relation_and_exp bool_exp_helper { }
 			;
 
-relation_and_exp 	: relation_exp relation_and_helper { char* left_id; left_id = value_return(list_var,$1); if(strlen($2) == 0){ $$ = $1; }else{char* right_id; right_id = value_return(list_var,$2); sprintf(str2," t%d",term_number); sprintf(str3,"&& t%d,%s,%s",term_number,left_id,right_id); sprintf(str4,"   %s",str3); if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str4,str3); node_insert(&list_func,"","",str3);  term_number++; } $$ = str3;   }   }
+relation_and_exp 	: relation_exp relation_and_helper {    }
 			;
 
-relation_and_helper	: %empty {$$ = "";  }
-		    	| AND relation_exp relation_and_helper { $$ = $2;  }
+relation_and_helper	: %empty { }
+		    	| AND relation_exp relation_and_helper {  }
 			;
 
-bool_exp_helper 	: %empty {$$ = "";   }
-		 	| OR relation_and_exp bool_exp_helper { $$ = $2;  }
+bool_exp_helper 	: %empty { }
+		 	| OR relation_and_exp bool_exp_helper {  }
 			;
 
 	
-relation_exp		: TRUE {$$ = "True";  char *x = "True"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); if(search_value(list_var,str) == 1){ sprintf(str3,"   . t%d",term_number); node_insert(&list_var,str2,str3,x);  term_number++;   }  }
+relation_exp		: TRUE {  }
 
-			| FALSE { $$ = "False"; char *x = "False"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); if(search_value(list_var,str) == 1){ sprintf(str3,"   . t%d",term_number); node_insert(&list_var,str2,str3,x); term_number++; } }
+			| FALSE { }
 
-			| expression comp expression {sprintf(str,"%c",$1); if(bool_value($3) == 1){ sprintf(str2,"%c",$3); }else { sprintf(str2,"%d",$3); } char *src2; src2 = value_return(list_var,str); char *src3;  src3 = value_return(list_var,str2); sprintf(str3,"   %s t%d,%s,%s",$2,term_number,src2,src3); sprintf(str2," t%d",term_number); sprintf(str,"  . t%d",term_number); $$ = str3;  node_insert(&list_var,str2,str,str3); node_insert(&list_func,"","",str3); term_number++; $$ = str3;   }	      
+			| expression comp expression {} 
+			| NOT expression comp expression {}
+			| NOT TRUE { }
 
-			| NOT expression comp expression {sprintf(str,"%c",$2); if(bool_value($4) == 1){ sprintf(str2,"%c",$4); }else { sprintf(str2,"%d",$4); } char *src2; src2 = value_return(list_var,str); char *src3; src3 = value_return(list_var,str2); sprintf(str3,"   %s t%d,%s,%s",$3,term_number,src2,src3); sprintf(str2," t%d",term_number); sprintf(str,"   . t%d",term_number); $$ = str3;  node_insert(&list_var,str2,str,str3); node_insert(&list_func,"","",str3);  term_number++; sprintf(str4,"! t%d,%s",term_number,str2); term_number++; sprintf(str2," t%d",term_number); sprintf(str,"   . t%d",term_number); node_insert(&list_var,str2,str,str4); node_insert(&list_func,"","",str4);  $$ = str4;  }  
+			| NOT FALSE { }
 
-			| NOT TRUE { $$ = "Not True"; char *x = "Not True"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); sprintf(str3,"   t%d",term_number); if(search_value(list_var,str) == 1){ node_insert(&list_var,str2,str3,x); term_number++; } }
-
-			| NOT FALSE { $$ = "Not False"; char *x = "Not False"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); sprintf(str3,"   t%d\n",term_number); if(search_value(list_var,str) == 1){ node_insert(&list_var,str2,str3,x);   term_number++; } }
-
-			| L_PAREN bool_exp R_PAREN { sprintf(str,"%s",$2); $$ = $2;  }
-			| NOT L_PAREN bool_exp R_PAREN { sprintf(str,"%s",$3);  $$ = $3; }
+			| L_PAREN bool_exp R_PAREN {  }
+			| NOT L_PAREN bool_exp R_PAREN {  }
 			;
 
 comp		: EQ {$$ = "==";  }
@@ -193,41 +193,41 @@ expression 	: mult_exp expression_helper {$$ = $1; }
 	    
 expression_helper : %empty {  }
 		  /* dst = src1 + src2 = + dst,src1,src2 */ 
-		  | PLUS mult_exp expression_helper { $$.result_id = newVirtalReg(); fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); } else {sprintf(str,"%d",$2); } char *src2; src2 = value_return(list_var,str);  sprintf(str2,"+ t%d,%s,%s",term_number, cur_string_value , src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++;   $$ = $2; }  
+		  | PLUS mult_exp expression_helper { }  
 
-		  | MINUS mult_exp expression_helper { fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); } else {sprintf(str,"%d",$2); } char *src2; src2 = value_return(list_var,str);  sprintf(str2,"- t%d,%s,%s",term_number, cur_string_value , src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++; $$ = $2;  }
+		  | MINUS mult_exp expression_helper {   }
 		  ;
 
-mult_exp	: term mult_exp_helper {$$ = $1; } 
+mult_exp	: term mult_exp_helper { } 
 	 	;
 
 
 mult_exp_helper : %empty {  }
 
 		/* dst = src1 * src2 = * dst,src1,src2 */
-		| MULT term mult_exp_helper {fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); }else {sprintf(str,"%d",$2); } char* src2; src2 = value_return(list_var,str); sprintf(str2,"* t%d,%s,%s",term_number, cur_string_value, src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++;  $$ = $2; }  /* cur_string_value is in src1 */
+		| MULT term mult_exp_helper {   } 
 
-		| DIV term mult_exp_helper { fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); }else { sprintf(str,"%d",$2); } char* src2; src2 = value_return(list_var,str); sprintf(str2,"/ t%d,%s,%s", term_number, cur_string_value , src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2);  term_number++; $$ = $2;  } 
+		| DIV term mult_exp_helper {  } 
 
-		| MOD term mult_exp_helper { fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); }else { sprintf(str,"%d",$2); } char* src2; src2 = value_return(list_var,str); sprintf(str2,"%% t%d,%s,%s", term_number, cur_string_value, src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2);  node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++;  $$ = $2;   }
+		| MOD term mult_exp_helper {    }
 		;
 
-term		: var {  $$ = $1;  }
+term		: var {    }
 
-		| NUMBER { sprintf(str, "   . p%d",point_number); sprintf(str2," p%d",point_number); sprintf(str3,"%d",$1); if(search_value(list_var, str3) == 1) { node_insert(&list_var,str2,str,str3); cur_string_value = str2; point_number++;  } else { if(fresh_term == 0){ cur_string_value = value_return(list_var,str3); fresh_term = 1; }} $$= $1; }  
+		| NUMBER { }  
 
-		| MINUS NUMBER {sprintf(str,"   . p%d",point_number); sprintf(str2," p%d",point_number); sprintf(str3,"-%d",$2); if(search_value(list_var,str3) == 1) { node_insert(&list_var,str2,str,str3); cur_string_value = str2;  point_number++; }else { if(fresh_term == 0){ cur_string_value = value_return(list_var,str3); fresh_term = 1; } } $$ = -$2;  }
+		| MINUS NUMBER {  }
 
-		| L_PAREN expression R_PAREN {sprintf(str,"   . p%d",point_number); sprintf(str2," t%d",point_number); sprintf(str3,"%d",$2); if(search_value(list_var,str3) == 1){  node_insert(&list_var,str2,str,str3); cur_string_value = str2;  term_number++;}else { if(fresh_term == 0) {  cur_string_value = value_return(list_var,str3); fresh_term = 1; }} $$ = $2;  }
+		| L_PAREN expression R_PAREN {  }
 
-		| MINUS L_PAREN expression R_PAREN {sprintf(str,"   . p%d",point_number); sprintf(str2," t%d",point_number); sprintf(str3,"-%d",$3);if(search_value(list_var,str3) == 1) { node_insert(&list_var,str2,str,str3); point_number++; }else { if(fresh_term == 0) { cur_string_value = value_return(list_var,str3); fresh_term = 1; } } $$ = -$3;  }
+		| MINUS L_PAREN expression R_PAREN {  }
 		;
 
 
-var		: IDENT {int x; x = *$1; $$ = x; sprintf(str,"   . %s",$1); sprintf(str2," _%s",$1); sprintf(str3,"%d",x); cur_string_value = str2; if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str,str3); }else {  if(fresh_term == 0) {cur_string_value = value_return(list_var,str3); fresh_term = 1; } }   }
+var		: IDENT {   }
     		
 
-     		| IDENT L_PAREN expression R_PAREN { $$ = 0; /*char *xyz; xyz = return_ascii($3); sprintf(str,"   . %s",xyz); sprintf(str2," _%s",xyz); sprintf(str3,"%d",$3); cur_string_value = str2; if(search_value(T,str3) == 1){ node_insert(&T,str2,str,str3); fprint(yyout,str); cur_string_value = str2; }else { if(fresh_term == 0) {cur_string_value = value_return(str3); fresh_term = 1; }} $$ = $1; */   }
+     		| IDENT L_PAREN expression R_PAREN {  }
 		;
 %%
 
