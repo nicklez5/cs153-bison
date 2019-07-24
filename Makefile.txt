@@ -1,6 +1,6 @@
 parse: grammar_l.lex calc2.y
        	bison -v -d --file-prefix=y calc2.y
 	flex grammar_l.lex
-	gcc -o parser y.tab.c lex.yy.c -lfl
+	gcc -o my_complier linked_list.c y.tab.c lex.yy.c -lfl
 clean: 
 	rm -rf lex.yy.c y.tab.* y.output *.o calc	

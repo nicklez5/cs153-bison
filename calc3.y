@@ -4,12 +4,22 @@
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
-	#include "linked_list.h"	
+	// #include "linked_list.h"	
 	#include <string.h>
+	#include <map>
+	#include <iterator>
+	#include <iostream> 
+	#include "random_struct.h"
+	#include <sstream>
+
+	using namespace std;
 	void yyerror(const char *msg);
 	double findMod(double a, double b);
 	char *my_itoa(char *dest,int i);
 	char *return_ascii(int i);
+	string newVirtualReg();
+
+	ostringstream oss;
 	int bool_value(int dest);
 	extern int num_pos ;
 	extern int num_line;
@@ -32,9 +42,9 @@
 	int loop_token = 0;
 	struct node *list_var;
 	struct node *list_func;
-	FILE *yyin;
-	FILE *yyout;
-	/*extern int yylex(void); */
+	extern FILE *yyin;
+	extern FILE *yyout;
+	extern int yylex(void); 
 %}
 
 %union{
@@ -57,7 +67,20 @@
 %type   <tokenName> bool_exp relation_and_exp relation_exp relation_and_helper bool_exp_helper 
 %type   <tokenName> comp 
 %type   <tokenName> statement 
-%type   <tokenName> NEQ EQ LT GTE GT LTE   
+%type   <tokenName> NEQ EQ LT GTE GT LTE 
+
+
+%type    <ExpStruct> var expression expression_helper mult_exp_helper term mult_exp 
+%type    <ExpStruct> block block_helper declaration_helper declaration declaration_helper2 
+%type    <ExpStruct> expression_statement ifelse_statement while_statement dobegin_statement readwrite_statement readwrite_helper continue_statement statement_helper
+%type    <ExpStruct> bool_exp relation_and_exp relation_exp relation_and_helper bool_exp_helper
+%type    <ExpStruct> comp
+%type    <ExpStruct> statement
+%type    <ExpStruct> NEQ EQ LT GTE GT LTE
+/*
+
+
+*/
 %left	PLUS MINUS
 %left	MULT DIV
 %nonassoc UMINUS
@@ -168,9 +191,9 @@ expression 	: mult_exp expression_helper {$$ = $1; }
 		;
 
 	    
-expression_helper : %empty {$$ = 0;  }
+expression_helper : %empty {  }
 		  /* dst = src1 + src2 = + dst,src1,src2 */ 
-		  | PLUS mult_exp expression_helper { fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); } else {sprintf(str,"%d",$2); } char *src2; src2 = value_return(list_var,str);  sprintf(str2,"+ t%d,%s,%s",term_number, cur_string_value , src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++;   $$ = $2; }  
+		  | PLUS mult_exp expression_helper { $$.result_id = newVirtalReg(); fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); } else {sprintf(str,"%d",$2); } char *src2; src2 = value_return(list_var,str);  sprintf(str2,"+ t%d,%s,%s",term_number, cur_string_value , src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++;   $$ = $2; }  
 
 		  | MINUS mult_exp expression_helper { fresh_term = 0; if(bool_value($2) == 1){ sprintf(str,"%c",$2); } else {sprintf(str,"%d",$2); } char *src2; src2 = value_return(list_var,str);  sprintf(str2,"- t%d,%s,%s",term_number, cur_string_value , src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++; $$ = $2;  }
 		  ;
@@ -255,33 +278,7 @@ int main(int argc,char **argv){
 
 
 
-		/*
-		fclose(yyin); 
 		
-		
-		/* After reading all the variables and written into a different file 
-		* Take in all the input and then write it to here 
-		char buff[BUZZ_SIZE];
-
-		char result2[100];
-		char *mil_ext = ".mil";
-		strcpy(result2,output_file);
-		strcat(result2,mil_ext);
-		yyin = fopen(result , "r");
-		yyout = fopen(result2, "w");
-		finished_looping = 1;
-		if(yyin == NULL){
-			printf("File Opening Error!!");
-		}
-		 Reading all of the strings and printing on the mil file 
-		while(fgets(buff,BUZZ_SIZE,yyin) != NULL){
-			fprintf(yyout,"%s\n",buff); 
-		}
-
-		fclose(yyin);
-		yyparse();		
-		fclose(yyout);
-		*/
 		
 	}
 	
@@ -290,6 +287,11 @@ int main(int argc,char **argv){
 	 
 	  
 	return 0;
+}
+string newVirtualReg(){
+	ostringstream buffer;
+	buffer << " p" << point_number;
+	return buffer.str();	
 }
 char *return_ascii(int i){
 	sprintf(str,"%d",i);

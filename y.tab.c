@@ -521,7 +521,7 @@ static const yytype_uint8 yyrline[] =
      128,   131,   134,   135,   138,   139,   143,   145,   147,   149,
      151,   153,   155,   156,   159,   160,   161,   162,   163,   164,
      167,   171,   173,   175,   178,   182,   185,   187,   189,   192,
-     194,   196,   198,   200,   202,   205
+     194,   196,   198,   200,   204,   207
 };
 #endif
 
@@ -1758,13 +1758,13 @@ yyreduce:
     break;
 
   case 64:
-#line 202 "calc.y" /* yacc.c:1646  */
+#line 204 "calc.y" /* yacc.c:1646  */
     {int x; x = *(yyvsp[0].tokenName); (yyval.ival) = x; sprintf(str,"   . %s",(yyvsp[0].tokenName)); sprintf(str2," _%s",(yyvsp[0].tokenName)); sprintf(str3,"%d",x); cur_string_value = str2; if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str,str3); }else {  if(fresh_term == 0) {cur_string_value = value_return(list_var,str3); fresh_term = 1; } }   }
 #line 1764 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 205 "calc.y" /* yacc.c:1646  */
+#line 207 "calc.y" /* yacc.c:1646  */
     { (yyval.ival) = 0; /*char *xyz; xyz = return_ascii($3); sprintf(str,"   . %s",xyz); sprintf(str2," _%s",xyz); sprintf(str3,"%d",$3); cur_string_value = str2; if(search_value(T,str3) == 1){ node_insert(&T,str2,str,str3); fprint(yyout,str); cur_string_value = str2; }else { if(fresh_term == 0) {cur_string_value = value_return(str3); fresh_term = 1; }} $$ = $1; */   }
 #line 1770 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1998,7 +1998,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 207 "calc.y" /* yacc.c:1906  */
+#line 209 "calc.y" /* yacc.c:1906  */
 
 
 int main(int argc,char **argv){
