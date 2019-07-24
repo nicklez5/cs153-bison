@@ -38,19 +38,48 @@ int search_value(node *head,char *temp_value){
 	return 1;
 }
 void node_insert(node **head,char *temp_id, char *temp_code, char *temp_key){
-	node *p_0 = create();
-	node *last = *head;
+	node *p_0 = malloc(sizeof(struct node));
+	p_0 -> next = NULL;
 	p_0 -> result_id = temp_id;
 	p_0 -> code = temp_code;
 	p_0 -> value = temp_key;
-	if(head == NULL){
+	
+
+	if(*head == NULL){
 		*head = p_0;
-		return; 
+	}else{
+		p_0 -> next = *head;
+		*head = p_0;
+
 	}
-	while(last ->next != NULL)
-		last = last -> next;
-	last -> next = p_0;
-	return;
+	
+}
+void print_all_id(node *head,FILE *_fp){
+	node *current = head;
+	while( current != NULL) {
+		fprintf(_fp,"   .%s\n",current -> result_id);
+		current = current -> next;
+	}
+
+
+}
+void print_all_value(node *head,FILE *_fp){
+	node *current = head;
+	char *random_str = "START";
+	fprintf(_fp,": %s\n",random_str);
+	int loop_num = 0;
+	while( current != NULL) {
+		if(strcmp(current->value , "L") == 0){
+			fprintf(_fp,": L%d\n",loop_num);
+			loop_num++;
+		}else{
+			fprintf(_fp,"   %s\n",current -> value);
+		}
+		
+		current = current -> next;
+	}
+	
+
 }
 char *code_return(node *head,char *temp_id){
 	char *_failed = "";

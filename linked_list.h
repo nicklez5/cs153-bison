@@ -16,3 +16,5 @@ int search_value(node *head,char *temp_value);
 char *value_return(node *head, char *temp_value);
 char *code_return(node *head, char *temp_id);
 node *back_list(node *head);
+void print_all_id(node *head,FILE *_fp);
+void print_all_value(node *head,FILE *_fp);
