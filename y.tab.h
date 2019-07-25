@@ -102,13 +102,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 40 "calc.y" /* yacc.c:1909  */
+#line 54 "calc3.y" /* yacc.c:1909  */
 
   double dval;
   int ival;
   char* tokenName;
+  struct ExpStruct *ExpType;
 
-#line 112 "y.tab.h" /* yacc.c:1909  */
+#line 113 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

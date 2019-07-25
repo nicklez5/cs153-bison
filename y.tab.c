@@ -62,16 +62,26 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 4 "calc.y" /* yacc.c:339  */
+#line 4 "calc3.y" /* yacc.c:339  */
 
+	#include <iostream>
 	#include <stdio.h>
-	#include <stdlib.h>
-	#include "linked_list.h"	
+	#include <stdlib.h>	
+	#include <string>
 	#include <string.h>
+	#include <map>
+	#include <iterator> 
+	#include "random_struct.h"
+	#include <sstream>
+
+	using namespace std;
 	void yyerror(const char *msg);
 	double findMod(double a, double b);
 	char *my_itoa(char *dest,int i);
 	char *return_ascii(int i);
+	string newVirtualReg();
+
+	ostringstream oss;
 	int bool_value(int dest);
 	extern int num_pos ;
 	extern int num_line;
@@ -79,26 +89,30 @@
 	char *totalLine;
 	#define ITOA(n) my_itoa((char [41]) {0},(n))
 	#define BUZZ_SIZE 1024
+	map<string,string> _map; 
+	map<string,string> func_map;
+	string type_1 = "SCALAR";
+	string type_2 = "ASSIGN";
+	string type_3 = "WHILE";
+	string type_4 = "PLUS";
+	string type_5 = "READ/WRITE";
+	string null_str = "";
 	char str[12];
-	char str2[12];
-	char str3[12]; 
-	char str4[12];
+	char *writeable;
 	int point_number = 0;
 	int term_number = 0;
-	int current_value = 0;
-	char *cur_string_value;
-	int finished_looping = 0; 
-	int fresh_term = 0;
-	int dont_loop = 0;
-	int check_bool_type = 0;
+	
+	
 	int loop_token = 0;
-	struct node *list_var;
-	struct node *list_func;
-	FILE *yyin;
-	FILE *yyout;
-	/*extern int yylex(void); */
+	//struct node *list_var;
+	//struct node *list_func;
 
-#line 102 "y.tab.c" /* yacc.c:339  */
+	extern FILE *yyin;
+	extern FILE *yyout;
+	extern int yylex(void);
+	extern int yyparse(void); 
+
+#line 116 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -190,13 +204,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 40 "calc.y" /* yacc.c:355  */
+#line 54 "calc3.y" /* yacc.c:355  */
 
   double dval;
   int ival;
   char* tokenName;
+  struct ExpStruct *ExpType;
 
-#line 200 "y.tab.c" /* yacc.c:355  */
+#line 215 "y.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -213,7 +228,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 217 "y.tab.c" /* yacc.c:358  */
+#line 232 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -515,13 +530,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    68,    68,    72,    75,    76,    79,    82,    83,    84,
-      87,    88,    91,    92,    93,    94,    95,    96,    99,   103,
-     104,   107,   110,   113,   114,   117,   118,   121,   124,   125,
-     128,   131,   134,   135,   138,   139,   143,   145,   147,   149,
-     151,   153,   155,   156,   159,   160,   161,   162,   163,   164,
-     167,   171,   173,   175,   178,   182,   185,   187,   189,   192,
-     194,   196,   198,   200,   204,   207
+       0,    79,    79,    83,    86,    87,    90,    93,    94,    95,
+      98,    99,   102,   103,   104,   105,   106,   107,   110,   114,
+     115,   118,   121,   124,   126,   129,   130,   133,   136,   137,
+     140,   143,   146,   147,   150,   151,   155,   157,   159,   161,
+     163,   165,   167,   168,   171,   172,   173,   174,   175,   176,
+     179,   183,   185,   187,   190,   194,   197,   199,   201,   204,
+     206,   208,   210,   212,   216,   218
 };
 #endif
 
@@ -1386,391 +1401,391 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 68 "calc.y" /* yacc.c:1646  */
+#line 79 "calc3.y" /* yacc.c:1646  */
     {  }
-#line 1392 "y.tab.c" /* yacc.c:1646  */
+#line 1407 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 72 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = "";  }
-#line 1398 "y.tab.c" /* yacc.c:1646  */
+#line 83 "calc3.y" /* yacc.c:1646  */
+    {   }
+#line 1413 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 75 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = ""; }
-#line 1404 "y.tab.c" /* yacc.c:1646  */
+#line 86 "calc3.y" /* yacc.c:1646  */
+    {}
+#line 1419 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 76 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = "";    }
-#line 1410 "y.tab.c" /* yacc.c:1646  */
+#line 87 "calc3.y" /* yacc.c:1646  */
+    {   }
+#line 1425 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 79 "calc.y" /* yacc.c:1646  */
-    { if(strcmp((yyvsp[0].tokenName),"integer") == 1) {sprintf(str, "   .[] _%s, %s", (yyvsp[-2].tokenName),(yyvsp[0].tokenName)); sprintf(str2," _%s",(yyvsp[-2].tokenName)); sprintf(str3,"%s",(yyvsp[-2].tokenName)); node_insert(&list_var,str2,str,str3);    (yyval.tokenName) = str; } (yyval.tokenName) = (yyvsp[-2].tokenName); dont_loop = 0;}
-#line 1416 "y.tab.c" /* yacc.c:1646  */
+#line 90 "calc3.y" /* yacc.c:1646  */
+    { if(strcmp((yyvsp[0].tokenName),"INTEGER") != 0 ){ string str_1 = string((yyvsp[-2].tokenName)); string num_str = string((yyvsp[0].tokenName)); oss.str(""); oss << "[] _" << str_1 << ", " <<  num_str;  _map.insert(pair<string,string>(oss.str(),type_1));        } }
+#line 1431 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 82 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = ""; }
-#line 1422 "y.tab.c" /* yacc.c:1646  */
+#line 93 "calc3.y" /* yacc.c:1646  */
+    {char *p = (char*)""; (yyval.tokenName) = p; }
+#line 1437 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 83 "calc.y" /* yacc.c:1646  */
-    {dont_loop = 0; (yyval.tokenName) = (yyvsp[-1].tokenName); int x; x = *(yyvsp[-1].tokenName); dont_loop = 1; sprintf(str,"   . _%s",(yyvsp[-1].tokenName)); sprintf(str2," _%s",(yyvsp[-1].tokenName)); sprintf(str3,"%d",x); if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str,str3); }    }
-#line 1428 "y.tab.c" /* yacc.c:1646  */
+#line 94 "calc3.y" /* yacc.c:1646  */
+    { (yyval.tokenName) = (yyvsp[-1].tokenName);      }
+#line 1443 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 84 "calc.y" /* yacc.c:1646  */
-    {  int x; x = *(yyvsp[-2].tokenName); dont_loop = 1; sprintf(str,"   . _%s",(yyvsp[-2].tokenName)); sprintf(str2," _%s",(yyvsp[-2].tokenName)); sprintf(str3,"%d",x); if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str,str3);   }  (yyval.tokenName) = (yyvsp[-2].tokenName); }
-#line 1434 "y.tab.c" /* yacc.c:1646  */
+#line 95 "calc3.y" /* yacc.c:1646  */
+    { string str_1 = string((yyvsp[-2].tokenName)); oss.str(""); oss << " _" << str_1; _map.insert(pair<string,string>(oss.str(),type_1)); string str_2 = string((yyvsp[0].tokenName)); oss.str(""); oss << " _" << str_2; _map.insert(pair<string,string>(oss.str(),type_1)); (yyval.tokenName) = (yyvsp[-2].tokenName);  }
+#line 1449 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 87 "calc.y" /* yacc.c:1646  */
-    { sprintf(str, "%d",(yyvsp[-3].ival)); (yyval.tokenName) = str;  }
-#line 1440 "y.tab.c" /* yacc.c:1646  */
+#line 98 "calc3.y" /* yacc.c:1646  */
+    { int x; x = (yyvsp[-3].ival); string xyz = to_string(x); const char *pchar = xyz.c_str(); char *p = (char*)pchar; (yyval.tokenName) = p;    }
+#line 1455 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 88 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = "integer";  }
-#line 1446 "y.tab.c" /* yacc.c:1646  */
+#line 99 "calc3.y" /* yacc.c:1646  */
+    { char *p = (char*)"INTEGER"; (yyval.tokenName) = p;  }
+#line 1461 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 91 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = "";  }
-#line 1452 "y.tab.c" /* yacc.c:1646  */
+#line 102 "calc3.y" /* yacc.c:1646  */
+    { }
+#line 1467 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 92 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = "";  }
-#line 1458 "y.tab.c" /* yacc.c:1646  */
+#line 103 "calc3.y" /* yacc.c:1646  */
+    {  }
+#line 1473 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 93 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = (yyvsp[0].tokenName); }
-#line 1464 "y.tab.c" /* yacc.c:1646  */
+#line 104 "calc3.y" /* yacc.c:1646  */
+    { }
+#line 1479 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 94 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = ""; }
-#line 1470 "y.tab.c" /* yacc.c:1646  */
+#line 105 "calc3.y" /* yacc.c:1646  */
+    {   }
+#line 1485 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 95 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = (yyvsp[0].tokenName); }
-#line 1476 "y.tab.c" /* yacc.c:1646  */
+#line 106 "calc3.y" /* yacc.c:1646  */
+    { }
+#line 1491 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 96 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = ""; }
-#line 1482 "y.tab.c" /* yacc.c:1646  */
+#line 107 "calc3.y" /* yacc.c:1646  */
+    { }
+#line 1497 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 99 "calc.y" /* yacc.c:1646  */
-    { char* x; x = return_ascii((yyvsp[-2].ival)); sprintf(str,"%d",(yyvsp[0].ival)); sprintf(str2," =%s,%s",value_return(list_var,x),value_return(list_var,str)); node_insert(&list_var,"","",str2); (yyval.tokenName) = value_return(list_var,x);   }
-#line 1488 "y.tab.c" /* yacc.c:1646  */
+#line 110 "calc3.y" /* yacc.c:1646  */
+    { oss.str(""); oss << "   =" << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; func_map.insert(pair<string,string>(null_str,oss.str()));     }
+#line 1503 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 103 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = "";  }
-#line 1494 "y.tab.c" /* yacc.c:1646  */
+#line 114 "calc3.y" /* yacc.c:1646  */
+    {   }
+#line 1509 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 104 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = ""; }
-#line 1500 "y.tab.c" /* yacc.c:1646  */
+#line 115 "calc3.y" /* yacc.c:1646  */
+    {  }
+#line 1515 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 107 "calc.y" /* yacc.c:1646  */
-    {char* predicate_id; predicate_id = value_return(list_var,(yyvsp[-3].tokenName)); char* label; label = value_return(list_var,(yyvsp[-1].tokenName)); sprintf(str,"?:= L%d,%s",loop_token,predicate_id); node_insert(&list_func,"","",str); node_insert(&list_func,"","","L");  sprintf(str2,"L%d",loop_token);  (yyval.tokenName) = str2; loop_token++;         }
-#line 1506 "y.tab.c" /* yacc.c:1646  */
+#line 118 "calc3.y" /* yacc.c:1646  */
+    { oss.str(""); oss << "   := L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); oss.str(""); loop_token++; oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str()));      }
+#line 1521 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 110 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = "";   }
-#line 1512 "y.tab.c" /* yacc.c:1646  */
+#line 121 "calc3.y" /* yacc.c:1646  */
+    {   }
+#line 1527 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 113 "calc.y" /* yacc.c:1646  */
-    {char* x; x = return_ascii((yyvsp[-1].ival)); sprintf(str,"   .<%s",value_return(list_var,x)); sprintf(str2," t%d",term_number); sprintf(str3,".<%s",value_return(list_var,x)); node_insert(&list_var,str2,str,str3); node_insert(&list_func,"","",str3);   (yyval.tokenName) = str3;    }
-#line 1518 "y.tab.c" /* yacc.c:1646  */
+#line 124 "calc3.y" /* yacc.c:1646  */
+    {oss.str(""); oss << "   .<" << (yyvsp[-1].ExpType) -> result_id; string _result_id = newVirtualReg(); _map.insert(pair<string,string>(_result_id,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  string extra_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(extra_str.c_str()) != 0){ oss.str(""); oss << "   .<" << (yyvsp[0].ExpType) -> result_id; string _id2 = newVirtualReg(); _map.insert(pair<string,string>(_id2,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  } }
+#line 1533 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 114 "calc.y" /* yacc.c:1646  */
-    {char* x; x = return_ascii((yyvsp[-1].ival)); sprintf(str,"   .>%s",value_return(list_var,x)); sprintf(str2," t%d",term_number); sprintf(str3,".>%s",value_return(list_var,x)); node_insert(&list_var,str2,str,str3); node_insert(&list_func,"","",str3);  (yyval.tokenName) = str3;  }
-#line 1524 "y.tab.c" /* yacc.c:1646  */
+#line 126 "calc3.y" /* yacc.c:1646  */
+    { oss.str(""); oss << "   .>" << (yyvsp[-1].ExpType) -> result_id; string _result_id = newVirtualReg(); _map.insert(pair<string,string>(_result_id,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  string extra_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(extra_str.c_str()) != 0) { oss.str(""); oss << "   .>" << (yyvsp[0].ExpType) -> result_id; string _id2 = newVirtualReg(); _map.insert(pair<string,string>(_id2,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));     }}
+#line 1539 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 117 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = ""; }
-#line 1530 "y.tab.c" /* yacc.c:1646  */
+#line 129 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); (yyval.ExpType) = temp;  }
+#line 1545 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 118 "calc.y" /* yacc.c:1646  */
-    {  }
-#line 1536 "y.tab.c" /* yacc.c:1646  */
+#line 130 "calc3.y" /* yacc.c:1646  */
+    { (yyval.ExpType) = (yyvsp[-1].ExpType);   }
+#line 1551 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 121 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = "";  }
-#line 1542 "y.tab.c" /* yacc.c:1646  */
+#line 133 "calc3.y" /* yacc.c:1646  */
+    {  }
+#line 1557 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 124 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = ""; }
-#line 1548 "y.tab.c" /* yacc.c:1646  */
+#line 136 "calc3.y" /* yacc.c:1646  */
+    {  }
+#line 1563 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 125 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = (yyvsp[-2].tokenName); /* char *x; x = value_return(temp,$1);   sprintf(str,":L%d\n",loop_num);  fprintf(fp,str) */ }
-#line 1554 "y.tab.c" /* yacc.c:1646  */
+#line 137 "calc3.y" /* yacc.c:1646  */
+    { }
+#line 1569 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 128 "calc.y" /* yacc.c:1646  */
-    {char *left_id; left_id = value_return(list_var,(yyvsp[-1].tokenName)); if(strlen((yyvsp[0].tokenName)) == 0){ (yyval.tokenName) = (yyvsp[-1].tokenName); } else {char *right_id; right_id = value_return(list_var,(yyvsp[0].tokenName)); sprintf(str2," t%d",term_number); sprintf(str3,"|| t%d,%s,%s",term_number,left_id,right_id); sprintf(str4,"   %s",str3); if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str4,str3); node_insert(&list_func,"","",str3);   term_number++; } (yyval.tokenName) = str3; } }
-#line 1560 "y.tab.c" /* yacc.c:1646  */
+#line 140 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); string temp_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(temp_str.c_str()) == 0) { (yyval.ExpType) = (yyvsp[-1].ExpType); } else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   ||" << temp -> result_id << "," << (yyvsp[-1].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); (yyval.ExpType) =  temp; } }
+#line 1575 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 131 "calc.y" /* yacc.c:1646  */
-    { char* left_id; left_id = value_return(list_var,(yyvsp[-1].tokenName)); if(strlen((yyvsp[0].tokenName)) == 0){ (yyval.tokenName) = (yyvsp[-1].tokenName); }else{char* right_id; right_id = value_return(list_var,(yyvsp[0].tokenName)); sprintf(str2," t%d",term_number); sprintf(str3,"&& t%d,%s,%s",term_number,left_id,right_id); sprintf(str4,"   %s",str3); if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str4,str3); node_insert(&list_func,"","",str3);  term_number++; } (yyval.tokenName) = str3;   }   }
-#line 1566 "y.tab.c" /* yacc.c:1646  */
+#line 143 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); string temp_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(temp_str.c_str()) == 0) { (yyval.ExpType) = (yyvsp[-1].ExpType); }else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   &&" << temp -> result_id << "," << (yyvsp[-1].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); (yyval.ExpType) =  temp; }  }
+#line 1581 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 134 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = "";  }
-#line 1572 "y.tab.c" /* yacc.c:1646  */
+#line 146 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); (yyval.ExpType) = temp; }
+#line 1587 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 135 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = (yyvsp[-1].tokenName);  }
-#line 1578 "y.tab.c" /* yacc.c:1646  */
+#line 147 "calc3.y" /* yacc.c:1646  */
+    {(yyval.ExpType) = (yyvsp[-1].ExpType); }
+#line 1593 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 138 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = "";   }
-#line 1584 "y.tab.c" /* yacc.c:1646  */
+#line 150 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); (yyval.ExpType) = temp;  }
+#line 1599 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 139 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = (yyvsp[-1].tokenName);  }
-#line 1590 "y.tab.c" /* yacc.c:1646  */
+#line 151 "calc3.y" /* yacc.c:1646  */
+    { (yyval.ExpType) = (yyvsp[-1].ExpType);  }
+#line 1605 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 143 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = "True";  char *x = "True"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); if(search_value(list_var,str) == 1){ sprintf(str3,"   . t%d",term_number); node_insert(&list_var,str2,str3,x);  term_number++;   }  }
-#line 1596 "y.tab.c" /* yacc.c:1646  */
+#line 155 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); (yyval.ExpType) = temp;  }
+#line 1611 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 145 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = "False"; char *x = "False"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); if(search_value(list_var,str) == 1){ sprintf(str3,"   . t%d",term_number); node_insert(&list_var,str2,str3,x); term_number++; } }
-#line 1602 "y.tab.c" /* yacc.c:1646  */
+#line 157 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); (yyval.ExpType) = temp; }
+#line 1617 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 147 "calc.y" /* yacc.c:1646  */
-    {sprintf(str,"%c",(yyvsp[-2].ival)); if(bool_value((yyvsp[0].ival)) == 1){ sprintf(str2,"%c",(yyvsp[0].ival)); }else { sprintf(str2,"%d",(yyvsp[0].ival)); } char *src2; src2 = value_return(list_var,str); char *src3;  src3 = value_return(list_var,str2); sprintf(str3,"   %s t%d,%s,%s",(yyvsp[-1].tokenName),term_number,src2,src3); sprintf(str2," t%d",term_number); sprintf(str,"  . t%d",term_number); (yyval.tokenName) = str3;  node_insert(&list_var,str2,str,str3); node_insert(&list_func,"","",str3); term_number++; (yyval.tokenName) = str3;   }
-#line 1608 "y.tab.c" /* yacc.c:1646  */
+#line 159 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string((yyvsp[-1].tokenName)); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str()));  func_map.insert(pair<string,string>(null_str,temp -> code));  (yyval.ExpType) =  temp;  }
+#line 1623 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 149 "calc.y" /* yacc.c:1646  */
-    {sprintf(str,"%c",(yyvsp[-2].ival)); if(bool_value((yyvsp[0].ival)) == 1){ sprintf(str2,"%c",(yyvsp[0].ival)); }else { sprintf(str2,"%d",(yyvsp[0].ival)); } char *src2; src2 = value_return(list_var,str); char *src3; src3 = value_return(list_var,str2); sprintf(str3,"   %s t%d,%s,%s",(yyvsp[-1].tokenName),term_number,src2,src3); sprintf(str2," t%d",term_number); sprintf(str,"   . t%d",term_number); (yyval.tokenName) = str3;  node_insert(&list_var,str2,str,str3); node_insert(&list_func,"","",str3);  term_number++; sprintf(str4,"! t%d,%s",term_number,str2); term_number++; sprintf(str2," t%d",term_number); sprintf(str,"   . t%d",term_number); node_insert(&list_var,str2,str,str4); node_insert(&list_func,"","",str4);  (yyval.tokenName) = str4;  }
-#line 1614 "y.tab.c" /* yacc.c:1646  */
+#line 161 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string((yyvsp[-1].tokenName)); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); func_map.insert(pair<string,string>(null_str,temp -> code));  string new_id = newVirtualReg(); _map.insert(pair<string,string>(new_id, type_3)); oss.str(""); oss << "   !" << new_id  << "," << temp -> result_id; temp -> code = oss.str(); temp -> result_id = new_id;  func_map.insert(pair<string,string>(null_str,temp -> code)); (yyval.ExpType) = temp; }
+#line 1629 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 151 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = "Not True"; char *x = "Not True"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); sprintf(str3,"   t%d",term_number); if(search_value(list_var,str) == 1){ node_insert(&list_var,str2,str3,x); term_number++; } }
-#line 1620 "y.tab.c" /* yacc.c:1646  */
+#line 163 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); (yyval.ExpType) = temp; }
+#line 1635 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 153 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = "Not False"; char *x = "Not False"; sprintf(str,"%s",x); sprintf(str2," t%d",term_number); sprintf(str3,"   t%d\n",term_number); if(search_value(list_var,str) == 1){ node_insert(&list_var,str2,str3,x);   term_number++; } }
-#line 1626 "y.tab.c" /* yacc.c:1646  */
+#line 165 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); (yyval.ExpType) = temp; }
+#line 1641 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 155 "calc.y" /* yacc.c:1646  */
-    { sprintf(str,"%s",(yyvsp[-1].tokenName)); (yyval.tokenName) = (yyvsp[-1].tokenName);  }
-#line 1632 "y.tab.c" /* yacc.c:1646  */
+#line 167 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = (yyvsp[-1].ExpType) -> result_id; temp -> code = (yyvsp[-1].ExpType) -> code; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); (yyval.ExpType) = temp;  }
+#line 1647 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 156 "calc.y" /* yacc.c:1646  */
-    { sprintf(str,"%s",(yyvsp[-1].tokenName));  (yyval.tokenName) = (yyvsp[-1].tokenName); }
-#line 1638 "y.tab.c" /* yacc.c:1646  */
+#line 168 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string get_id = (yyvsp[-1].ExpType) -> result_id; oss.str(""); oss << "   !" << temp -> result_id << get_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); (yyval.ExpType) = temp; }
+#line 1653 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 159 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = "==";  }
-#line 1644 "y.tab.c" /* yacc.c:1646  */
+#line 171 "calc3.y" /* yacc.c:1646  */
+    {char *p = (char*)"=="; (yyval.tokenName) = p;  }
+#line 1659 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 160 "calc.y" /* yacc.c:1646  */
-    {(yyval.tokenName) = "!="; }
-#line 1650 "y.tab.c" /* yacc.c:1646  */
+#line 172 "calc3.y" /* yacc.c:1646  */
+    { char *p = (char*)"!="; (yyval.tokenName) = p; }
+#line 1665 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 161 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = "<"; }
-#line 1656 "y.tab.c" /* yacc.c:1646  */
+#line 173 "calc3.y" /* yacc.c:1646  */
+    { char *p = (char*)"<"; (yyval.tokenName) = p;  }
+#line 1671 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 162 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = ">"; }
-#line 1662 "y.tab.c" /* yacc.c:1646  */
+#line 174 "calc3.y" /* yacc.c:1646  */
+    { char *p = (char*)">"; (yyval.tokenName) = p;  }
+#line 1677 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 163 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = "<="; }
-#line 1668 "y.tab.c" /* yacc.c:1646  */
+#line 175 "calc3.y" /* yacc.c:1646  */
+    { char *p = (char*)"<=";  (yyval.tokenName) = p; }
+#line 1683 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 164 "calc.y" /* yacc.c:1646  */
-    { (yyval.tokenName) = ">="; }
-#line 1674 "y.tab.c" /* yacc.c:1646  */
+#line 176 "calc3.y" /* yacc.c:1646  */
+    { char *p = (char*)">="; (yyval.tokenName) = p;  }
+#line 1689 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 167 "calc.y" /* yacc.c:1646  */
-    {(yyval.ival) = (yyvsp[-1].ival); }
-#line 1680 "y.tab.c" /* yacc.c:1646  */
+#line 179 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); string left_side = (yyvsp[-1].ExpType) -> result_id; string right_side = (yyvsp[0].ExpType) -> result_id; if(strlen(right_side.c_str()) != 0){  temp -> result_id = newVirtualReg(); oss.str(""); _map.insert(pair<string,string>(temp -> result_id,type_4)); oss << "   +" << temp -> result_id << "," << left_side << "," << right_side;  temp -> code = oss.str(); (yyval.ExpType) = temp; }else {(yyval.ExpType) = (yyvsp[-1].ExpType);} }
+#line 1695 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 171 "calc.y" /* yacc.c:1646  */
-    {(yyval.ival) = 0;  }
-#line 1686 "y.tab.c" /* yacc.c:1646  */
+#line 183 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); (yyval.ExpType) = temp; }
+#line 1701 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 173 "calc.y" /* yacc.c:1646  */
-    { fresh_term = 0; if(bool_value((yyvsp[-1].ival)) == 1){ sprintf(str,"%c",(yyvsp[-1].ival)); } else {sprintf(str,"%d",(yyvsp[-1].ival)); } char *src2; src2 = value_return(list_var,str);  sprintf(str2,"+ t%d,%s,%s",term_number, cur_string_value , src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++;   (yyval.ival) = (yyvsp[-1].ival); }
-#line 1692 "y.tab.c" /* yacc.c:1646  */
+#line 185 "calc3.y" /* yacc.c:1646  */
+    {(yyval.ExpType) = (yyvsp[-1].ExpType);  }
+#line 1707 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 175 "calc.y" /* yacc.c:1646  */
-    { fresh_term = 0; if(bool_value((yyvsp[-1].ival)) == 1){ sprintf(str,"%c",(yyvsp[-1].ival)); } else {sprintf(str,"%d",(yyvsp[-1].ival)); } char *src2; src2 = value_return(list_var,str);  sprintf(str2,"- t%d,%s,%s",term_number, cur_string_value , src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++; (yyval.ival) = (yyvsp[-1].ival);  }
-#line 1698 "y.tab.c" /* yacc.c:1646  */
+#line 187 "calc3.y" /* yacc.c:1646  */
+    { (yyval.ExpType) = (yyvsp[-1].ExpType);  }
+#line 1713 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 178 "calc.y" /* yacc.c:1646  */
-    {(yyval.ival) = (yyvsp[-1].ival); }
-#line 1704 "y.tab.c" /* yacc.c:1646  */
+#line 190 "calc3.y" /* yacc.c:1646  */
+    {(yyval.ExpType) = (yyvsp[-1].ExpType); }
+#line 1719 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 182 "calc.y" /* yacc.c:1646  */
-    {  }
-#line 1710 "y.tab.c" /* yacc.c:1646  */
+#line 194 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); (yyval.ExpType) = temp; }
+#line 1725 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 185 "calc.y" /* yacc.c:1646  */
-    {fresh_term = 0; if(bool_value((yyvsp[-1].ival)) == 1){ sprintf(str,"%c",(yyvsp[-1].ival)); }else {sprintf(str,"%d",(yyvsp[-1].ival)); } char* src2; src2 = value_return(list_var,str); sprintf(str2,"* t%d,%s,%s",term_number, cur_string_value, src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++;  (yyval.ival) = (yyvsp[-1].ival); }
-#line 1716 "y.tab.c" /* yacc.c:1646  */
+#line 197 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); (yyval.ExpType) = temp;   }
+#line 1731 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 187 "calc.y" /* yacc.c:1646  */
-    { fresh_term = 0; if(bool_value((yyvsp[-1].ival)) == 1){ sprintf(str,"%c",(yyvsp[-1].ival)); }else { sprintf(str,"%d",(yyvsp[-1].ival)); } char* src2; src2 = value_return(list_var,str); sprintf(str2,"/ t%d,%s,%s", term_number, cur_string_value , src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2); node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2);  term_number++; (yyval.ival) = (yyvsp[-1].ival);  }
-#line 1722 "y.tab.c" /* yacc.c:1646  */
+#line 199 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); (yyval.ExpType) = temp;  }
+#line 1737 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 189 "calc.y" /* yacc.c:1646  */
-    { fresh_term = 0; if(bool_value((yyvsp[-1].ival)) == 1){ sprintf(str,"%c",(yyvsp[-1].ival)); }else { sprintf(str,"%d",(yyvsp[-1].ival)); } char* src2; src2 = value_return(list_var,str); sprintf(str2,"%% t%d,%s,%s", term_number, cur_string_value, src2); sprintf(str3," t%d",term_number); sprintf(str4,"   .%s",str2);  node_insert(&list_var,str3,str4,str2); node_insert(&list_func,"","",str2); term_number++;  (yyval.ival) = (yyvsp[-1].ival);   }
-#line 1728 "y.tab.c" /* yacc.c:1646  */
+#line 201 "calc3.y" /* yacc.c:1646  */
+    { ExpStruct *temp = create(); (yyval.ExpType) = temp;    }
+#line 1743 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 192 "calc.y" /* yacc.c:1646  */
-    {  (yyval.ival) = (yyvsp[0].ival);  }
-#line 1734 "y.tab.c" /* yacc.c:1646  */
+#line 204 "calc3.y" /* yacc.c:1646  */
+    { (yyval.ExpType) = (yyvsp[0].ExpType); }
+#line 1749 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 194 "calc.y" /* yacc.c:1646  */
-    { sprintf(str, "   . p%d",point_number); sprintf(str2," p%d",point_number); sprintf(str3,"%d",(yyvsp[0].ival)); if(search_value(list_var, str3) == 1) { node_insert(&list_var,str2,str,str3); cur_string_value = str2; point_number++;  } else { if(fresh_term == 0){ cur_string_value = value_return(list_var,str3); fresh_term = 1; }} (yyval.ival)= (yyvsp[0].ival); }
-#line 1740 "y.tab.c" /* yacc.c:1646  */
+#line 206 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_1)); (yyval.ExpType) = temp; }
+#line 1755 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 196 "calc.y" /* yacc.c:1646  */
-    {sprintf(str,"   . p%d",point_number); sprintf(str2," p%d",point_number); sprintf(str3,"-%d",(yyvsp[0].ival)); if(search_value(list_var,str3) == 1) { node_insert(&list_var,str2,str,str3); cur_string_value = str2;  point_number++; }else { if(fresh_term == 0){ cur_string_value = value_return(list_var,str3); fresh_term = 1; } } (yyval.ival) = -(yyvsp[0].ival);  }
-#line 1746 "y.tab.c" /* yacc.c:1646  */
+#line 208 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_1)); (yyval.ExpType) = temp;  }
+#line 1761 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 198 "calc.y" /* yacc.c:1646  */
-    {sprintf(str,"   . p%d",point_number); sprintf(str2," t%d",point_number); sprintf(str3,"%d",(yyvsp[-1].ival)); if(search_value(list_var,str3) == 1){  node_insert(&list_var,str2,str,str3); cur_string_value = str2;  term_number++;}else { if(fresh_term == 0) {  cur_string_value = value_return(list_var,str3); fresh_term = 1; }} (yyval.ival) = (yyvsp[-1].ival);  }
-#line 1752 "y.tab.c" /* yacc.c:1646  */
+#line 210 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); (yyval.ExpType) = temp;  }
+#line 1767 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 200 "calc.y" /* yacc.c:1646  */
-    {sprintf(str,"   . p%d",point_number); sprintf(str2," t%d",point_number); sprintf(str3,"-%d",(yyvsp[-1].ival));if(search_value(list_var,str3) == 1) { node_insert(&list_var,str2,str,str3); point_number++; }else { if(fresh_term == 0) { cur_string_value = value_return(list_var,str3); fresh_term = 1; } } (yyval.ival) = -(yyvsp[-1].ival);  }
-#line 1758 "y.tab.c" /* yacc.c:1646  */
+#line 212 "calc3.y" /* yacc.c:1646  */
+    { ExpStruct *temp = create(); (yyval.ExpType) = temp; }
+#line 1773 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 204 "calc.y" /* yacc.c:1646  */
-    {int x; x = *(yyvsp[0].tokenName); (yyval.ival) = x; sprintf(str,"   . %s",(yyvsp[0].tokenName)); sprintf(str2," _%s",(yyvsp[0].tokenName)); sprintf(str3,"%d",x); cur_string_value = str2; if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str,str3); }else {  if(fresh_term == 0) {cur_string_value = value_return(list_var,str3); fresh_term = 1; } }   }
-#line 1764 "y.tab.c" /* yacc.c:1646  */
+#line 216 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); string str_1 = string((yyvsp[0].tokenName)); oss.str(""); oss << " _" << str_1; temp -> result_id = oss.str(); oss.str(""); oss << "   . _" << str_1; temp -> code = oss.str(); if(_map.find(temp -> result_id) == _map.end()){ _map.insert(pair<string,string>(temp -> result_id,type_1)); } (yyval.ExpType) =  temp;  }
+#line 1779 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 207 "calc.y" /* yacc.c:1646  */
-    { (yyval.ival) = 0; /*char *xyz; xyz = return_ascii($3); sprintf(str,"   . %s",xyz); sprintf(str2," _%s",xyz); sprintf(str3,"%d",$3); cur_string_value = str2; if(search_value(T,str3) == 1){ node_insert(&T,str2,str,str3); fprint(yyout,str); cur_string_value = str2; }else { if(fresh_term == 0) {cur_string_value = value_return(str3); fresh_term = 1; }} $$ = $1; */   }
-#line 1770 "y.tab.c" /* yacc.c:1646  */
+#line 218 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); string str_1 = string((yyvsp[-3].tokenName)); oss.str(""); oss << "_" << str_1; temp -> result_id = oss.str(); oss.str(""); oss << "   . _" << str_1; temp -> code = oss.str(); if(_map.find(temp -> result_id) == _map.end()){_map.insert(pair<string,string>(temp -> result_id,type_1));  } (yyval.ExpType) = temp; }
+#line 1785 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1774 "y.tab.c" /* yacc.c:1646  */
+#line 1789 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1998,41 +2013,48 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 209 "calc.y" /* yacc.c:1906  */
+#line 220 "calc3.y" /* yacc.c:1906  */
 
 
 int main(int argc,char **argv){
+	for(int i = 1; i < argc;i++){
+		printf("%s\t",argv[i]);
 	
+	}
 	if(argc == 2){
 		yyin = fopen(argv[1],"r");
 		if(yyin == NULL){
 			printf("syntax: %s filename\n",argv[0]);
 		}//endif
 		yyparse();
-	}else if(argc == 1){
+		fclose(yyin); 
+		cout << "Hello0" << endl;
+	}else if(argc > 1){
 
 		yyparse();
-
+		cout << "Hello1" << endl;
 	}else if(argc == 3){
-
+		
 		/* Writing to a file */
-		char *output_file = argv[2];
-		char *file_ext = ".mil";
+		cout << "Hello2" << endl;
+		char *output_file = argv[1];
 
-		char result[100];
+		string min_file = string(output_file); 
+		char *file_ext = (char*)".mil";
 
-		strcpy(result,output_file);
-		strcat(result,file_ext);
+		size_t lastindex = min_file.find_last_of(".");
+		string raw_file = min_file.substr(0,lastindex);
+
+		oss.str("");
+		oss << raw_file << file_ext;
+
+		string MIL_FILE = oss.str();
 		 
-		yyout = fopen(result,"w");
+		yyout = fopen(MIL_FILE.c_str(),"w");
 		
 		/* Reading the file and parsing it */
 		yyin = fopen(argv[1],"r");
 
-		/* Create a single linked list */
-
-		list_var = create(); 
-		list_func = create();
 
 		if(yyin == NULL){
 			printf("syntax: %s filename\n",argv[0]);
@@ -2041,48 +2063,39 @@ int main(int argc,char **argv){
 		yyparse();
 
 		fclose(yyin);
-	        print_all_id(list_var,yyout);
-		
-		print_all_value(list_var,yyout);					
-		fclose(yyout);
-
-
-
-		/*
-		fclose(yyin); 
-		
-		
-		/* After reading all the variables and written into a different file 
-		* Take in all the input and then write it to here 
-		char buff[BUZZ_SIZE];
-
-		char result2[100];
-		char *mil_ext = ".mil";
-		strcpy(result2,output_file);
-		strcat(result2,mil_ext);
-		yyin = fopen(result , "r");
-		yyout = fopen(result2, "w");
-		finished_looping = 1;
-		if(yyin == NULL){
-			printf("File Opening Error!!");
+	 	
+		map<string,string>::iterator it;
+		for(it = _map.begin(); it != _map.end(); it++){
+			string xyz = it->first;
+			fprintf(yyout,"   .%s\n",xyz.c_str());
 		}
-		 Reading all of the strings and printing on the mil file 
-		while(fgets(buff,BUZZ_SIZE,yyin) != NULL){
-			fprintf(yyout,"%s\n",buff); 
-		}
+		fprintf(yyout,": START\n");
 
-		fclose(yyin);
-		yyparse();		
+		map<string,string>::iterator its;
+		for(its = func_map.begin(); its != func_map.end(); its++){
+			string xyz_2 = it->second;
+			fprintf(yyout,"%s\n",xyz_2.c_str());
+		}
 		fclose(yyout);
-		*/
+		
+
+
+
+		
 		
 	}
 	
- //Calls yylex for tokens.
+ 
 		
 	 
 	  
 	return 0;
+}
+string newVirtualReg(){
+	ostringstream buffer;
+	buffer << " p" << point_number;
+	point_number++;
+	return buffer.str();	
 }
 char *return_ascii(int i){
 	sprintf(str,"%d",i);

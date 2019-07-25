@@ -24,7 +24,7 @@ Grammar
     5 declaration: declaration_helper COLON declaration_helper2
 
     6 declaration_helper: %empty
-    7                   | IDENT
+    7                   | IDENT declaration_helper
     8                   | IDENT COMMA declaration_helper
 
     9 declaration_helper2: ARRAY L_PAREN NUMBER R_PAREN OF INTEGER
@@ -174,7 +174,7 @@ block_helper (55)
 declaration (56)
     on left: 5, on right: 4
 declaration_helper (57)
-    on left: 6 7 8, on right: 5 8
+    on left: 6 7 8, on right: 5 7 8
 declaration_helper2 (58)
     on left: 9 10, on right: 5
 statement (59)
@@ -275,40 +275,43 @@ State 5
 
 State 6
 
-    7 declaration_helper: IDENT .
+    7 declaration_helper: IDENT . declaration_helper
     8                   | IDENT . COMMA declaration_helper
 
+    IDENT  shift, and go to state 6
     COMMA  shift, and go to state 11
 
-    $default  reduce using rule 7 (declaration_helper)
+    $default  reduce using rule 6 (declaration_helper)
+
+    declaration_helper  go to state 12
 
 
 State 7
 
     1 program: PROGRAM IDENT SEMICOLON block . END_PROGRAM
 
-    END_PROGRAM  shift, and go to state 12
+    END_PROGRAM  shift, and go to state 13
 
 
 State 8
 
     2 block: block_helper . BEGIN_PROGRAM statement_helper
 
-    BEGIN_PROGRAM  shift, and go to state 13
+    BEGIN_PROGRAM  shift, and go to state 14
 
 
 State 9
 
     4 block_helper: declaration . SEMICOLON block_helper
 
-    SEMICOLON  shift, and go to state 14
+    SEMICOLON  shift, and go to state 15
 
 
 State 10
 
     5 declaration: declaration_helper . COLON declaration_helper2
 
-    COLON  shift, and go to state 15
+    COLON  shift, and go to state 16
 
 
 State 11
@@ -319,42 +322,49 @@ State 11
 
     $default  reduce using rule 6 (declaration_helper)
 
-    declaration_helper  go to state 16
+    declaration_helper  go to state 17
 
 
 State 12
+
+    7 declaration_helper: IDENT declaration_helper .
+
+    $default  reduce using rule 7 (declaration_helper)
+
+
+State 13
 
     1 program: PROGRAM IDENT SEMICOLON block END_PROGRAM .
 
     $default  reduce using rule 1 (program)
 
 
-State 13
+State 14
 
     2 block: block_helper BEGIN_PROGRAM . statement_helper
 
-    IDENT     shift, and go to state 17
-    CONTINUE  shift, and go to state 18
-    READ      shift, and go to state 19
-    WRITE     shift, and go to state 20
-    IF        shift, and go to state 21
-    DO        shift, and go to state 22
-    WHILE     shift, and go to state 23
+    IDENT     shift, and go to state 18
+    CONTINUE  shift, and go to state 19
+    READ      shift, and go to state 20
+    WRITE     shift, and go to state 21
+    IF        shift, and go to state 22
+    DO        shift, and go to state 23
+    WHILE     shift, and go to state 24
 
     $default  reduce using rule 27 (statement_helper)
 
-    statement             go to state 24
-    expression_statement  go to state 25
-    ifelse_statement      go to state 26
-    while_statement       go to state 27
-    dobegin_statement     go to state 28
-    readwrite_statement   go to state 29
-    continue_statement    go to state 30
-    statement_helper      go to state 31
-    var                   go to state 32
+    statement             go to state 25
+    expression_statement  go to state 26
+    ifelse_statement      go to state 27
+    while_statement       go to state 28
+    dobegin_statement     go to state 29
+    readwrite_statement   go to state 30
+    continue_statement    go to state 31
+    statement_helper      go to state 32
+    var                   go to state 33
 
 
-State 14
+State 15
 
     4 block_helper: declaration SEMICOLON . block_helper
 
@@ -363,235 +373,224 @@ State 14
     COLON     reduce using rule 6 (declaration_helper)
     $default  reduce using rule 3 (block_helper)
 
-    block_helper        go to state 33
+    block_helper        go to state 34
     declaration         go to state 9
     declaration_helper  go to state 10
 
 
-State 15
+State 16
 
     5 declaration: declaration_helper COLON . declaration_helper2
 
-    INTEGER  shift, and go to state 34
-    ARRAY    shift, and go to state 35
+    INTEGER  shift, and go to state 35
+    ARRAY    shift, and go to state 36
 
-    declaration_helper2  go to state 36
+    declaration_helper2  go to state 37
 
 
-State 16
+State 17
 
     8 declaration_helper: IDENT COMMA declaration_helper .
 
     $default  reduce using rule 8 (declaration_helper)
 
 
-State 17
+State 18
 
    63 var: IDENT .
    64    | IDENT . L_PAREN expression R_PAREN
 
-    L_PAREN  shift, and go to state 37
+    L_PAREN  shift, and go to state 38
 
     $default  reduce using rule 63 (var)
 
 
-State 18
+State 19
 
    26 continue_statement: CONTINUE .
 
     $default  reduce using rule 26 (continue_statement)
 
 
-State 19
+State 20
 
    22 readwrite_statement: READ . var readwrite_helper
 
-    IDENT  shift, and go to state 17
-
-    var  go to state 38
-
-
-State 20
-
-   23 readwrite_statement: WRITE . var readwrite_helper
-
-    IDENT  shift, and go to state 17
+    IDENT  shift, and go to state 18
 
     var  go to state 39
 
 
 State 21
 
-   18 ifelse_statement: IF . bool_exp THEN statement_helper ENDIF
-   19                 | IF . bool_exp THEN statement_helper ELSE statement_helper ENDIF
+   23 readwrite_statement: WRITE . var readwrite_helper
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 41
-    MINUS    shift, and go to state 42
-    NOT      shift, and go to state 43
-    FALSE    shift, and go to state 44
-    TRUE     shift, and go to state 45
+    IDENT  shift, and go to state 18
 
-    bool_exp          go to state 46
-    relation_and_exp  go to state 47
-    relation_exp      go to state 48
-    expression        go to state 49
-    mult_exp          go to state 50
-    term              go to state 51
-    var               go to state 52
+    var  go to state 40
 
 
 State 22
 
-   21 dobegin_statement: DO . BEGINLOOP statement_helper ENDLOOP WHILE bool_exp
+   18 ifelse_statement: IF . bool_exp THEN statement_helper ENDIF
+   19                 | IF . bool_exp THEN statement_helper ELSE statement_helper ENDIF
 
-    BEGINLOOP  shift, and go to state 53
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 42
+    MINUS    shift, and go to state 43
+    NOT      shift, and go to state 44
+    FALSE    shift, and go to state 45
+    TRUE     shift, and go to state 46
+
+    bool_exp          go to state 47
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    expression        go to state 50
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
 State 23
 
-   20 while_statement: WHILE . bool_exp BEGINLOOP statement_helper ENDLOOP
+   21 dobegin_statement: DO . BEGINLOOP statement_helper ENDLOOP WHILE bool_exp
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 41
-    MINUS    shift, and go to state 42
-    NOT      shift, and go to state 43
-    FALSE    shift, and go to state 44
-    TRUE     shift, and go to state 45
-
-    bool_exp          go to state 54
-    relation_and_exp  go to state 47
-    relation_exp      go to state 48
-    expression        go to state 49
-    mult_exp          go to state 50
-    term              go to state 51
-    var               go to state 52
+    BEGINLOOP  shift, and go to state 54
 
 
 State 24
 
-   28 statement_helper: statement . SEMICOLON statement_helper
+   20 while_statement: WHILE . bool_exp BEGINLOOP statement_helper ENDLOOP
 
-    SEMICOLON  shift, and go to state 55
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 42
+    MINUS    shift, and go to state 43
+    NOT      shift, and go to state 44
+    FALSE    shift, and go to state 45
+    TRUE     shift, and go to state 46
+
+    bool_exp          go to state 55
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    expression        go to state 50
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
 State 25
+
+   28 statement_helper: statement . SEMICOLON statement_helper
+
+    SEMICOLON  shift, and go to state 56
+
+
+State 26
 
    11 statement: expression_statement .
 
     $default  reduce using rule 11 (statement)
 
 
-State 26
+State 27
 
    12 statement: ifelse_statement .
 
     $default  reduce using rule 12 (statement)
 
 
-State 27
+State 28
 
    13 statement: while_statement .
 
     $default  reduce using rule 13 (statement)
 
 
-State 28
+State 29
 
    14 statement: dobegin_statement .
 
     $default  reduce using rule 14 (statement)
 
 
-State 29
+State 30
 
    15 statement: readwrite_statement .
 
     $default  reduce using rule 15 (statement)
 
 
-State 30
+State 31
 
    16 statement: continue_statement .
 
     $default  reduce using rule 16 (statement)
 
 
-State 31
+State 32
 
     2 block: block_helper BEGIN_PROGRAM statement_helper .
 
     $default  reduce using rule 2 (block)
 
 
-State 32
+State 33
 
    17 expression_statement: var . ASSIGN expression
 
-    ASSIGN  shift, and go to state 56
+    ASSIGN  shift, and go to state 57
 
 
-State 33
+State 34
 
     4 block_helper: declaration SEMICOLON block_helper .
 
     $default  reduce using rule 4 (block_helper)
 
 
-State 34
+State 35
 
    10 declaration_helper2: INTEGER .
 
     $default  reduce using rule 10 (declaration_helper2)
 
 
-State 35
+State 36
 
     9 declaration_helper2: ARRAY . L_PAREN NUMBER R_PAREN OF INTEGER
 
-    L_PAREN  shift, and go to state 57
+    L_PAREN  shift, and go to state 58
 
 
-State 36
+State 37
 
     5 declaration: declaration_helper COLON declaration_helper2 .
 
     $default  reduce using rule 5 (declaration)
 
 
-State 37
+State 38
 
    64 var: IDENT L_PAREN . expression R_PAREN
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
 
-    expression  go to state 59
-    mult_exp    go to state 50
-    term        go to state 51
-    var         go to state 52
-
-
-State 38
-
-   22 readwrite_statement: READ var . readwrite_helper
-
-    COMMA  shift, and go to state 60
-
-    $default  reduce using rule 24 (readwrite_helper)
-
-    readwrite_helper  go to state 61
+    expression  go to state 60
+    mult_exp    go to state 51
+    term        go to state 52
+    var         go to state 53
 
 
 State 39
 
-   23 readwrite_statement: WRITE var . readwrite_helper
+   22 readwrite_statement: READ var . readwrite_helper
 
-    COMMA  shift, and go to state 60
+    COMMA  shift, and go to state 61
 
     $default  reduce using rule 24 (readwrite_helper)
 
@@ -600,765 +599,764 @@ State 39
 
 State 40
 
+   23 readwrite_statement: WRITE var . readwrite_helper
+
+    COMMA  shift, and go to state 61
+
+    $default  reduce using rule 24 (readwrite_helper)
+
+    readwrite_helper  go to state 63
+
+
+State 41
+
    59 term: NUMBER .
 
     $default  reduce using rule 59 (term)
 
 
-State 41
+State 42
 
    41 relation_exp: L_PAREN . bool_exp R_PAREN
    61 term: L_PAREN . expression R_PAREN
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 41
-    MINUS    shift, and go to state 42
-    NOT      shift, and go to state 43
-    FALSE    shift, and go to state 44
-    TRUE     shift, and go to state 45
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 42
+    MINUS    shift, and go to state 43
+    NOT      shift, and go to state 44
+    FALSE    shift, and go to state 45
+    TRUE     shift, and go to state 46
 
-    bool_exp          go to state 63
-    relation_and_exp  go to state 47
-    relation_exp      go to state 48
-    expression        go to state 64
-    mult_exp          go to state 50
-    term              go to state 51
-    var               go to state 52
+    bool_exp          go to state 64
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    expression        go to state 65
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
-State 42
+State 43
 
    60 term: MINUS . NUMBER
    62     | MINUS . L_PAREN expression R_PAREN
 
-    NUMBER   shift, and go to state 65
-    L_PAREN  shift, and go to state 66
+    NUMBER   shift, and go to state 66
+    L_PAREN  shift, and go to state 67
 
 
-State 43
+State 44
 
    38 relation_exp: NOT . expression comp expression
    39             | NOT . TRUE
    40             | NOT . FALSE
    42             | NOT . L_PAREN bool_exp R_PAREN
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 67
-    MINUS    shift, and go to state 42
-    FALSE    shift, and go to state 68
-    TRUE     shift, and go to state 69
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 68
+    MINUS    shift, and go to state 43
+    FALSE    shift, and go to state 69
+    TRUE     shift, and go to state 70
 
-    expression  go to state 70
-    mult_exp    go to state 50
-    term        go to state 51
-    var         go to state 52
+    expression  go to state 71
+    mult_exp    go to state 51
+    term        go to state 52
+    var         go to state 53
 
 
-State 44
+State 45
 
    36 relation_exp: FALSE .
 
     $default  reduce using rule 36 (relation_exp)
 
 
-State 45
+State 46
 
    35 relation_exp: TRUE .
 
     $default  reduce using rule 35 (relation_exp)
 
 
-State 46
+State 47
 
    18 ifelse_statement: IF bool_exp . THEN statement_helper ENDIF
    19                 | IF bool_exp . THEN statement_helper ELSE statement_helper ENDIF
 
-    THEN  shift, and go to state 71
-
-
-State 47
-
-   29 bool_exp: relation_and_exp . bool_exp_helper
-
-    OR  shift, and go to state 72
-
-    $default  reduce using rule 33 (bool_exp_helper)
-
-    bool_exp_helper  go to state 73
+    THEN  shift, and go to state 72
 
 
 State 48
 
-   30 relation_and_exp: relation_exp . relation_and_helper
+   29 bool_exp: relation_and_exp . bool_exp_helper
 
-    AND  shift, and go to state 74
+    OR  shift, and go to state 73
 
-    $default  reduce using rule 31 (relation_and_helper)
+    $default  reduce using rule 33 (bool_exp_helper)
 
-    relation_and_helper  go to state 75
+    bool_exp_helper  go to state 74
 
 
 State 49
 
-   37 relation_exp: expression . comp expression
+   30 relation_and_exp: relation_exp . relation_and_helper
 
-    LT   shift, and go to state 76
-    LTE  shift, and go to state 77
-    GT   shift, and go to state 78
-    GTE  shift, and go to state 79
-    EQ   shift, and go to state 80
-    NEQ  shift, and go to state 81
+    AND  shift, and go to state 75
 
-    comp  go to state 82
+    $default  reduce using rule 31 (relation_and_helper)
+
+    relation_and_helper  go to state 76
 
 
 State 50
 
-   49 expression: mult_exp . expression_helper
+   37 relation_exp: expression . comp expression
 
-    MINUS  shift, and go to state 83
-    PLUS   shift, and go to state 84
+    LT   shift, and go to state 77
+    LTE  shift, and go to state 78
+    GT   shift, and go to state 79
+    GTE  shift, and go to state 80
+    EQ   shift, and go to state 81
+    NEQ  shift, and go to state 82
 
-    $default  reduce using rule 50 (expression_helper)
-
-    expression_helper  go to state 85
+    comp  go to state 83
 
 
 State 51
 
-   53 mult_exp: term . mult_exp_helper
+   49 expression: mult_exp . expression_helper
 
-    MULT  shift, and go to state 86
-    DIV   shift, and go to state 87
-    MOD   shift, and go to state 88
+    MINUS  shift, and go to state 84
+    PLUS   shift, and go to state 85
 
-    $default  reduce using rule 54 (mult_exp_helper)
+    $default  reduce using rule 50 (expression_helper)
 
-    mult_exp_helper  go to state 89
+    expression_helper  go to state 86
 
 
 State 52
+
+   53 mult_exp: term . mult_exp_helper
+
+    MULT  shift, and go to state 87
+    DIV   shift, and go to state 88
+    MOD   shift, and go to state 89
+
+    $default  reduce using rule 54 (mult_exp_helper)
+
+    mult_exp_helper  go to state 90
+
+
+State 53
 
    58 term: var .
 
     $default  reduce using rule 58 (term)
 
 
-State 53
+State 54
 
    21 dobegin_statement: DO BEGINLOOP . statement_helper ENDLOOP WHILE bool_exp
 
-    IDENT     shift, and go to state 17
-    CONTINUE  shift, and go to state 18
-    READ      shift, and go to state 19
-    WRITE     shift, and go to state 20
-    IF        shift, and go to state 21
-    DO        shift, and go to state 22
-    WHILE     shift, and go to state 23
+    IDENT     shift, and go to state 18
+    CONTINUE  shift, and go to state 19
+    READ      shift, and go to state 20
+    WRITE     shift, and go to state 21
+    IF        shift, and go to state 22
+    DO        shift, and go to state 23
+    WHILE     shift, and go to state 24
 
     $default  reduce using rule 27 (statement_helper)
 
-    statement             go to state 24
-    expression_statement  go to state 25
-    ifelse_statement      go to state 26
-    while_statement       go to state 27
-    dobegin_statement     go to state 28
-    readwrite_statement   go to state 29
-    continue_statement    go to state 30
-    statement_helper      go to state 90
-    var                   go to state 32
-
-
-State 54
-
-   20 while_statement: WHILE bool_exp . BEGINLOOP statement_helper ENDLOOP
-
-    BEGINLOOP  shift, and go to state 91
+    statement             go to state 25
+    expression_statement  go to state 26
+    ifelse_statement      go to state 27
+    while_statement       go to state 28
+    dobegin_statement     go to state 29
+    readwrite_statement   go to state 30
+    continue_statement    go to state 31
+    statement_helper      go to state 91
+    var                   go to state 33
 
 
 State 55
 
-   28 statement_helper: statement SEMICOLON . statement_helper
+   20 while_statement: WHILE bool_exp . BEGINLOOP statement_helper ENDLOOP
 
-    IDENT     shift, and go to state 17
-    CONTINUE  shift, and go to state 18
-    READ      shift, and go to state 19
-    WRITE     shift, and go to state 20
-    IF        shift, and go to state 21
-    DO        shift, and go to state 22
-    WHILE     shift, and go to state 23
-
-    $default  reduce using rule 27 (statement_helper)
-
-    statement             go to state 24
-    expression_statement  go to state 25
-    ifelse_statement      go to state 26
-    while_statement       go to state 27
-    dobegin_statement     go to state 28
-    readwrite_statement   go to state 29
-    continue_statement    go to state 30
-    statement_helper      go to state 92
-    var                   go to state 32
+    BEGINLOOP  shift, and go to state 92
 
 
 State 56
 
-   17 expression_statement: var ASSIGN . expression
+   28 statement_helper: statement SEMICOLON . statement_helper
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
+    IDENT     shift, and go to state 18
+    CONTINUE  shift, and go to state 19
+    READ      shift, and go to state 20
+    WRITE     shift, and go to state 21
+    IF        shift, and go to state 22
+    DO        shift, and go to state 23
+    WHILE     shift, and go to state 24
 
-    expression  go to state 93
-    mult_exp    go to state 50
-    term        go to state 51
-    var         go to state 52
+    $default  reduce using rule 27 (statement_helper)
+
+    statement             go to state 25
+    expression_statement  go to state 26
+    ifelse_statement      go to state 27
+    while_statement       go to state 28
+    dobegin_statement     go to state 29
+    readwrite_statement   go to state 30
+    continue_statement    go to state 31
+    statement_helper      go to state 93
+    var                   go to state 33
 
 
 State 57
 
-    9 declaration_helper2: ARRAY L_PAREN . NUMBER R_PAREN OF INTEGER
+   17 expression_statement: var ASSIGN . expression
 
-    NUMBER  shift, and go to state 94
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
+
+    expression  go to state 94
+    mult_exp    go to state 51
+    term        go to state 52
+    var         go to state 53
 
 
 State 58
 
-   61 term: L_PAREN . expression R_PAREN
+    9 declaration_helper2: ARRAY L_PAREN . NUMBER R_PAREN OF INTEGER
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
-
-    expression  go to state 95
-    mult_exp    go to state 50
-    term        go to state 51
-    var         go to state 52
+    NUMBER  shift, and go to state 95
 
 
 State 59
 
-   64 var: IDENT L_PAREN expression . R_PAREN
+   61 term: L_PAREN . expression R_PAREN
 
-    R_PAREN  shift, and go to state 96
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
+
+    expression  go to state 96
+    mult_exp    go to state 51
+    term        go to state 52
+    var         go to state 53
 
 
 State 60
 
-   25 readwrite_helper: COMMA . var readwrite_helper
+   64 var: IDENT L_PAREN expression . R_PAREN
 
-    IDENT  shift, and go to state 17
-
-    var  go to state 97
+    R_PAREN  shift, and go to state 97
 
 
 State 61
+
+   25 readwrite_helper: COMMA . var readwrite_helper
+
+    IDENT  shift, and go to state 18
+
+    var  go to state 98
+
+
+State 62
 
    22 readwrite_statement: READ var readwrite_helper .
 
     $default  reduce using rule 22 (readwrite_statement)
 
 
-State 62
+State 63
 
    23 readwrite_statement: WRITE var readwrite_helper .
 
     $default  reduce using rule 23 (readwrite_statement)
 
 
-State 63
+State 64
 
    41 relation_exp: L_PAREN bool_exp . R_PAREN
 
-    R_PAREN  shift, and go to state 98
+    R_PAREN  shift, and go to state 99
 
 
-State 64
+State 65
 
    37 relation_exp: expression . comp expression
    61 term: L_PAREN expression . R_PAREN
 
-    R_PAREN  shift, and go to state 99
-    LT       shift, and go to state 76
-    LTE      shift, and go to state 77
-    GT       shift, and go to state 78
-    GTE      shift, and go to state 79
-    EQ       shift, and go to state 80
-    NEQ      shift, and go to state 81
+    R_PAREN  shift, and go to state 100
+    LT       shift, and go to state 77
+    LTE      shift, and go to state 78
+    GT       shift, and go to state 79
+    GTE      shift, and go to state 80
+    EQ       shift, and go to state 81
+    NEQ      shift, and go to state 82
 
-    comp  go to state 82
+    comp  go to state 83
 
 
-State 65
+State 66
 
    60 term: MINUS NUMBER .
 
     $default  reduce using rule 60 (term)
 
 
-State 66
+State 67
 
    62 term: MINUS L_PAREN . expression R_PAREN
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
 
-    expression  go to state 100
-    mult_exp    go to state 50
-    term        go to state 51
-    var         go to state 52
+    expression  go to state 101
+    mult_exp    go to state 51
+    term        go to state 52
+    var         go to state 53
 
 
-State 67
+State 68
 
    42 relation_exp: NOT L_PAREN . bool_exp R_PAREN
    61 term: L_PAREN . expression R_PAREN
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 41
-    MINUS    shift, and go to state 42
-    NOT      shift, and go to state 43
-    FALSE    shift, and go to state 44
-    TRUE     shift, and go to state 45
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 42
+    MINUS    shift, and go to state 43
+    NOT      shift, and go to state 44
+    FALSE    shift, and go to state 45
+    TRUE     shift, and go to state 46
 
-    bool_exp          go to state 101
-    relation_and_exp  go to state 47
-    relation_exp      go to state 48
-    expression        go to state 64
-    mult_exp          go to state 50
-    term              go to state 51
-    var               go to state 52
+    bool_exp          go to state 102
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    expression        go to state 65
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
-State 68
+State 69
 
    40 relation_exp: NOT FALSE .
 
     $default  reduce using rule 40 (relation_exp)
 
 
-State 69
+State 70
 
    39 relation_exp: NOT TRUE .
 
     $default  reduce using rule 39 (relation_exp)
 
 
-State 70
+State 71
 
    38 relation_exp: NOT expression . comp expression
 
-    LT   shift, and go to state 76
-    LTE  shift, and go to state 77
-    GT   shift, and go to state 78
-    GTE  shift, and go to state 79
-    EQ   shift, and go to state 80
-    NEQ  shift, and go to state 81
+    LT   shift, and go to state 77
+    LTE  shift, and go to state 78
+    GT   shift, and go to state 79
+    GTE  shift, and go to state 80
+    EQ   shift, and go to state 81
+    NEQ  shift, and go to state 82
 
-    comp  go to state 102
-
-
-State 71
-
-   18 ifelse_statement: IF bool_exp THEN . statement_helper ENDIF
-   19                 | IF bool_exp THEN . statement_helper ELSE statement_helper ENDIF
-
-    IDENT     shift, and go to state 17
-    CONTINUE  shift, and go to state 18
-    READ      shift, and go to state 19
-    WRITE     shift, and go to state 20
-    IF        shift, and go to state 21
-    DO        shift, and go to state 22
-    WHILE     shift, and go to state 23
-
-    $default  reduce using rule 27 (statement_helper)
-
-    statement             go to state 24
-    expression_statement  go to state 25
-    ifelse_statement      go to state 26
-    while_statement       go to state 27
-    dobegin_statement     go to state 28
-    readwrite_statement   go to state 29
-    continue_statement    go to state 30
-    statement_helper      go to state 103
-    var                   go to state 32
+    comp  go to state 103
 
 
 State 72
 
-   34 bool_exp_helper: OR . relation_and_exp bool_exp_helper
+   18 ifelse_statement: IF bool_exp THEN . statement_helper ENDIF
+   19                 | IF bool_exp THEN . statement_helper ELSE statement_helper ENDIF
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 41
-    MINUS    shift, and go to state 42
-    NOT      shift, and go to state 43
-    FALSE    shift, and go to state 44
-    TRUE     shift, and go to state 45
+    IDENT     shift, and go to state 18
+    CONTINUE  shift, and go to state 19
+    READ      shift, and go to state 20
+    WRITE     shift, and go to state 21
+    IF        shift, and go to state 22
+    DO        shift, and go to state 23
+    WHILE     shift, and go to state 24
 
-    relation_and_exp  go to state 104
-    relation_exp      go to state 48
-    expression        go to state 49
-    mult_exp          go to state 50
-    term              go to state 51
-    var               go to state 52
+    $default  reduce using rule 27 (statement_helper)
+
+    statement             go to state 25
+    expression_statement  go to state 26
+    ifelse_statement      go to state 27
+    while_statement       go to state 28
+    dobegin_statement     go to state 29
+    readwrite_statement   go to state 30
+    continue_statement    go to state 31
+    statement_helper      go to state 104
+    var                   go to state 33
 
 
 State 73
+
+   34 bool_exp_helper: OR . relation_and_exp bool_exp_helper
+
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 42
+    MINUS    shift, and go to state 43
+    NOT      shift, and go to state 44
+    FALSE    shift, and go to state 45
+    TRUE     shift, and go to state 46
+
+    relation_and_exp  go to state 105
+    relation_exp      go to state 49
+    expression        go to state 50
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
+
+
+State 74
 
    29 bool_exp: relation_and_exp bool_exp_helper .
 
     $default  reduce using rule 29 (bool_exp)
 
 
-State 74
+State 75
 
    32 relation_and_helper: AND . relation_exp relation_and_helper
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 41
-    MINUS    shift, and go to state 42
-    NOT      shift, and go to state 43
-    FALSE    shift, and go to state 44
-    TRUE     shift, and go to state 45
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 42
+    MINUS    shift, and go to state 43
+    NOT      shift, and go to state 44
+    FALSE    shift, and go to state 45
+    TRUE     shift, and go to state 46
 
-    relation_exp  go to state 105
-    expression    go to state 49
-    mult_exp      go to state 50
-    term          go to state 51
-    var           go to state 52
+    relation_exp  go to state 106
+    expression    go to state 50
+    mult_exp      go to state 51
+    term          go to state 52
+    var           go to state 53
 
 
-State 75
+State 76
 
    30 relation_and_exp: relation_exp relation_and_helper .
 
     $default  reduce using rule 30 (relation_and_exp)
 
 
-State 76
+State 77
 
    45 comp: LT .
 
     $default  reduce using rule 45 (comp)
 
 
-State 77
+State 78
 
    47 comp: LTE .
 
     $default  reduce using rule 47 (comp)
 
 
-State 78
+State 79
 
    46 comp: GT .
 
     $default  reduce using rule 46 (comp)
 
 
-State 79
+State 80
 
    48 comp: GTE .
 
     $default  reduce using rule 48 (comp)
 
 
-State 80
+State 81
 
    43 comp: EQ .
 
     $default  reduce using rule 43 (comp)
 
 
-State 81
+State 82
 
    44 comp: NEQ .
 
     $default  reduce using rule 44 (comp)
 
 
-State 82
+State 83
 
    37 relation_exp: expression comp . expression
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
 
-    expression  go to state 106
-    mult_exp    go to state 50
-    term        go to state 51
-    var         go to state 52
-
-
-State 83
-
-   52 expression_helper: MINUS . mult_exp expression_helper
-
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
-
-    mult_exp  go to state 107
-    term      go to state 51
-    var       go to state 52
+    expression  go to state 107
+    mult_exp    go to state 51
+    term        go to state 52
+    var         go to state 53
 
 
 State 84
 
-   51 expression_helper: PLUS . mult_exp expression_helper
+   52 expression_helper: MINUS . mult_exp expression_helper
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
 
     mult_exp  go to state 108
-    term      go to state 51
-    var       go to state 52
+    term      go to state 52
+    var       go to state 53
 
 
 State 85
+
+   51 expression_helper: PLUS . mult_exp expression_helper
+
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
+
+    mult_exp  go to state 109
+    term      go to state 52
+    var       go to state 53
+
+
+State 86
 
    49 expression: mult_exp expression_helper .
 
     $default  reduce using rule 49 (expression)
 
 
-State 86
+State 87
 
    55 mult_exp_helper: MULT . term mult_exp_helper
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
-
-    term  go to state 109
-    var   go to state 52
-
-
-State 87
-
-   56 mult_exp_helper: DIV . term mult_exp_helper
-
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
 
     term  go to state 110
-    var   go to state 52
+    var   go to state 53
 
 
 State 88
 
-   57 mult_exp_helper: MOD . term mult_exp_helper
+   56 mult_exp_helper: DIV . term mult_exp_helper
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
 
     term  go to state 111
-    var   go to state 52
+    var   go to state 53
 
 
 State 89
+
+   57 mult_exp_helper: MOD . term mult_exp_helper
+
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
+
+    term  go to state 112
+    var   go to state 53
+
+
+State 90
 
    53 mult_exp: term mult_exp_helper .
 
     $default  reduce using rule 53 (mult_exp)
 
 
-State 90
+State 91
 
    21 dobegin_statement: DO BEGINLOOP statement_helper . ENDLOOP WHILE bool_exp
 
-    ENDLOOP  shift, and go to state 112
-
-
-State 91
-
-   20 while_statement: WHILE bool_exp BEGINLOOP . statement_helper ENDLOOP
-
-    IDENT     shift, and go to state 17
-    CONTINUE  shift, and go to state 18
-    READ      shift, and go to state 19
-    WRITE     shift, and go to state 20
-    IF        shift, and go to state 21
-    DO        shift, and go to state 22
-    WHILE     shift, and go to state 23
-
-    $default  reduce using rule 27 (statement_helper)
-
-    statement             go to state 24
-    expression_statement  go to state 25
-    ifelse_statement      go to state 26
-    while_statement       go to state 27
-    dobegin_statement     go to state 28
-    readwrite_statement   go to state 29
-    continue_statement    go to state 30
-    statement_helper      go to state 113
-    var                   go to state 32
+    ENDLOOP  shift, and go to state 113
 
 
 State 92
+
+   20 while_statement: WHILE bool_exp BEGINLOOP . statement_helper ENDLOOP
+
+    IDENT     shift, and go to state 18
+    CONTINUE  shift, and go to state 19
+    READ      shift, and go to state 20
+    WRITE     shift, and go to state 21
+    IF        shift, and go to state 22
+    DO        shift, and go to state 23
+    WHILE     shift, and go to state 24
+
+    $default  reduce using rule 27 (statement_helper)
+
+    statement             go to state 25
+    expression_statement  go to state 26
+    ifelse_statement      go to state 27
+    while_statement       go to state 28
+    dobegin_statement     go to state 29
+    readwrite_statement   go to state 30
+    continue_statement    go to state 31
+    statement_helper      go to state 114
+    var                   go to state 33
+
+
+State 93
 
    28 statement_helper: statement SEMICOLON statement_helper .
 
     $default  reduce using rule 28 (statement_helper)
 
 
-State 93
+State 94
 
    17 expression_statement: var ASSIGN expression .
 
     $default  reduce using rule 17 (expression_statement)
 
 
-State 94
+State 95
 
     9 declaration_helper2: ARRAY L_PAREN NUMBER . R_PAREN OF INTEGER
 
-    R_PAREN  shift, and go to state 114
-
-
-State 95
-
-   61 term: L_PAREN expression . R_PAREN
-
-    R_PAREN  shift, and go to state 99
+    R_PAREN  shift, and go to state 115
 
 
 State 96
+
+   61 term: L_PAREN expression . R_PAREN
+
+    R_PAREN  shift, and go to state 100
+
+
+State 97
 
    64 var: IDENT L_PAREN expression R_PAREN .
 
     $default  reduce using rule 64 (var)
 
 
-State 97
+State 98
 
    25 readwrite_helper: COMMA var . readwrite_helper
 
-    COMMA  shift, and go to state 60
+    COMMA  shift, and go to state 61
 
     $default  reduce using rule 24 (readwrite_helper)
 
-    readwrite_helper  go to state 115
+    readwrite_helper  go to state 116
 
 
-State 98
+State 99
 
    41 relation_exp: L_PAREN bool_exp R_PAREN .
 
     $default  reduce using rule 41 (relation_exp)
 
 
-State 99
+State 100
 
    61 term: L_PAREN expression R_PAREN .
 
     $default  reduce using rule 61 (term)
 
 
-State 100
-
-   62 term: MINUS L_PAREN expression . R_PAREN
-
-    R_PAREN  shift, and go to state 116
-
-
 State 101
 
-   42 relation_exp: NOT L_PAREN bool_exp . R_PAREN
+   62 term: MINUS L_PAREN expression . R_PAREN
 
     R_PAREN  shift, and go to state 117
 
 
 State 102
 
-   38 relation_exp: NOT expression comp . expression
+   42 relation_exp: NOT L_PAREN bool_exp . R_PAREN
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 58
-    MINUS    shift, and go to state 42
-
-    expression  go to state 118
-    mult_exp    go to state 50
-    term        go to state 51
-    var         go to state 52
+    R_PAREN  shift, and go to state 118
 
 
 State 103
 
-   18 ifelse_statement: IF bool_exp THEN statement_helper . ENDIF
-   19                 | IF bool_exp THEN statement_helper . ELSE statement_helper ENDIF
+   38 relation_exp: NOT expression comp . expression
 
-    ENDIF  shift, and go to state 119
-    ELSE   shift, and go to state 120
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 59
+    MINUS    shift, and go to state 43
+
+    expression  go to state 119
+    mult_exp    go to state 51
+    term        go to state 52
+    var         go to state 53
 
 
 State 104
 
-   34 bool_exp_helper: OR relation_and_exp . bool_exp_helper
+   18 ifelse_statement: IF bool_exp THEN statement_helper . ENDIF
+   19                 | IF bool_exp THEN statement_helper . ELSE statement_helper ENDIF
 
-    OR  shift, and go to state 72
-
-    $default  reduce using rule 33 (bool_exp_helper)
-
-    bool_exp_helper  go to state 121
+    ENDIF  shift, and go to state 120
+    ELSE   shift, and go to state 121
 
 
 State 105
 
-   32 relation_and_helper: AND relation_exp . relation_and_helper
+   34 bool_exp_helper: OR relation_and_exp . bool_exp_helper
 
-    AND  shift, and go to state 74
+    OR  shift, and go to state 73
 
-    $default  reduce using rule 31 (relation_and_helper)
+    $default  reduce using rule 33 (bool_exp_helper)
 
-    relation_and_helper  go to state 122
+    bool_exp_helper  go to state 122
 
 
 State 106
+
+   32 relation_and_helper: AND relation_exp . relation_and_helper
+
+    AND  shift, and go to state 75
+
+    $default  reduce using rule 31 (relation_and_helper)
+
+    relation_and_helper  go to state 123
+
+
+State 107
 
    37 relation_exp: expression comp expression .
 
     $default  reduce using rule 37 (relation_exp)
 
 
-State 107
+State 108
 
    52 expression_helper: MINUS mult_exp . expression_helper
 
-    MINUS  shift, and go to state 83
-    PLUS   shift, and go to state 84
-
-    $default  reduce using rule 50 (expression_helper)
-
-    expression_helper  go to state 123
-
-
-State 108
-
-   51 expression_helper: PLUS mult_exp . expression_helper
-
-    MINUS  shift, and go to state 83
-    PLUS   shift, and go to state 84
+    MINUS  shift, and go to state 84
+    PLUS   shift, and go to state 85
 
     $default  reduce using rule 50 (expression_helper)
 
@@ -1367,24 +1365,23 @@ State 108
 
 State 109
 
-   55 mult_exp_helper: MULT term . mult_exp_helper
+   51 expression_helper: PLUS mult_exp . expression_helper
 
-    MULT  shift, and go to state 86
-    DIV   shift, and go to state 87
-    MOD   shift, and go to state 88
+    MINUS  shift, and go to state 84
+    PLUS   shift, and go to state 85
 
-    $default  reduce using rule 54 (mult_exp_helper)
+    $default  reduce using rule 50 (expression_helper)
 
-    mult_exp_helper  go to state 125
+    expression_helper  go to state 125
 
 
 State 110
 
-   56 mult_exp_helper: DIV term . mult_exp_helper
+   55 mult_exp_helper: MULT term . mult_exp_helper
 
-    MULT  shift, and go to state 86
-    DIV   shift, and go to state 87
-    MOD   shift, and go to state 88
+    MULT  shift, and go to state 87
+    DIV   shift, and go to state 88
+    MOD   shift, and go to state 89
 
     $default  reduce using rule 54 (mult_exp_helper)
 
@@ -1393,11 +1390,11 @@ State 110
 
 State 111
 
-   57 mult_exp_helper: MOD term . mult_exp_helper
+   56 mult_exp_helper: DIV term . mult_exp_helper
 
-    MULT  shift, and go to state 86
-    DIV   shift, and go to state 87
-    MOD   shift, and go to state 88
+    MULT  shift, and go to state 87
+    DIV   shift, and go to state 88
+    MOD   shift, and go to state 89
 
     $default  reduce using rule 54 (mult_exp_helper)
 
@@ -1406,191 +1403,204 @@ State 111
 
 State 112
 
-   21 dobegin_statement: DO BEGINLOOP statement_helper ENDLOOP . WHILE bool_exp
+   57 mult_exp_helper: MOD term . mult_exp_helper
 
-    WHILE  shift, and go to state 128
+    MULT  shift, and go to state 87
+    DIV   shift, and go to state 88
+    MOD   shift, and go to state 89
+
+    $default  reduce using rule 54 (mult_exp_helper)
+
+    mult_exp_helper  go to state 128
 
 
 State 113
 
-   20 while_statement: WHILE bool_exp BEGINLOOP statement_helper . ENDLOOP
+   21 dobegin_statement: DO BEGINLOOP statement_helper ENDLOOP . WHILE bool_exp
 
-    ENDLOOP  shift, and go to state 129
+    WHILE  shift, and go to state 129
 
 
 State 114
 
-    9 declaration_helper2: ARRAY L_PAREN NUMBER R_PAREN . OF INTEGER
+   20 while_statement: WHILE bool_exp BEGINLOOP statement_helper . ENDLOOP
 
-    OF  shift, and go to state 130
+    ENDLOOP  shift, and go to state 130
 
 
 State 115
+
+    9 declaration_helper2: ARRAY L_PAREN NUMBER R_PAREN . OF INTEGER
+
+    OF  shift, and go to state 131
+
+
+State 116
 
    25 readwrite_helper: COMMA var readwrite_helper .
 
     $default  reduce using rule 25 (readwrite_helper)
 
 
-State 116
+State 117
 
    62 term: MINUS L_PAREN expression R_PAREN .
 
     $default  reduce using rule 62 (term)
 
 
-State 117
+State 118
 
    42 relation_exp: NOT L_PAREN bool_exp R_PAREN .
 
     $default  reduce using rule 42 (relation_exp)
 
 
-State 118
+State 119
 
    38 relation_exp: NOT expression comp expression .
 
     $default  reduce using rule 38 (relation_exp)
 
 
-State 119
+State 120
 
    18 ifelse_statement: IF bool_exp THEN statement_helper ENDIF .
 
     $default  reduce using rule 18 (ifelse_statement)
 
 
-State 120
+State 121
 
    19 ifelse_statement: IF bool_exp THEN statement_helper ELSE . statement_helper ENDIF
 
-    IDENT     shift, and go to state 17
-    CONTINUE  shift, and go to state 18
-    READ      shift, and go to state 19
-    WRITE     shift, and go to state 20
-    IF        shift, and go to state 21
-    DO        shift, and go to state 22
-    WHILE     shift, and go to state 23
+    IDENT     shift, and go to state 18
+    CONTINUE  shift, and go to state 19
+    READ      shift, and go to state 20
+    WRITE     shift, and go to state 21
+    IF        shift, and go to state 22
+    DO        shift, and go to state 23
+    WHILE     shift, and go to state 24
 
     $default  reduce using rule 27 (statement_helper)
 
-    statement             go to state 24
-    expression_statement  go to state 25
-    ifelse_statement      go to state 26
-    while_statement       go to state 27
-    dobegin_statement     go to state 28
-    readwrite_statement   go to state 29
-    continue_statement    go to state 30
-    statement_helper      go to state 131
-    var                   go to state 32
+    statement             go to state 25
+    expression_statement  go to state 26
+    ifelse_statement      go to state 27
+    while_statement       go to state 28
+    dobegin_statement     go to state 29
+    readwrite_statement   go to state 30
+    continue_statement    go to state 31
+    statement_helper      go to state 132
+    var                   go to state 33
 
 
-State 121
+State 122
 
    34 bool_exp_helper: OR relation_and_exp bool_exp_helper .
 
     $default  reduce using rule 34 (bool_exp_helper)
 
 
-State 122
+State 123
 
    32 relation_and_helper: AND relation_exp relation_and_helper .
 
     $default  reduce using rule 32 (relation_and_helper)
 
 
-State 123
+State 124
 
    52 expression_helper: MINUS mult_exp expression_helper .
 
     $default  reduce using rule 52 (expression_helper)
 
 
-State 124
+State 125
 
    51 expression_helper: PLUS mult_exp expression_helper .
 
     $default  reduce using rule 51 (expression_helper)
 
 
-State 125
+State 126
 
    55 mult_exp_helper: MULT term mult_exp_helper .
 
     $default  reduce using rule 55 (mult_exp_helper)
 
 
-State 126
+State 127
 
    56 mult_exp_helper: DIV term mult_exp_helper .
 
     $default  reduce using rule 56 (mult_exp_helper)
 
 
-State 127
+State 128
 
    57 mult_exp_helper: MOD term mult_exp_helper .
 
     $default  reduce using rule 57 (mult_exp_helper)
 
 
-State 128
+State 129
 
    21 dobegin_statement: DO BEGINLOOP statement_helper ENDLOOP WHILE . bool_exp
 
-    NUMBER   shift, and go to state 40
-    IDENT    shift, and go to state 17
-    L_PAREN  shift, and go to state 41
-    MINUS    shift, and go to state 42
-    NOT      shift, and go to state 43
-    FALSE    shift, and go to state 44
-    TRUE     shift, and go to state 45
+    NUMBER   shift, and go to state 41
+    IDENT    shift, and go to state 18
+    L_PAREN  shift, and go to state 42
+    MINUS    shift, and go to state 43
+    NOT      shift, and go to state 44
+    FALSE    shift, and go to state 45
+    TRUE     shift, and go to state 46
 
-    bool_exp          go to state 132
-    relation_and_exp  go to state 47
-    relation_exp      go to state 48
-    expression        go to state 49
-    mult_exp          go to state 50
-    term              go to state 51
-    var               go to state 52
+    bool_exp          go to state 133
+    relation_and_exp  go to state 48
+    relation_exp      go to state 49
+    expression        go to state 50
+    mult_exp          go to state 51
+    term              go to state 52
+    var               go to state 53
 
 
-State 129
+State 130
 
    20 while_statement: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP .
 
     $default  reduce using rule 20 (while_statement)
 
 
-State 130
+State 131
 
     9 declaration_helper2: ARRAY L_PAREN NUMBER R_PAREN OF . INTEGER
 
-    INTEGER  shift, and go to state 133
-
-
-State 131
-
-   19 ifelse_statement: IF bool_exp THEN statement_helper ELSE statement_helper . ENDIF
-
-    ENDIF  shift, and go to state 134
+    INTEGER  shift, and go to state 134
 
 
 State 132
+
+   19 ifelse_statement: IF bool_exp THEN statement_helper ELSE statement_helper . ENDIF
+
+    ENDIF  shift, and go to state 135
+
+
+State 133
 
    21 dobegin_statement: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp .
 
     $default  reduce using rule 21 (dobegin_statement)
 
 
-State 133
+State 134
 
     9 declaration_helper2: ARRAY L_PAREN NUMBER R_PAREN OF INTEGER .
 
     $default  reduce using rule 9 (declaration_helper2)
 
 
-State 134
+State 135
 
    19 ifelse_statement: IF bool_exp THEN statement_helper ELSE statement_helper ENDIF .
 

@@ -1,7 +1,12 @@
-#include <string.h>
+#include <string>
+#include <iostream>
 using namespace std;
-struct ExpStruct{
+
+typedef struct ExpStruct{
 	string code;
 	string result_id;
-}
+
+}ExpStruct;
+
+ExpStruct *create();
 

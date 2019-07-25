@@ -2,11 +2,27 @@
 #include <iterator>
 #include <map>
 #include <string.h>
-
+#include "random_struct.h"
+#include <sstream>
 using namespace std;
 
 int main(){
+	
+	ExpStruct *temp_ptr = create();
+	string _result = "Hi";
+	string _code = "Bitches";
+	temp_ptr -> result_id = _result;
+	temp_ptr -> code = _code;
+	ostringstream oss;
+	oss << "Result id: " << temp_ptr -> result_id << "                       "  << " Code: " << temp_ptr -> code;
+	cout << oss.str() << endl;
 
+
+
+
+
+
+	/*
 	map<string,string> _map;
 	string x = "_p0";
 	string y = "integer";
@@ -18,7 +34,7 @@ int main(){
 		
 	}
 	
-	
+	*/
 	return 0;
 
 

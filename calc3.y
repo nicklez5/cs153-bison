@@ -2,13 +2,13 @@
 /* calc.y */
 
 %{
+	#include <iostream>
 	#include <stdio.h>
-	#include <stdlib.h>
-	// #include "linked_list.h"	
+	#include <stdlib.h>	
+	#include <string>
 	#include <string.h>
 	#include <map>
-	#include <iterator>
-	#include <iostream> 
+	#include <iterator> 
 	#include "random_struct.h"
 	#include <sstream>
 
@@ -27,32 +27,35 @@
 	char *totalLine;
 	#define ITOA(n) my_itoa((char [41]) {0},(n))
 	#define BUZZ_SIZE 1024
-	
-	
+	map<string,string> _map; 
+	map<string,string> func_map;
+	string type_1 = "SCALAR";
+	string type_2 = "ASSIGN";
+	string type_3 = "WHILE";
+	string type_4 = "PLUS";
+	string type_5 = "READ/WRITE";
+	string null_str = "";
 	char str[12];
-	char str2[12];
-	char str3[12]; 
-	char str4[12];
+	char *writeable;
 	int point_number = 0;
 	int term_number = 0;
-	int current_value = 0;
-	char *cur_string_value;
-	int finished_looping = 0; 
-	int fresh_term = 0;
-	int dont_loop = 0;
-	int check_bool_type = 0;
+	
+	
 	int loop_token = 0;
-	struct node *list_var;
-	struct node *list_func;
+	//struct node *list_var;
+	//struct node *list_func;
+
 	extern FILE *yyin;
 	extern FILE *yyout;
-	extern int yylex(void); 
+	extern int yylex(void);
+	extern int yyparse(void); 
 %}
 
 %union{
   double dval;
   int ival;
   char* tokenName;
+  struct ExpStruct *ExpType;
 }
 %error-verbose
 %start	program 
@@ -61,28 +64,11 @@
 %token  L_PAREN R_PAREN MINUS MULT DIV MOD PLUS SUB LT LTE GT GTE EQUAL EQ INTEGER NEQ NOT AND OR ASSIGN  COMMENT END SEMICOLON COLON COMMA ENDLOOP CONTINUE READ WRITE error_1 error_2 error_3 IF FALSE END_PROGRAM ENDIF ELSE DO BEGIN_PROGRAM ARRAY  WHILE TRUE THEN PROGRAM OF BEGINLOOP 	
  
 
-%type   <ival>  mult_exp
-%type 	<ival>  expression
-%type   <ival>  expression_helper mult_exp_helper term var
-%type   <tokenName> block block_helper declaration_helper declaration declaration_helper2  
-%type   <tokenName> expression_statement ifelse_statement while_statement dobegin_statement readwrite_statement readwrite_helper continue_statement statement_helper
-%type   <tokenName> bool_exp relation_and_exp relation_exp relation_and_helper bool_exp_helper 
-%type   <tokenName> comp 
-%type   <tokenName> statement 
-%type   <tokenName> NEQ EQ LT GTE GT LTE 
 
 
-%type    <ExpStruct> var expression expression_helper mult_exp_helper term mult_exp 
-%type    <ExpStruct> block block_helper declaration_helper declaration declaration_helper2 
-%type    <ExpStruct> expression_statement ifelse_statement while_statement dobegin_statement readwrite_statement readwrite_helper continue_statement statement_helper
-%type    <ExpStruct> bool_exp relation_and_exp relation_exp relation_and_helper bool_exp_helper
-%type    <ExpStruct> comp
-%type    <ExpStruct> statement
-%type    <ExpStruct> NEQ EQ LT GTE GT LTE
-/*
+%type    <ExpType> var expression expression_helper mult_exp_helper term mult_exp bool_exp_helper relation_exp relation_and_helper bool_exp relation_and_exp readwrite_helper
+%type    <tokenName> comp declaration_helper2 declaration_helper declaration  
 
-
-*/
 %left	PLUS MINUS
 %left	MULT DIV
 %nonassoc UMINUS
@@ -101,16 +87,16 @@ block_helper    : %empty {}
 		| declaration SEMICOLON block_helper {   }
 		;
 
-declaration	: declaration_helper COLON declaration_helper2 { }
+declaration	: declaration_helper COLON declaration_helper2 { if(strcmp($3,"INTEGER") != 0 ){ string str_1 = string($1); string num_str = string($3); oss.str(""); oss << "[] _" << str_1 << ", " <<  num_str;  _map.insert(pair<string,string>(oss.str(),type_1));        } }
 		;  
 
-declaration_helper : %empty { }
-		   | IDENT declaration_helper {    } 
-		   | IDENT COMMA declaration_helper{ }	
+declaration_helper : %empty {char *p = (char*)""; $$ = p; }
+		   | IDENT declaration_helper { $$ = $1;      } 
+		   | IDENT COMMA declaration_helper{ string str_1 = string($1); oss.str(""); oss << " _" << str_1; _map.insert(pair<string,string>(oss.str(),type_1)); string str_2 = string($3); oss.str(""); oss << " _" << str_2; _map.insert(pair<string,string>(oss.str(),type_1)); $$ = $1;  }	
 		   ; 
 
-declaration_helper2 : ARRAY L_PAREN NUMBER R_PAREN OF INTEGER {  }
-		    | INTEGER {  }
+declaration_helper2 : ARRAY L_PAREN NUMBER R_PAREN OF INTEGER { int x; x = $3; string xyz = to_string(x); const char *pchar = xyz.c_str(); char *p = (char*)pchar; $$ = p;    }
+		    | INTEGER { char *p = (char*)"INTEGER"; $$ = p;  }
 		    ;
 
 statement	: expression_statement { }
@@ -121,7 +107,7 @@ statement	: expression_statement { }
 		| continue_statement { }
 		;
 			/* = dst,src          dst = src */
-expression_statement : var ASSIGN expression {    }  
+expression_statement : var ASSIGN expression { oss.str(""); oss << "   =" << $1 -> result_id << "," << $3 -> result_id; func_map.insert(pair<string,string>(null_str,oss.str()));     }  
 		  
 		     ;
 
@@ -129,18 +115,19 @@ ifelse_statement 	: IF bool_exp THEN statement_helper ENDIF {   }
 		  	| IF bool_exp THEN statement_helper ELSE statement_helper ENDIF {  }
 			;
 
-while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP {      }
+while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP { oss.str(""); oss << "   := L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); oss.str(""); loop_token++; oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str()));      }
 		 	;
 
 dobegin_statement	: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp {   }
 		  	;
 
-readwrite_statement	: READ var readwrite_helper {    }
-		    	| WRITE var readwrite_helper {   } 
+readwrite_statement	: READ var readwrite_helper {oss.str(""); oss << "   .<" << $2 -> result_id; string _result_id = newVirtualReg(); _map.insert(pair<string,string>(_result_id,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  string extra_str = string($3 -> result_id); if(strlen(extra_str.c_str()) != 0){ oss.str(""); oss << "   .<" << $3 -> result_id; string _id2 = newVirtualReg(); _map.insert(pair<string,string>(_id2,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  } }
+
+		    	| WRITE var readwrite_helper { oss.str(""); oss << "   .>" << $2 -> result_id; string _result_id = newVirtualReg(); _map.insert(pair<string,string>(_result_id,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  string extra_str = string($3 -> result_id); if(strlen(extra_str.c_str()) != 0) { oss.str(""); oss << "   .>" << $3 -> result_id; string _id2 = newVirtualReg(); _map.insert(pair<string,string>(_id2,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));     }}
 			;
 
-readwrite_helper	: %empty { }
-		 	| COMMA var readwrite_helper{  }
+readwrite_helper	: %empty {ExpStruct *temp = create(); $$ = temp;  }
+		 	| COMMA var readwrite_helper{ $$ = $2;   }
 			;
 
 continue_statement	: CONTINUE {  }
@@ -150,119 +137,127 @@ statement_helper	: %empty {  }
 		 	| statement SEMICOLON statement_helper { }
 		 	;
 
-bool_exp		: relation_and_exp bool_exp_helper { }
+bool_exp		: relation_and_exp bool_exp_helper  {ExpStruct *temp = create(); string temp_str = string($2 -> result_id); if(strlen(temp_str.c_str()) == 0) { $$ = $1; } else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   ||" << temp -> result_id << "," << $1 -> result_id << "," << $2 -> result_id; temp -> code = oss.str(); $$ =  temp; } }
 			;
 
-relation_and_exp 	: relation_exp relation_and_helper {    }
+relation_and_exp 	: relation_exp relation_and_helper {ExpStruct *temp = create(); string temp_str = string($2 -> result_id); if(strlen(temp_str.c_str()) == 0) { $$ = $1; }else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   &&" << temp -> result_id << "," << $1 -> result_id << "," << $2 -> result_id; temp -> code = oss.str(); $$ =  temp; }  }
 			;
 
-relation_and_helper	: %empty { }
-		    	| AND relation_exp relation_and_helper {  }
+relation_and_helper	: %empty {ExpStruct *temp = create(); $$ = temp; }
+		    	| AND relation_exp relation_and_helper {$$ = $2; }
 			;
 
-bool_exp_helper 	: %empty { }
-		 	| OR relation_and_exp bool_exp_helper {  }
+bool_exp_helper 	: %empty {ExpStruct *temp = create(); $$ = temp;  }
+		 	| OR relation_and_exp bool_exp_helper { $$ = $2;  }
 			;
 
 	
-relation_exp		: TRUE {  }
+relation_exp		: TRUE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); $$ = temp;  }
 
-			| FALSE { }
+			| FALSE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); $$ = temp; }
 
-			| expression comp expression {} 
-			| NOT expression comp expression {}
-			| NOT TRUE { }
+			| expression comp expression {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string($2); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << $1 -> result_id << "," << $3 -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str()));  func_map.insert(pair<string,string>(null_str,temp -> code));  $$ =  temp;  } 
 
-			| NOT FALSE { }
+			| NOT expression comp expression {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string($3); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << $2 -> result_id << "," << $4 -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); func_map.insert(pair<string,string>(null_str,temp -> code));  string new_id = newVirtualReg(); _map.insert(pair<string,string>(new_id, type_3)); oss.str(""); oss << "   !" << new_id  << "," << temp -> result_id; temp -> code = oss.str(); temp -> result_id = new_id;  func_map.insert(pair<string,string>(null_str,temp -> code)); $$ = temp; }
+			
+			| NOT TRUE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); $$ = temp; }
 
-			| L_PAREN bool_exp R_PAREN {  }
-			| NOT L_PAREN bool_exp R_PAREN {  }
+			| NOT FALSE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); $$ = temp; }
+
+			| L_PAREN bool_exp R_PAREN {ExpStruct *temp = create(); temp -> result_id = $2 -> result_id; temp -> code = $2 -> code; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); $$ = temp;  }
+			| NOT L_PAREN bool_exp R_PAREN {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string get_id = $3 -> result_id; oss.str(""); oss << "   !" << temp -> result_id << get_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); $$ = temp; }
 			;
 
-comp		: EQ {$$ = "==";  }
-    		| NEQ {$$ = "!="; }
-		| LT { $$ = "<"; }
-		| GT { $$ = ">"; }
-		| LTE { $$ = "<="; }
-		| GTE { $$ = ">="; }
+comp		: EQ {char *p = (char*)"=="; $$ = p;  }
+    		| NEQ { char *p = (char*)"!="; $$ = p; }
+		| LT { char *p = (char*)"<"; $$ = p;  }
+		| GT { char *p = (char*)">"; $$ = p;  }
+		| LTE { char *p = (char*)"<=";  $$ = p; }
+		| GTE { char *p = (char*)">="; $$ = p;  }
 		;
 
-expression 	: mult_exp expression_helper {$$ = $1; } 
+expression 	: mult_exp expression_helper {ExpStruct *temp = create(); string left_side = $1 -> result_id; string right_side = $2 -> result_id; if(strlen(right_side.c_str()) != 0){  temp -> result_id = newVirtualReg(); oss.str(""); _map.insert(pair<string,string>(temp -> result_id,type_4)); oss << "   +" << temp -> result_id << "," << left_side << "," << right_side;  temp -> code = oss.str(); $$ = temp; }else {$$ = $1;} }
 		;
 
 	    
-expression_helper : %empty {  }
+expression_helper : %empty {ExpStruct *temp = create(); $$ = temp; }
 		  /* dst = src1 + src2 = + dst,src1,src2 */ 
-		  | PLUS mult_exp expression_helper { }  
+		  | PLUS mult_exp expression_helper {$$ = $2;  }  
 
-		  | MINUS mult_exp expression_helper {   }
+		  | MINUS mult_exp expression_helper { $$ = $2;  }
 		  ;
 
-mult_exp	: term mult_exp_helper { } 
+mult_exp	: term mult_exp_helper {$$ = $1; } 
 	 	;
 
 
-mult_exp_helper : %empty {  }
+mult_exp_helper : %empty {ExpStruct *temp = create(); $$ = temp; }
 
 		/* dst = src1 * src2 = * dst,src1,src2 */
-		| MULT term mult_exp_helper {   } 
+		| MULT term mult_exp_helper {ExpStruct *temp = create(); $$ = temp;   } 
 
-		| DIV term mult_exp_helper {  } 
+		| DIV term mult_exp_helper {ExpStruct *temp = create(); $$ = temp;  } 
 
-		| MOD term mult_exp_helper {    }
+		| MOD term mult_exp_helper { ExpStruct *temp = create(); $$ = temp;    }
 		;
 
-term		: var {    }
+term		: var { $$ = $1; }
 
-		| NUMBER { }  
+		| NUMBER {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_1)); $$ = temp; }  
 
-		| MINUS NUMBER {  }
+		| MINUS NUMBER {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_1)); $$ = temp;  }
 
-		| L_PAREN expression R_PAREN {  }
+		| L_PAREN expression R_PAREN {ExpStruct *temp = create(); $$ = temp;  }
 
-		| MINUS L_PAREN expression R_PAREN {  }
+		| MINUS L_PAREN expression R_PAREN { ExpStruct *temp = create(); $$ = temp; }
 		;
 
 
-var		: IDENT {   }
-    		
+var		: IDENT {ExpStruct *temp = create(); string str_1 = string($1); oss.str(""); oss << " _" << str_1; temp -> result_id = oss.str(); oss.str(""); oss << "   . _" << str_1; temp -> code = oss.str(); if(_map.find(temp -> result_id) == _map.end()){ _map.insert(pair<string,string>(temp -> result_id,type_1)); } $$ =  temp;  }
 
-     		| IDENT L_PAREN expression R_PAREN {  }
+     		| IDENT L_PAREN expression R_PAREN {ExpStruct *temp = create(); string str_1 = string($1); oss.str(""); oss << "_" << str_1; temp -> result_id = oss.str(); oss.str(""); oss << "   . _" << str_1; temp -> code = oss.str(); if(_map.find(temp -> result_id) == _map.end()){_map.insert(pair<string,string>(temp -> result_id,type_1));  } $$ = temp; }
 		;
 %%
 
 int main(int argc,char **argv){
+	for(int i = 1; i < argc;i++){
+		printf("%s\t",argv[i]);
 	
+	}
 	if(argc == 2){
 		yyin = fopen(argv[1],"r");
 		if(yyin == NULL){
 			printf("syntax: %s filename\n",argv[0]);
 		}//endif
 		yyparse();
+		fclose(yyin); 
+		cout << "Hello0" << endl;
 	}else if(argc == 1){
 
 		yyparse();
-
+		cout << "Hello1" << endl;
 	}else if(argc == 3){
-
+		
 		/* Writing to a file */
-		char *output_file = argv[2];
-		char *file_ext = ".mil";
+		cout << "Hello2" << endl;
+		char *output_file = argv[1];
 
-		char result[100];
+		string min_file = string(output_file); 
+		char *file_ext = (char*)".mil";
 
-		strcpy(result,output_file);
-		strcat(result,file_ext);
+		size_t lastindex = min_file.find_last_of(".");
+		string raw_file = min_file.substr(0,lastindex);
+
+		oss.str("");
+		oss << raw_file << file_ext;
+
+		string MIL_FILE = oss.str();
 		 
-		yyout = fopen(result,"w");
+		yyout = fopen(MIL_FILE.c_str(),"w");
 		
 		/* Reading the file and parsing it */
 		yyin = fopen(argv[1],"r");
 
-		/* Create a single linked list */
-
-		list_var = create(); 
-		list_func = create();
 
 		if(yyin == NULL){
 			printf("syntax: %s filename\n",argv[0]);
@@ -271,10 +266,21 @@ int main(int argc,char **argv){
 		yyparse();
 
 		fclose(yyin);
-	        print_all_id(list_var,yyout);
-		
-		print_all_value(list_var,yyout);					
+	 	
+		map<string,string>::iterator it;
+		for(it = _map.begin(); it != _map.end(); it++){
+			string xyz = it->first;
+			fprintf(yyout,"   .%s\n",xyz.c_str());
+		}
+		fprintf(yyout,": START\n");
+
+		map<string,string>::iterator its;
+		for(its = func_map.begin(); its != func_map.end(); its++){
+			string xyz_2 = it->second;
+			fprintf(yyout,"%s\n",xyz_2.c_str());
+		}
 		fclose(yyout);
+		
 
 
 
@@ -282,7 +288,7 @@ int main(int argc,char **argv){
 		
 	}
 	
- //Calls yylex for tokens.
+ 
 		
 	 
 	  
@@ -291,6 +297,7 @@ int main(int argc,char **argv){
 string newVirtualReg(){
 	ostringstream buffer;
 	buffer << " p" << point_number;
+	point_number++;
 	return buffer.str();	
 }
 char *return_ascii(int i){

@@ -204,7 +204,7 @@ term		: var {  $$ = $1;  }
 var		: IDENT {int x; x = *$1; $$ = x; sprintf(str,"   . %s",$1); sprintf(str2," _%s",$1); sprintf(str3,"%d",x); cur_string_value = str2; if(search_value(list_var,str3) == 1){ node_insert(&list_var,str2,str,str3); }else {  if(fresh_term == 0) {cur_string_value = value_return(list_var,str3); fresh_term = 1; } }   }
     		
 
-     		| IDENT L_PAREN expression R_PAREN { $$ = 0; /*char *xyz; xyz = return_ascii($3); sprintf(str,"   . %s",xyz); sprintf(str2," _%s",xyz); sprintf(str3,"%d",$3); cur_string_value = str2; if(search_value(T,str3) == 1){ node_insert(&T,str2,str,str3); fprint(yyout,str); cur_string_value = str2; }else { if(fresh_term == 0) {cur_string_value = value_return(str3); fresh_term = 1; }} $$ = $1; */   }
+     		| IDENT L_PAREN expression R_PAREN {    }
 		;
 %%
 
