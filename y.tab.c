@@ -1570,13 +1570,13 @@ yyreduce:
 
   case 30:
 #line 140 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); string temp_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(temp_str.c_str()) == 0) { (yyval.ExpType) = (yyvsp[-1].ExpType); } else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   ||" << temp -> result_id << "," << (yyvsp[-1].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); (yyval.ExpType) =  temp; } }
+    {ExpStruct *temp = create(); string temp_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(temp_str.c_str()) == 0) { (yyval.ExpType) = (yyvsp[-1].ExpType); } else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   ||" << temp -> result_id << "," << (yyvsp[-1].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); func_map.insert(pair<string,string>(null_str, temp -> code)); (yyval.ExpType) =  temp; } }
 #line 1575 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
 #line 143 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); string temp_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(temp_str.c_str()) == 0) { (yyval.ExpType) = (yyvsp[-1].ExpType); }else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   &&" << temp -> result_id << "," << (yyvsp[-1].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); (yyval.ExpType) =  temp; }  }
+    {ExpStruct *temp = create(); string temp_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(temp_str.c_str()) == 0) { (yyval.ExpType) = (yyvsp[-1].ExpType); }else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   &&" << temp -> result_id << "," << (yyvsp[-1].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); func_map.insert(pair<string,string>(null_str, temp -> code)); (yyval.ExpType) =  temp; }  }
 #line 1581 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1618,7 +1618,7 @@ yyreduce:
 
   case 38:
 #line 159 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string((yyvsp[-1].tokenName)); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str()));  func_map.insert(pair<string,string>(null_str,temp -> code));  (yyval.ExpType) =  temp;  }
+    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string((yyvsp[-1].tokenName)); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); func_map.insert(pair<string,string>(null_str, temp -> code)); oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str()));   (yyval.ExpType) =  temp;  }
 #line 1623 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1690,7 +1690,7 @@ yyreduce:
 
   case 50:
 #line 179 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); string left_side = (yyvsp[-1].ExpType) -> result_id; string right_side = (yyvsp[0].ExpType) -> result_id; if(strlen(right_side.c_str()) != 0){  temp -> result_id = newVirtualReg(); oss.str(""); _map.insert(pair<string,string>(temp -> result_id,type_4)); oss << "   +" << temp -> result_id << "," << left_side << "," << right_side;  temp -> code = oss.str(); (yyval.ExpType) = temp; }else {(yyval.ExpType) = (yyvsp[-1].ExpType);} }
+    {ExpStruct *temp = create(); string left_side = (yyvsp[-1].ExpType) -> result_id; string right_side = (yyvsp[0].ExpType) -> result_id; if(strlen(right_side.c_str()) != 0){  temp -> result_id = newVirtualReg(); oss.str(""); _map.insert(pair<string,string>(temp -> result_id,type_4)); oss << "   +" << temp -> result_id << "," << left_side << "," << right_side;  temp -> code = oss.str(); func_map.insert(pair<string,string>(null_str,temp -> code)); (yyval.ExpType) = temp; }else {(yyval.ExpType) = (yyvsp[-1].ExpType);} }
 #line 1695 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1750,13 +1750,13 @@ yyreduce:
 
   case 60:
 #line 206 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_1)); (yyval.ExpType) = temp; }
+    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); /*_map.insert(pair<string,string>(temp -> result_id,type_1)); */ (yyval.ExpType) = temp; }
 #line 1755 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
 #line 208 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_1)); (yyval.ExpType) = temp;  }
+    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); /* _map.insert(pair<string,string>(temp -> result_id,type_1)); */ (yyval.ExpType) = temp;  }
 #line 1761 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2017,11 +2017,7 @@ yyreturn:
 
 
 int main(int argc,char **argv){
-	for(int i = 1; i < argc;i++){
-		printf("%s\t",argv[i]);
-	
-	}
-	if(argc == 2){
+	if(argc == 4){
 		yyin = fopen(argv[1],"r");
 		if(yyin == NULL){
 			printf("syntax: %s filename\n",argv[0]);
@@ -2029,18 +2025,18 @@ int main(int argc,char **argv){
 		yyparse();
 		fclose(yyin); 
 		cout << "Hello0" << endl;
-	}else if(argc > 1){
+	}else if(argc == 5){
 
 		yyparse();
 		cout << "Hello1" << endl;
-	}else if(argc == 3){
+	}else if(argc == 2){
 		
-		/* Writing to a file */
-		cout << "Hello2" << endl;
+
 		char *output_file = argv[1];
 
 		string min_file = string(output_file); 
 		char *file_ext = (char*)".mil";
+		cout << "Old File: " << min_file << endl;
 
 		size_t lastindex = min_file.find_last_of(".");
 		string raw_file = min_file.substr(0,lastindex);
@@ -2049,7 +2045,8 @@ int main(int argc,char **argv){
 		oss << raw_file << file_ext;
 
 		string MIL_FILE = oss.str();
-		 
+		cout << "New File: " << MIL_FILE << endl;
+
 		yyout = fopen(MIL_FILE.c_str(),"w");
 		
 		/* Reading the file and parsing it */
@@ -2073,12 +2070,13 @@ int main(int argc,char **argv){
 
 		map<string,string>::iterator its;
 		for(its = func_map.begin(); its != func_map.end(); its++){
-			string xyz_2 = it->second;
+			string xyz_2 = its->second;
 			fprintf(yyout,"%s\n",xyz_2.c_str());
+			fprintf(yyout,"Entering function\n");	
 		}
-		fclose(yyout);
 		
-
+		
+		fclose(yyout);
 
 
 		
