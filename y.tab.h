@@ -102,7 +102,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 54 "calc3.y" /* yacc.c:1909  */
+#line 55 "calc3.y" /* yacc.c:1909  */
 
   double dval;
   int ival;

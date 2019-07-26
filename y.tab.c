@@ -73,14 +73,14 @@
 	#include <iterator> 
 	#include "random_struct.h"
 	#include <sstream>
-
+	#include <vector>
 	using namespace std;
 	void yyerror(const char *msg);
 	double findMod(double a, double b);
 	char *my_itoa(char *dest,int i);
 	char *return_ascii(int i);
 	string newVirtualReg();
-
+	string newVirtualReg2();
 	ostringstream oss;
 	int bool_value(int dest);
 	extern int num_pos ;
@@ -91,6 +91,7 @@
 	#define BUZZ_SIZE 1024
 	map<string,string> _map; 
 	map<string,string> func_map;
+	vector<string> func_vec; 
 	string type_1 = "SCALAR";
 	string type_2 = "ASSIGN";
 	string type_3 = "WHILE";
@@ -112,7 +113,7 @@
 	extern int yylex(void);
 	extern int yyparse(void); 
 
-#line 116 "y.tab.c" /* yacc.c:339  */
+#line 117 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -204,14 +205,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 54 "calc3.y" /* yacc.c:355  */
+#line 55 "calc3.y" /* yacc.c:355  */
 
   double dval;
   int ival;
   char* tokenName;
   struct ExpStruct *ExpType;
 
-#line 215 "y.tab.c" /* yacc.c:355  */
+#line 216 "y.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -228,7 +229,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 232 "y.tab.c" /* yacc.c:358  */
+#line 233 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -530,13 +531,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    79,    79,    83,    86,    87,    90,    93,    94,    95,
-      98,    99,   102,   103,   104,   105,   106,   107,   110,   114,
-     115,   118,   121,   124,   126,   129,   130,   133,   136,   137,
-     140,   143,   146,   147,   150,   151,   155,   157,   159,   161,
-     163,   165,   167,   168,   171,   172,   173,   174,   175,   176,
-     179,   183,   185,   187,   190,   194,   197,   199,   201,   204,
-     206,   208,   210,   212,   216,   218
+       0,    80,    80,    84,    87,    88,    91,    94,    95,    96,
+      99,   100,   103,   104,   105,   106,   107,   108,   111,   115,
+     116,   119,   122,   125,   127,   130,   131,   134,   137,   138,
+     141,   144,   147,   148,   151,   152,   156,   158,   160,   162,
+     164,   166,   168,   169,   172,   173,   174,   175,   176,   177,
+     180,   184,   186,   188,   191,   195,   198,   200,   202,   205,
+     207,   209,   211,   213,   217,   219
 };
 #endif
 
@@ -1401,391 +1402,391 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 79 "calc3.y" /* yacc.c:1646  */
+#line 80 "calc3.y" /* yacc.c:1646  */
     {  }
-#line 1407 "y.tab.c" /* yacc.c:1646  */
+#line 1408 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 83 "calc3.y" /* yacc.c:1646  */
+#line 84 "calc3.y" /* yacc.c:1646  */
     {   }
-#line 1413 "y.tab.c" /* yacc.c:1646  */
+#line 1414 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 86 "calc3.y" /* yacc.c:1646  */
+#line 87 "calc3.y" /* yacc.c:1646  */
     {}
-#line 1419 "y.tab.c" /* yacc.c:1646  */
+#line 1420 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 87 "calc3.y" /* yacc.c:1646  */
+#line 88 "calc3.y" /* yacc.c:1646  */
     {   }
-#line 1425 "y.tab.c" /* yacc.c:1646  */
+#line 1426 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 90 "calc3.y" /* yacc.c:1646  */
+#line 91 "calc3.y" /* yacc.c:1646  */
     { if(strcmp((yyvsp[0].tokenName),"INTEGER") != 0 ){ string str_1 = string((yyvsp[-2].tokenName)); string num_str = string((yyvsp[0].tokenName)); oss.str(""); oss << "[] _" << str_1 << ", " <<  num_str;  _map.insert(pair<string,string>(oss.str(),type_1));        } }
-#line 1431 "y.tab.c" /* yacc.c:1646  */
+#line 1432 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 93 "calc3.y" /* yacc.c:1646  */
+#line 94 "calc3.y" /* yacc.c:1646  */
     {char *p = (char*)""; (yyval.tokenName) = p; }
-#line 1437 "y.tab.c" /* yacc.c:1646  */
+#line 1438 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 94 "calc3.y" /* yacc.c:1646  */
+#line 95 "calc3.y" /* yacc.c:1646  */
     { (yyval.tokenName) = (yyvsp[-1].tokenName);      }
-#line 1443 "y.tab.c" /* yacc.c:1646  */
+#line 1444 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 95 "calc3.y" /* yacc.c:1646  */
+#line 96 "calc3.y" /* yacc.c:1646  */
     { string str_1 = string((yyvsp[-2].tokenName)); oss.str(""); oss << " _" << str_1; _map.insert(pair<string,string>(oss.str(),type_1)); string str_2 = string((yyvsp[0].tokenName)); oss.str(""); oss << " _" << str_2; _map.insert(pair<string,string>(oss.str(),type_1)); (yyval.tokenName) = (yyvsp[-2].tokenName);  }
-#line 1449 "y.tab.c" /* yacc.c:1646  */
+#line 1450 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 98 "calc3.y" /* yacc.c:1646  */
+#line 99 "calc3.y" /* yacc.c:1646  */
     { int x; x = (yyvsp[-3].ival); string xyz = to_string(x); const char *pchar = xyz.c_str(); char *p = (char*)pchar; (yyval.tokenName) = p;    }
-#line 1455 "y.tab.c" /* yacc.c:1646  */
+#line 1456 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 99 "calc3.y" /* yacc.c:1646  */
+#line 100 "calc3.y" /* yacc.c:1646  */
     { char *p = (char*)"INTEGER"; (yyval.tokenName) = p;  }
-#line 1461 "y.tab.c" /* yacc.c:1646  */
+#line 1462 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 102 "calc3.y" /* yacc.c:1646  */
+#line 103 "calc3.y" /* yacc.c:1646  */
     { }
-#line 1467 "y.tab.c" /* yacc.c:1646  */
+#line 1468 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 103 "calc3.y" /* yacc.c:1646  */
+#line 104 "calc3.y" /* yacc.c:1646  */
     {  }
-#line 1473 "y.tab.c" /* yacc.c:1646  */
+#line 1474 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 104 "calc3.y" /* yacc.c:1646  */
+#line 105 "calc3.y" /* yacc.c:1646  */
     { }
-#line 1479 "y.tab.c" /* yacc.c:1646  */
+#line 1480 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 105 "calc3.y" /* yacc.c:1646  */
+#line 106 "calc3.y" /* yacc.c:1646  */
     {   }
-#line 1485 "y.tab.c" /* yacc.c:1646  */
+#line 1486 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 106 "calc3.y" /* yacc.c:1646  */
+#line 107 "calc3.y" /* yacc.c:1646  */
     { }
-#line 1491 "y.tab.c" /* yacc.c:1646  */
+#line 1492 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 107 "calc3.y" /* yacc.c:1646  */
+#line 108 "calc3.y" /* yacc.c:1646  */
     { }
-#line 1497 "y.tab.c" /* yacc.c:1646  */
+#line 1498 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 110 "calc3.y" /* yacc.c:1646  */
-    { oss.str(""); oss << "   =" << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; func_map.insert(pair<string,string>(null_str,oss.str()));     }
-#line 1503 "y.tab.c" /* yacc.c:1646  */
+#line 111 "calc3.y" /* yacc.c:1646  */
+    { oss.str(""); oss << "   =" << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; func_vec.push_back(oss.str());      }
+#line 1504 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 114 "calc3.y" /* yacc.c:1646  */
+#line 115 "calc3.y" /* yacc.c:1646  */
     {   }
-#line 1509 "y.tab.c" /* yacc.c:1646  */
+#line 1510 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 115 "calc3.y" /* yacc.c:1646  */
+#line 116 "calc3.y" /* yacc.c:1646  */
     {  }
-#line 1515 "y.tab.c" /* yacc.c:1646  */
+#line 1516 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 118 "calc3.y" /* yacc.c:1646  */
-    { oss.str(""); oss << "   := L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); oss.str(""); loop_token++; oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str()));      }
-#line 1521 "y.tab.c" /* yacc.c:1646  */
+#line 119 "calc3.y" /* yacc.c:1646  */
+    { oss.str(""); oss << "   := L" << loop_token; func_vec.push_back(oss.str()); oss.str(""); loop_token++; oss << ": L" << loop_token; func_vec.push_back(oss.str());      }
+#line 1522 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 121 "calc3.y" /* yacc.c:1646  */
+#line 122 "calc3.y" /* yacc.c:1646  */
     {   }
-#line 1527 "y.tab.c" /* yacc.c:1646  */
+#line 1528 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 124 "calc3.y" /* yacc.c:1646  */
-    {oss.str(""); oss << "   .<" << (yyvsp[-1].ExpType) -> result_id; string _result_id = newVirtualReg(); _map.insert(pair<string,string>(_result_id,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  string extra_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(extra_str.c_str()) != 0){ oss.str(""); oss << "   .<" << (yyvsp[0].ExpType) -> result_id; string _id2 = newVirtualReg(); _map.insert(pair<string,string>(_id2,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  } }
-#line 1533 "y.tab.c" /* yacc.c:1646  */
+#line 125 "calc3.y" /* yacc.c:1646  */
+    {oss.str(""); oss << "   .<" << (yyvsp[-1].ExpType) -> result_id; /*string _result_id = newVirtualReg();*/ /*_map.insert(pair<string,string>(_result_id,type_5)); */ func_vec.push_back(oss.str());  string extra_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(extra_str.c_str()) != 0){ oss.str(""); oss << "   .<" << (yyvsp[0].ExpType) -> result_id; /*_map.insert(pair<string,string>(_id2,type_5));*/ func_vec.push_back(oss.str());   } }
+#line 1534 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 126 "calc3.y" /* yacc.c:1646  */
-    { oss.str(""); oss << "   .>" << (yyvsp[-1].ExpType) -> result_id; string _result_id = newVirtualReg(); _map.insert(pair<string,string>(_result_id,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  string extra_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(extra_str.c_str()) != 0) { oss.str(""); oss << "   .>" << (yyvsp[0].ExpType) -> result_id; string _id2 = newVirtualReg(); _map.insert(pair<string,string>(_id2,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));     }}
-#line 1539 "y.tab.c" /* yacc.c:1646  */
+#line 127 "calc3.y" /* yacc.c:1646  */
+    { oss.str(""); oss << "   .>" << (yyvsp[-1].ExpType) -> result_id; /* string _result_id = newVirtualReg(); */ /*_map.insert(pair<string,string>(_result_id,type_5)); */ func_vec.push_back(oss.str());   string extra_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(extra_str.c_str()) != 0) { oss.str(""); oss << "   .>" << (yyvsp[0].ExpType) -> result_id; /*_map.insert(pair<string,string>(_id2,type_5));*/ func_vec.push_back(oss.str());    }}
+#line 1540 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 129 "calc3.y" /* yacc.c:1646  */
+#line 130 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); (yyval.ExpType) = temp;  }
-#line 1545 "y.tab.c" /* yacc.c:1646  */
+#line 1546 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 130 "calc3.y" /* yacc.c:1646  */
+#line 131 "calc3.y" /* yacc.c:1646  */
     { (yyval.ExpType) = (yyvsp[-1].ExpType);   }
-#line 1551 "y.tab.c" /* yacc.c:1646  */
+#line 1552 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 133 "calc3.y" /* yacc.c:1646  */
+#line 134 "calc3.y" /* yacc.c:1646  */
     {  }
-#line 1557 "y.tab.c" /* yacc.c:1646  */
+#line 1558 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 136 "calc3.y" /* yacc.c:1646  */
+#line 137 "calc3.y" /* yacc.c:1646  */
     {  }
-#line 1563 "y.tab.c" /* yacc.c:1646  */
+#line 1564 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 137 "calc3.y" /* yacc.c:1646  */
+#line 138 "calc3.y" /* yacc.c:1646  */
     { }
-#line 1569 "y.tab.c" /* yacc.c:1646  */
+#line 1570 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 140 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); string temp_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(temp_str.c_str()) == 0) { (yyval.ExpType) = (yyvsp[-1].ExpType); } else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   ||" << temp -> result_id << "," << (yyvsp[-1].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); func_map.insert(pair<string,string>(null_str, temp -> code)); (yyval.ExpType) =  temp; } }
-#line 1575 "y.tab.c" /* yacc.c:1646  */
+#line 141 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); string temp_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(temp_str.c_str()) == 0) { (yyval.ExpType) = (yyvsp[-1].ExpType); } else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3));  oss.str(""); oss << "   ||" << temp -> result_id << "," << (yyvsp[-1].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); func_vec.push_back(temp -> code); (yyval.ExpType) =  temp; } }
+#line 1576 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 143 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); string temp_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(temp_str.c_str()) == 0) { (yyval.ExpType) = (yyvsp[-1].ExpType); }else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   &&" << temp -> result_id << "," << (yyvsp[-1].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); func_map.insert(pair<string,string>(null_str, temp -> code)); (yyval.ExpType) =  temp; }  }
-#line 1581 "y.tab.c" /* yacc.c:1646  */
+#line 144 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); string temp_str = string((yyvsp[0].ExpType) -> result_id); if(strlen(temp_str.c_str()) == 0) { (yyval.ExpType) = (yyvsp[-1].ExpType); }else { temp -> result_id = newVirtualReg();  _map.insert(pair<string,string>(temp -> result_id,type_3));  oss.str(""); oss << "   &&" << temp -> result_id << "," << (yyvsp[-1].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); func_vec.push_back(temp -> code);  (yyval.ExpType) =  temp; }  }
+#line 1582 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 146 "calc3.y" /* yacc.c:1646  */
+#line 147 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); (yyval.ExpType) = temp; }
-#line 1587 "y.tab.c" /* yacc.c:1646  */
+#line 1588 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 147 "calc3.y" /* yacc.c:1646  */
+#line 148 "calc3.y" /* yacc.c:1646  */
     {(yyval.ExpType) = (yyvsp[-1].ExpType); }
-#line 1593 "y.tab.c" /* yacc.c:1646  */
+#line 1594 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 150 "calc3.y" /* yacc.c:1646  */
+#line 151 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); (yyval.ExpType) = temp;  }
-#line 1599 "y.tab.c" /* yacc.c:1646  */
+#line 1600 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 151 "calc3.y" /* yacc.c:1646  */
+#line 152 "calc3.y" /* yacc.c:1646  */
     { (yyval.ExpType) = (yyvsp[-1].ExpType);  }
-#line 1605 "y.tab.c" /* yacc.c:1646  */
+#line 1606 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 155 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); (yyval.ExpType) = temp;  }
-#line 1611 "y.tab.c" /* yacc.c:1646  */
+#line 156 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str()); (yyval.ExpType) = temp;  }
+#line 1612 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 157 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); (yyval.ExpType) = temp; }
-#line 1617 "y.tab.c" /* yacc.c:1646  */
+#line 158 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str());  (yyval.ExpType) = temp; }
+#line 1618 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 159 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string((yyvsp[-1].tokenName)); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); func_map.insert(pair<string,string>(null_str, temp -> code)); oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str()));   (yyval.ExpType) =  temp;  }
-#line 1623 "y.tab.c" /* yacc.c:1646  */
+#line 160 "calc3.y" /* yacc.c:1646  */
+    {oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str());  ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string((yyvsp[-1].tokenName)); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); func_vec.push_back(temp -> code);  oss.str(""); string _LHS = newVirtualReg(); oss << "   " << "==" << _LHS << "," << temp -> result_id << ", 0"; _map.insert(pair<string,string>(_LHS,type_3)); int other_loop = loop_token + 1; func_vec.push_back(oss.str()); oss.str(""); oss << "   " << "?:= L" << other_loop << "," << _LHS; func_vec.push_back(oss.str());   /*oss << ": L" << loop_token; func_vec.push_back(oss.str());*/  (yyval.ExpType) =  temp;  }
+#line 1624 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 161 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string((yyvsp[-1].tokenName)); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); func_map.insert(pair<string,string>(null_str,temp -> code));  string new_id = newVirtualReg(); _map.insert(pair<string,string>(new_id, type_3)); oss.str(""); oss << "   !" << new_id  << "," << temp -> result_id; temp -> code = oss.str(); temp -> result_id = new_id;  func_map.insert(pair<string,string>(null_str,temp -> code)); (yyval.ExpType) = temp; }
-#line 1629 "y.tab.c" /* yacc.c:1646  */
+#line 162 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string((yyvsp[-1].tokenName)); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << (yyvsp[-2].ExpType) -> result_id << "," << (yyvsp[0].ExpType) -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str()); func_vec.push_back(temp -> code); string new_id = newVirtualReg(); _map.insert(pair<string,string>(new_id, type_3)); oss.str(""); oss << "   !" << new_id  << "," << temp -> result_id; temp -> code = oss.str(); temp -> result_id = new_id;  func_vec.push_back(temp -> code);  (yyval.ExpType) = temp; }
+#line 1630 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 163 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); (yyval.ExpType) = temp; }
-#line 1635 "y.tab.c" /* yacc.c:1646  */
+#line 164 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str());  (yyval.ExpType) = temp; }
+#line 1636 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 165 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); (yyval.ExpType) = temp; }
-#line 1641 "y.tab.c" /* yacc.c:1646  */
+#line 166 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str());  (yyval.ExpType) = temp; }
+#line 1642 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 167 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = (yyvsp[-1].ExpType) -> result_id; temp -> code = (yyvsp[-1].ExpType) -> code; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); (yyval.ExpType) = temp;  }
-#line 1647 "y.tab.c" /* yacc.c:1646  */
+#line 168 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); temp -> result_id = (yyvsp[-1].ExpType) -> result_id; temp -> code = (yyvsp[-1].ExpType) -> code; oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str());  (yyval.ExpType) = temp;  }
+#line 1648 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 168 "calc3.y" /* yacc.c:1646  */
+#line 169 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string get_id = (yyvsp[-1].ExpType) -> result_id; oss.str(""); oss << "   !" << temp -> result_id << get_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); (yyval.ExpType) = temp; }
-#line 1653 "y.tab.c" /* yacc.c:1646  */
+#line 1654 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 171 "calc3.y" /* yacc.c:1646  */
+#line 172 "calc3.y" /* yacc.c:1646  */
     {char *p = (char*)"=="; (yyval.tokenName) = p;  }
-#line 1659 "y.tab.c" /* yacc.c:1646  */
+#line 1660 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 172 "calc3.y" /* yacc.c:1646  */
+#line 173 "calc3.y" /* yacc.c:1646  */
     { char *p = (char*)"!="; (yyval.tokenName) = p; }
-#line 1665 "y.tab.c" /* yacc.c:1646  */
+#line 1666 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 173 "calc3.y" /* yacc.c:1646  */
+#line 174 "calc3.y" /* yacc.c:1646  */
     { char *p = (char*)"<"; (yyval.tokenName) = p;  }
-#line 1671 "y.tab.c" /* yacc.c:1646  */
+#line 1672 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 174 "calc3.y" /* yacc.c:1646  */
+#line 175 "calc3.y" /* yacc.c:1646  */
     { char *p = (char*)">"; (yyval.tokenName) = p;  }
-#line 1677 "y.tab.c" /* yacc.c:1646  */
+#line 1678 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 175 "calc3.y" /* yacc.c:1646  */
+#line 176 "calc3.y" /* yacc.c:1646  */
     { char *p = (char*)"<=";  (yyval.tokenName) = p; }
-#line 1683 "y.tab.c" /* yacc.c:1646  */
+#line 1684 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 176 "calc3.y" /* yacc.c:1646  */
+#line 177 "calc3.y" /* yacc.c:1646  */
     { char *p = (char*)">="; (yyval.tokenName) = p;  }
-#line 1689 "y.tab.c" /* yacc.c:1646  */
+#line 1690 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 179 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); string left_side = (yyvsp[-1].ExpType) -> result_id; string right_side = (yyvsp[0].ExpType) -> result_id; if(strlen(right_side.c_str()) != 0){  temp -> result_id = newVirtualReg(); oss.str(""); _map.insert(pair<string,string>(temp -> result_id,type_4)); oss << "   +" << temp -> result_id << "," << left_side << "," << right_side;  temp -> code = oss.str(); func_map.insert(pair<string,string>(null_str,temp -> code)); (yyval.ExpType) = temp; }else {(yyval.ExpType) = (yyvsp[-1].ExpType);} }
-#line 1695 "y.tab.c" /* yacc.c:1646  */
+#line 180 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); string left_side = (yyvsp[-1].ExpType) -> result_id; string right_side = (yyvsp[0].ExpType) -> result_id; if(strlen(right_side.c_str()) != 0){  temp -> result_id = newVirtualReg2(); oss.str(""); _map.insert(pair<string,string>(temp -> result_id,type_4)); oss << "   +" << temp -> result_id << "," << left_side << "," << right_side;  temp -> code = oss.str(); func_vec.push_back(temp -> code); (yyval.ExpType) = temp; }else {(yyval.ExpType) = (yyvsp[-1].ExpType);} }
+#line 1696 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 183 "calc3.y" /* yacc.c:1646  */
+#line 184 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); (yyval.ExpType) = temp; }
-#line 1701 "y.tab.c" /* yacc.c:1646  */
+#line 1702 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 185 "calc3.y" /* yacc.c:1646  */
+#line 186 "calc3.y" /* yacc.c:1646  */
     {(yyval.ExpType) = (yyvsp[-1].ExpType);  }
-#line 1707 "y.tab.c" /* yacc.c:1646  */
+#line 1708 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 187 "calc3.y" /* yacc.c:1646  */
+#line 188 "calc3.y" /* yacc.c:1646  */
     { (yyval.ExpType) = (yyvsp[-1].ExpType);  }
-#line 1713 "y.tab.c" /* yacc.c:1646  */
+#line 1714 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 190 "calc3.y" /* yacc.c:1646  */
+#line 191 "calc3.y" /* yacc.c:1646  */
     {(yyval.ExpType) = (yyvsp[-1].ExpType); }
-#line 1719 "y.tab.c" /* yacc.c:1646  */
+#line 1720 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 194 "calc3.y" /* yacc.c:1646  */
+#line 195 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); (yyval.ExpType) = temp; }
-#line 1725 "y.tab.c" /* yacc.c:1646  */
+#line 1726 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 197 "calc3.y" /* yacc.c:1646  */
+#line 198 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); (yyval.ExpType) = temp;   }
-#line 1731 "y.tab.c" /* yacc.c:1646  */
+#line 1732 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 199 "calc3.y" /* yacc.c:1646  */
+#line 200 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); (yyval.ExpType) = temp;  }
-#line 1737 "y.tab.c" /* yacc.c:1646  */
+#line 1738 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 201 "calc3.y" /* yacc.c:1646  */
+#line 202 "calc3.y" /* yacc.c:1646  */
     { ExpStruct *temp = create(); (yyval.ExpType) = temp;    }
-#line 1743 "y.tab.c" /* yacc.c:1646  */
+#line 1744 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 204 "calc3.y" /* yacc.c:1646  */
+#line 205 "calc3.y" /* yacc.c:1646  */
     { (yyval.ExpType) = (yyvsp[0].ExpType); }
-#line 1749 "y.tab.c" /* yacc.c:1646  */
+#line 1750 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 206 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); /*_map.insert(pair<string,string>(temp -> result_id,type_1)); */ (yyval.ExpType) = temp; }
-#line 1755 "y.tab.c" /* yacc.c:1646  */
+#line 207 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); int x; x = (yyvsp[0].ival); string xyz = to_string(x); oss.str(""); oss << " " << xyz; temp -> result_id = oss.str(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); /* _map.insert(pair<string,string>(temp -> result_id,type_1)); */  (yyval.ExpType) = temp; }
+#line 1756 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 208 "calc3.y" /* yacc.c:1646  */
-    {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); /* _map.insert(pair<string,string>(temp -> result_id,type_1)); */ (yyval.ExpType) = temp;  }
-#line 1761 "y.tab.c" /* yacc.c:1646  */
+#line 209 "calc3.y" /* yacc.c:1646  */
+    {ExpStruct *temp = create(); int x; x = (yyvsp[0].ival); oss.str(""); oss << "-" << x; temp -> result_id = oss.str(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str();  _map.insert(pair<string,string>(temp -> result_id,type_1));  (yyval.ExpType) = temp;  }
+#line 1762 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 210 "calc3.y" /* yacc.c:1646  */
+#line 211 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); (yyval.ExpType) = temp;  }
-#line 1767 "y.tab.c" /* yacc.c:1646  */
+#line 1768 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 212 "calc3.y" /* yacc.c:1646  */
+#line 213 "calc3.y" /* yacc.c:1646  */
     { ExpStruct *temp = create(); (yyval.ExpType) = temp; }
-#line 1773 "y.tab.c" /* yacc.c:1646  */
+#line 1774 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 216 "calc3.y" /* yacc.c:1646  */
+#line 217 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); string str_1 = string((yyvsp[0].tokenName)); oss.str(""); oss << " _" << str_1; temp -> result_id = oss.str(); oss.str(""); oss << "   . _" << str_1; temp -> code = oss.str(); if(_map.find(temp -> result_id) == _map.end()){ _map.insert(pair<string,string>(temp -> result_id,type_1)); } (yyval.ExpType) =  temp;  }
-#line 1779 "y.tab.c" /* yacc.c:1646  */
+#line 1780 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 218 "calc3.y" /* yacc.c:1646  */
+#line 219 "calc3.y" /* yacc.c:1646  */
     {ExpStruct *temp = create(); string str_1 = string((yyvsp[-3].tokenName)); oss.str(""); oss << "_" << str_1; temp -> result_id = oss.str(); oss.str(""); oss << "   . _" << str_1; temp -> code = oss.str(); if(_map.find(temp -> result_id) == _map.end()){_map.insert(pair<string,string>(temp -> result_id,type_1));  } (yyval.ExpType) = temp; }
-#line 1785 "y.tab.c" /* yacc.c:1646  */
+#line 1786 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1789 "y.tab.c" /* yacc.c:1646  */
+#line 1790 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2013,7 +2014,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 220 "calc3.y" /* yacc.c:1906  */
+#line 221 "calc3.y" /* yacc.c:1906  */
 
 
 int main(int argc,char **argv){
@@ -2067,13 +2068,12 @@ int main(int argc,char **argv){
 			fprintf(yyout,"   .%s\n",xyz.c_str());
 		}
 		fprintf(yyout,": START\n");
-
-		map<string,string>::iterator its;
-		for(its = func_map.begin(); its != func_map.end(); its++){
-			string xyz_2 = its->second;
+		vector<string>::iterator rit = func_vec.begin();
+		for(; rit != func_vec.end(); ++rit){
+			string xyz_2 = *rit;
 			fprintf(yyout,"%s\n",xyz_2.c_str());
-			fprintf(yyout,"Entering function\n");	
 		}
+		
 		
 		
 		fclose(yyout);
@@ -2088,6 +2088,12 @@ int main(int argc,char **argv){
 	 
 	  
 	return 0;
+}
+string newVirtualReg2(){
+	ostringstream buffer;
+	buffer << " t" << term_number;
+	term_number++;
+	return buffer.str();
 }
 string newVirtualReg(){
 	ostringstream buffer;

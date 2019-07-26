@@ -11,14 +11,14 @@
 	#include <iterator> 
 	#include "random_struct.h"
 	#include <sstream>
-
+	#include <vector>
 	using namespace std;
 	void yyerror(const char *msg);
 	double findMod(double a, double b);
 	char *my_itoa(char *dest,int i);
 	char *return_ascii(int i);
 	string newVirtualReg();
-
+	string newVirtualReg2();
 	ostringstream oss;
 	int bool_value(int dest);
 	extern int num_pos ;
@@ -29,6 +29,7 @@
 	#define BUZZ_SIZE 1024
 	map<string,string> _map; 
 	map<string,string> func_map;
+	vector<string> func_vec; 
 	string type_1 = "SCALAR";
 	string type_2 = "ASSIGN";
 	string type_3 = "WHILE";
@@ -107,7 +108,7 @@ statement	: expression_statement { }
 		| continue_statement { }
 		;
 			/* = dst,src          dst = src */
-expression_statement : var ASSIGN expression { oss.str(""); oss << "   =" << $1 -> result_id << "," << $3 -> result_id; func_map.insert(pair<string,string>(null_str,oss.str()));     }  
+expression_statement : var ASSIGN expression { oss.str(""); oss << "   =" << $1 -> result_id << "," << $3 -> result_id; func_vec.push_back(oss.str());      }  
 		  
 		     ;
 
@@ -115,15 +116,15 @@ ifelse_statement 	: IF bool_exp THEN statement_helper ENDIF {   }
 		  	| IF bool_exp THEN statement_helper ELSE statement_helper ENDIF {  }
 			;
 
-while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP { oss.str(""); oss << "   := L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); oss.str(""); loop_token++; oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str()));      }
+while_statement		: WHILE bool_exp BEGINLOOP statement_helper ENDLOOP { oss.str(""); oss << "   := L" << loop_token; func_vec.push_back(oss.str()); oss.str(""); loop_token++; oss << ": L" << loop_token; func_vec.push_back(oss.str());      }
 		 	;
 
 dobegin_statement	: DO BEGINLOOP statement_helper ENDLOOP WHILE bool_exp {   }
 		  	;
 
-readwrite_statement	: READ var readwrite_helper {oss.str(""); oss << "   .<" << $2 -> result_id; string _result_id = newVirtualReg(); _map.insert(pair<string,string>(_result_id,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  string extra_str = string($3 -> result_id); if(strlen(extra_str.c_str()) != 0){ oss.str(""); oss << "   .<" << $3 -> result_id; string _id2 = newVirtualReg(); _map.insert(pair<string,string>(_id2,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  } }
+readwrite_statement	: READ var readwrite_helper {oss.str(""); oss << "   .<" << $2 -> result_id; /*string _result_id = newVirtualReg();*/ /*_map.insert(pair<string,string>(_result_id,type_5)); */ func_vec.push_back(oss.str());  string extra_str = string($3 -> result_id); if(strlen(extra_str.c_str()) != 0){ oss.str(""); oss << "   .<" << $3 -> result_id; /*_map.insert(pair<string,string>(_id2,type_5));*/ func_vec.push_back(oss.str());   } }
 
-		    	| WRITE var readwrite_helper { oss.str(""); oss << "   .>" << $2 -> result_id; string _result_id = newVirtualReg(); _map.insert(pair<string,string>(_result_id,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));  string extra_str = string($3 -> result_id); if(strlen(extra_str.c_str()) != 0) { oss.str(""); oss << "   .>" << $3 -> result_id; string _id2 = newVirtualReg(); _map.insert(pair<string,string>(_id2,type_5)); func_map.insert(pair<string,string>(null_str,oss.str()));     }}
+		    	| WRITE var readwrite_helper { oss.str(""); oss << "   .>" << $2 -> result_id; /* string _result_id = newVirtualReg(); */ /*_map.insert(pair<string,string>(_result_id,type_5)); */ func_vec.push_back(oss.str());   string extra_str = string($3 -> result_id); if(strlen(extra_str.c_str()) != 0) { oss.str(""); oss << "   .>" << $3 -> result_id; /*_map.insert(pair<string,string>(_id2,type_5));*/ func_vec.push_back(oss.str());    }}
 			;
 
 readwrite_helper	: %empty {ExpStruct *temp = create(); $$ = temp;  }
@@ -137,10 +138,10 @@ statement_helper	: %empty {  }
 		 	| statement SEMICOLON statement_helper { }
 		 	;
 
-bool_exp		: relation_and_exp bool_exp_helper  {ExpStruct *temp = create(); string temp_str = string($2 -> result_id); if(strlen(temp_str.c_str()) == 0) { $$ = $1; } else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   ||" << temp -> result_id << "," << $1 -> result_id << "," << $2 -> result_id; temp -> code = oss.str(); func_map.insert(pair<string,string>(null_str, temp -> code)); $$ =  temp; } }
+bool_exp		: relation_and_exp bool_exp_helper  {ExpStruct *temp = create(); string temp_str = string($2 -> result_id); if(strlen(temp_str.c_str()) == 0) { $$ = $1; } else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3));  oss.str(""); oss << "   ||" << temp -> result_id << "," << $1 -> result_id << "," << $2 -> result_id; temp -> code = oss.str(); func_vec.push_back(temp -> code); $$ =  temp; } }
 			;
 
-relation_and_exp 	: relation_exp relation_and_helper {ExpStruct *temp = create(); string temp_str = string($2 -> result_id); if(strlen(temp_str.c_str()) == 0) { $$ = $1; }else { temp -> result_id = newVirtualReg(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << "   &&" << temp -> result_id << "," << $1 -> result_id << "," << $2 -> result_id; temp -> code = oss.str(); func_map.insert(pair<string,string>(null_str, temp -> code)); $$ =  temp; }  }
+relation_and_exp 	: relation_exp relation_and_helper {ExpStruct *temp = create(); string temp_str = string($2 -> result_id); if(strlen(temp_str.c_str()) == 0) { $$ = $1; }else { temp -> result_id = newVirtualReg();  _map.insert(pair<string,string>(temp -> result_id,type_3));  oss.str(""); oss << "   &&" << temp -> result_id << "," << $1 -> result_id << "," << $2 -> result_id; temp -> code = oss.str(); func_vec.push_back(temp -> code);  $$ =  temp; }  }
 			;
 
 relation_and_helper	: %empty {ExpStruct *temp = create(); $$ = temp; }
@@ -152,19 +153,19 @@ bool_exp_helper 	: %empty {ExpStruct *temp = create(); $$ = temp;  }
 			;
 
 	
-relation_exp		: TRUE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); $$ = temp;  }
+relation_exp		: TRUE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str()); $$ = temp;  }
 
-			| FALSE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); $$ = temp; }
+			| FALSE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str());  $$ = temp; }
 
-			| expression comp expression {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string($2); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << $1 -> result_id << "," << $3 -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); func_map.insert(pair<string,string>(null_str, temp -> code)); oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str()));   $$ =  temp;  } 
+			| expression comp expression {oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str());  ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string($2); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << $1 -> result_id << "," << $3 -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); func_vec.push_back(temp -> code);  oss.str(""); string _LHS = newVirtualReg(); oss << "   " << "==" << _LHS << "," << temp -> result_id << ", 0"; _map.insert(pair<string,string>(_LHS,type_3)); int other_loop = loop_token + 1; func_vec.push_back(oss.str()); oss.str(""); oss << "   " << "?:= L" << other_loop << "," << _LHS; func_vec.push_back(oss.str());   /*oss << ": L" << loop_token; func_vec.push_back(oss.str());*/  $$ =  temp;  } 
 
-			| NOT expression comp expression {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string($3); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << $2 -> result_id << "," << $4 -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); func_map.insert(pair<string,string>(null_str,temp -> code));  string new_id = newVirtualReg(); _map.insert(pair<string,string>(new_id, type_3)); oss.str(""); oss << "   !" << new_id  << "," << temp -> result_id; temp -> code = oss.str(); temp -> result_id = new_id;  func_map.insert(pair<string,string>(null_str,temp -> code)); $$ = temp; }
+			| NOT expression comp expression {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string _comp = string($3); oss.str(""); oss << "   " << _comp << temp -> result_id << "," << $2 -> result_id << "," << $4 -> result_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str()); func_vec.push_back(temp -> code); string new_id = newVirtualReg(); _map.insert(pair<string,string>(new_id, type_3)); oss.str(""); oss << "   !" << new_id  << "," << temp -> result_id; temp -> code = oss.str(); temp -> result_id = new_id;  func_vec.push_back(temp -> code);  $$ = temp; }
 			
-			| NOT TRUE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); $$ = temp; }
+			| NOT TRUE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str());  $$ = temp; }
 
-			| NOT FALSE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); $$ = temp; }
+			| NOT FALSE {ExpStruct *temp = create(); temp -> result_id = ""; oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str());  $$ = temp; }
 
-			| L_PAREN bool_exp R_PAREN {ExpStruct *temp = create(); temp -> result_id = $2 -> result_id; temp -> code = $2 -> code; oss.str(""); oss << ": L" << loop_token; func_map.insert(pair<string,string>(null_str,oss.str())); $$ = temp;  }
+			| L_PAREN bool_exp R_PAREN {ExpStruct *temp = create(); temp -> result_id = $2 -> result_id; temp -> code = $2 -> code; oss.str(""); oss << ": L" << loop_token; func_vec.push_back(oss.str());  $$ = temp;  }
 			| NOT L_PAREN bool_exp R_PAREN {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); string get_id = $3 -> result_id; oss.str(""); oss << "   !" << temp -> result_id << get_id; temp -> code = oss.str(); _map.insert(pair<string,string>(temp -> result_id,type_3)); $$ = temp; }
 			;
 
@@ -176,7 +177,7 @@ comp		: EQ {char *p = (char*)"=="; $$ = p;  }
 		| GTE { char *p = (char*)">="; $$ = p;  }
 		;
 
-expression 	: mult_exp expression_helper {ExpStruct *temp = create(); string left_side = $1 -> result_id; string right_side = $2 -> result_id; if(strlen(right_side.c_str()) != 0){  temp -> result_id = newVirtualReg(); oss.str(""); _map.insert(pair<string,string>(temp -> result_id,type_4)); oss << "   +" << temp -> result_id << "," << left_side << "," << right_side;  temp -> code = oss.str(); func_map.insert(pair<string,string>(null_str,temp -> code)); $$ = temp; }else {$$ = $1;} }
+expression 	: mult_exp expression_helper {ExpStruct *temp = create(); string left_side = $1 -> result_id; string right_side = $2 -> result_id; if(strlen(right_side.c_str()) != 0){  temp -> result_id = newVirtualReg2(); oss.str(""); _map.insert(pair<string,string>(temp -> result_id,type_4)); oss << "   +" << temp -> result_id << "," << left_side << "," << right_side;  temp -> code = oss.str(); func_vec.push_back(temp -> code); $$ = temp; }else {$$ = $1;} }
 		;
 
 	    
@@ -203,9 +204,9 @@ mult_exp_helper : %empty {ExpStruct *temp = create(); $$ = temp; }
 
 term		: var { $$ = $1; }
 
-		| NUMBER {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); /*_map.insert(pair<string,string>(temp -> result_id,type_1)); */ $$ = temp; }  
+		| NUMBER {ExpStruct *temp = create(); int x; x = $1; string xyz = to_string(x); oss.str(""); oss << " " << xyz; temp -> result_id = oss.str(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); /* _map.insert(pair<string,string>(temp -> result_id,type_1)); */  $$ = temp; }  
 
-		| MINUS NUMBER {ExpStruct *temp = create(); temp -> result_id = newVirtualReg(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str(); /* _map.insert(pair<string,string>(temp -> result_id,type_1)); */ $$ = temp;  }
+		| MINUS NUMBER {ExpStruct *temp = create(); int x; x = $2; oss.str(""); oss << "-" << x; temp -> result_id = oss.str(); oss.str(""); oss << "   ." << temp -> result_id; temp -> code = oss.str();  _map.insert(pair<string,string>(temp -> result_id,type_1));  $$ = temp;  }
 
 		| L_PAREN expression R_PAREN {ExpStruct *temp = create(); $$ = temp;  }
 
@@ -270,13 +271,12 @@ int main(int argc,char **argv){
 			fprintf(yyout,"   .%s\n",xyz.c_str());
 		}
 		fprintf(yyout,": START\n");
-
-		map<string,string>::iterator its;
-		for(its = func_map.begin(); its != func_map.end(); its++){
-			string xyz_2 = its->second;
+		vector<string>::iterator rit = func_vec.begin();
+		for(; rit != func_vec.end(); ++rit){
+			string xyz_2 = *rit;
 			fprintf(yyout,"%s\n",xyz_2.c_str());
-				
 		}
+		
 		
 		
 		fclose(yyout);
@@ -291,6 +291,12 @@ int main(int argc,char **argv){
 	 
 	  
 	return 0;
+}
+string newVirtualReg2(){
+	ostringstream buffer;
+	buffer << " t" << term_number;
+	term_number++;
+	return buffer.str();
 }
 string newVirtualReg(){
 	ostringstream buffer;
